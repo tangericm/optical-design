@@ -1,0 +1,288 @@
+[
+  {
+    "model_id": "Stock",
+    "case_id": "huygens_y_w0_p128_i128",
+    "raw_file": "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-real-benchmark\\docs\\research\\real-benchmark\\smoke\\raw\\5_Stock--huygens_y_w0_p128_i128.json",
+    "raw_sha256": "3b212525bb3c295bf89aedade28cb880b44b6fa28d380ea8f7a924966d9f3032",
+    "restored": true,
+    "diagnostics": {
+      "y": {
+        "status": "partial",
+        "profile_kind": "cut",
+        "intensity_semantics": "intensity_not_field_amplitude",
+        "fwhm_mm": 0.007411166329448606,
+        "d1e2_mm": 0.013130137247411824,
+        "cv_roi": null,
+        "fwhm_status": "ok",
+        "d1e2_status": "ok",
+        "cv_roi_status": "roi_not_covered",
+        "connected_segments_fwhm": 1,
+        "connected_segments_1e2": 1,
+        "threshold_details": {
+          "fwhm": {
+            "width_mm": 0.007411166329448606,
+            "status": "ok",
+            "level_fraction": 0.5,
+            "left_crossing_mm": -0.0037055831647177287,
+            "right_crossing_mm": 0.003705583164730877,
+            "connected_segments": 1,
+            "samples_per_segment": [
+              15
+            ]
+          },
+          "1e2": {
+            "width_mm": 0.013130137247411824,
+            "status": "ok",
+            "level_fraction": 0.1353352832366127,
+            "left_crossing_mm": -0.00656506862370059,
+            "right_crossing_mm": 0.006565068623711233,
+            "connected_segments": 1,
+            "samples_per_segment": [
+              27
+            ]
+          }
+        },
+        "grid": {
+          "sample_count": 129,
+          "bounds_mm": [
+            -0.032,
+            0.032
+          ],
+          "min_step_mm": 0.000499999999999997,
+          "max_step_mm": 0.0005000000000000004,
+          "uniform": true
+        },
+        "peak_intensity": 1.0,
+        "peak_x_mm": 0.0,
+        "edge_fraction_of_peak": [
+          5.4463049782339225e-05,
+          5.3927259223972055e-05
+        ],
+        "roi": {
+          "bounds_mm": [
+            -0.21,
+            0.21
+          ],
+          "fully_covered": false,
+          "sample_count": 129,
+          "max_gap_mm": 0.178,
+          "cv_convention": "population_std_ddof0_over_mean_of_original_roi_samples"
+        },
+        "sampling_policy": {
+          "min_roi_samples": 5,
+          "max_roi_gap_fraction": 0.25,
+          "min_threshold_component_samples": 3
+        },
+        "edge_warning_fraction": 0.001,
+        "warnings": [
+          "ROI is not fully covered by the grid; CV unavailable"
+        ],
+        "method": "outermost linearly interpolated sampled-peak intensity threshold crossings; no extrapolation, peak fit, recentering, or width clamping"
+      }
+    },
+    "comparison": {
+      "passes": true,
+      "axes": {
+        "y": {
+          "passes": true,
+          "shape_matches": true,
+          "grid_matches": true,
+          "intensity_matches": true,
+          "max_abs_intensity_error": 0.0,
+          "interpolation": false,
+          "normalization": "none"
+        }
+      },
+      "power": null,
+      "settings": {
+        "rtol": 1e-06,
+        "atol": 1e-08,
+        "coordinate_atol_mm": 1e-10
+      }
+    }
+  },
+  {
+    "model_id": "Stock",
+    "case_id": "pop_w9_n1024",
+    "raw_file": "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-real-benchmark\\docs\\research\\real-benchmark\\smoke\\raw\\5_Stock--pop_w9_n1024.json",
+    "raw_sha256": "639485b5711398ed79a075c309c63ab84019c839cda15f6e4b62fcd2946151df",
+    "restored": true,
+    "diagnostics": {
+      "x": {
+        "status": "ok",
+        "profile_kind": "cut",
+        "intensity_semantics": "intensity_not_field_amplitude",
+        "fwhm_mm": 0.6491024019403723,
+        "d1e2_mm": 0.7408604928443541,
+        "cv_roi": 0.07262195717521146,
+        "fwhm_status": "ok",
+        "d1e2_status": "ok",
+        "cv_roi_status": "ok",
+        "connected_segments_fwhm": 1,
+        "connected_segments_1e2": 1,
+        "threshold_details": {
+          "fwhm": {
+            "width_mm": 0.6491024019403723,
+            "status": "ok",
+            "level_fraction": 0.5,
+            "left_crossing_mm": -0.3245512036944631,
+            "right_crossing_mm": 0.32455119824590917,
+            "connected_segments": 1,
+            "samples_per_segment": [
+              37
+            ]
+          },
+          "1e2": {
+            "width_mm": 0.7408604928443541,
+            "status": "ok",
+            "level_fraction": 0.1353352832366127,
+            "left_crossing_mm": -0.3704302451349611,
+            "right_crossing_mm": 0.37043024770939303,
+            "connected_segments": 1,
+            "samples_per_segment": [
+              43
+            ]
+          }
+        },
+        "grid": {
+          "sample_count": 1024,
+          "bounds_mm": [
+            -8.83050351323108,
+            8.8132564360568
+          ],
+          "min_step_mm": 0.017247077174278758,
+          "max_step_mm": 0.01724707717428231,
+          "uniform": true
+        },
+        "peak_intensity": 90.45613068020621,
+        "peak_x_mm": 0.0,
+        "edge_fraction_of_peak": [
+          3.367934429589569e-09,
+          3.3711146949124387e-09
+        ],
+        "roi": {
+          "bounds_mm": [
+            -0.21,
+            0.21
+          ],
+          "fully_covered": true,
+          "sample_count": 25,
+          "max_gap_mm": 0.017247077174280534,
+          "cv_convention": "population_std_ddof0_over_mean_of_original_roi_samples"
+        },
+        "sampling_policy": {
+          "min_roi_samples": 5,
+          "max_roi_gap_fraction": 0.25,
+          "min_threshold_component_samples": 3
+        },
+        "edge_warning_fraction": 0.001,
+        "warnings": [],
+        "method": "outermost linearly interpolated sampled-peak intensity threshold crossings; no extrapolation, peak fit, recentering, or width clamping"
+      },
+      "y": {
+        "status": "ok",
+        "profile_kind": "cut",
+        "intensity_semantics": "intensity_not_field_amplitude",
+        "fwhm_mm": 0.0075982385903354925,
+        "d1e2_mm": 0.01248462191355761,
+        "cv_roi": 6.020161389298535,
+        "fwhm_status": "ok",
+        "d1e2_status": "ok",
+        "cv_roi_status": "ok",
+        "connected_segments_fwhm": 1,
+        "connected_segments_1e2": 1,
+        "threshold_details": {
+          "fwhm": {
+            "width_mm": 0.0075982385903354925,
+            "status": "ok",
+            "level_fraction": 0.5,
+            "left_crossing_mm": -0.0037991192951677497,
+            "right_crossing_mm": 0.0037991192951677432,
+            "connected_segments": 1,
+            "samples_per_segment": [
+              7
+            ]
+          },
+          "1e2": {
+            "width_mm": 0.01248462191355761,
+            "status": "ok",
+            "level_fraction": 0.1353352832366127,
+            "left_crossing_mm": -0.00624231095677896,
+            "right_crossing_mm": 0.0062423109567786485,
+            "connected_segments": 1,
+            "samples_per_segment": [
+              11
+            ]
+          }
+        },
+        "grid": {
+          "sample_count": 1024,
+          "bounds_mm": [
+            -0.5395302235879385,
+            0.5384764536199933
+          ],
+          "min_step_mm": 0.0010537699679451507,
+          "max_step_mm": 0.0010537699679453727,
+          "uniform": true
+        },
+        "peak_intensity": 90.45613068020621,
+        "peak_x_mm": 0.0,
+        "edge_fraction_of_peak": [
+          6.706336112850921e-07,
+          3.41974370612042e-07
+        ],
+        "roi": {
+          "bounds_mm": [
+            -0.21,
+            0.21
+          ],
+          "fully_covered": true,
+          "sample_count": 399,
+          "max_gap_mm": 0.0010537699679452617,
+          "cv_convention": "population_std_ddof0_over_mean_of_original_roi_samples"
+        },
+        "sampling_policy": {
+          "min_roi_samples": 5,
+          "max_roi_gap_fraction": 0.25,
+          "min_threshold_component_samples": 3
+        },
+        "edge_warning_fraction": 0.001,
+        "warnings": [],
+        "method": "outermost linearly interpolated sampled-peak intensity threshold crossings; no extrapolation, peak fit, recentering, or width clamping"
+      }
+    },
+    "comparison": {
+      "passes": true,
+      "axes": {
+        "x": {
+          "passes": true,
+          "shape_matches": true,
+          "grid_matches": true,
+          "intensity_matches": true,
+          "max_abs_intensity_error": 0.0,
+          "interpolation": false,
+          "normalization": "none"
+        },
+        "y": {
+          "passes": true,
+          "shape_matches": true,
+          "grid_matches": true,
+          "intensity_matches": true,
+          "max_abs_intensity_error": 0.0,
+          "interpolation": false,
+          "normalization": "none"
+        }
+      },
+      "power": {
+        "passes": true,
+        "actual_w": 0.4044939850260847,
+        "reference_w": 0.4044939850250477
+      },
+      "settings": {
+        "rtol": 1e-06,
+        "atol": 1e-08,
+        "coordinate_atol_mm": 1e-10
+      }
+    }
+  }
+]

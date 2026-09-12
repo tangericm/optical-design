@@ -1,0 +1,1768 @@
+{
+  "schema_version": 1,
+  "name": "Final CLI native smoke with preserved Stock model",
+  "status": "benchmark_passed",
+  "reference_validated": true,
+  "reference_supplied": true,
+  "reference_integrity_verified": true,
+  "source_unchanged": true,
+  "models": [
+    {
+      "id": "Stock",
+      "source": "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\ZEMAX\\Line-Field-OCT-Optics\\source\\full_sample\\SamplePath_Stock.ZMX",
+      "source_sha256": "04f882d3384bed689551c56aa22dcba4d0206698cbde77bf0a75dc86031b9748",
+      "copied_model": "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-real-benchmark\\docs\\research\\real-benchmark\\smoke\\models\\Stock.ZMX",
+      "copied_sha256": "04f882d3384bed689551c56aa22dcba4d0206698cbde77bf0a75dc86031b9748",
+      "restored": true,
+      "inspection": {
+        "engine": {
+          "name": "OpticStudio",
+          "version": "24.1.0",
+          "zospy": "2.1.5",
+          "pythonnet": "3.1.0",
+          "license": "PremiumEdition"
+        },
+        "mode": "Sequential",
+        "configurations": 1,
+        "catalog_names": [
+          "LIGHTPATH",
+          "SCHOTT"
+        ],
+        "catalog_files": [
+          {
+            "path": "C:\\Users\\erict\\OneDrive\\Documents\\Zemax\\Glasscat\\LIGHTPATH.AGF",
+            "sha256": "80c966c2f573e64dc6924cbee23545107b101f9acb0f76bf54960f49d9587858"
+          },
+          {
+            "path": "C:\\Users\\erict\\OneDrive\\Documents\\Zemax\\Glasscat\\LIGHTPATH.BGF",
+            "sha256": "aafe025516c7e7c3fe9d54c3930372a888d405ff9fde85c7a72dbb448fc0132e"
+          },
+          {
+            "path": "C:\\Users\\erict\\OneDrive\\Documents\\Zemax\\Glasscat\\SCHOTT.AGF",
+            "sha256": "8eb91c9ade15a1b70cd9548026465b059739e1e2cb59ad712dec226d2bace8c0"
+          },
+          {
+            "path": "C:\\Users\\erict\\OneDrive\\Documents\\Zemax\\Glasscat\\SCHOTT.BGF",
+            "sha256": "ae8dd7e681a98725dab380ccbd5ee8d67746c7b2b981e48c7ff9679a9d63db6e"
+          }
+        ],
+        "coating_files": [
+          {
+            "path": "C:\\Users\\erict\\OneDrive\\Documents\\Zemax\\Coatings\\COATING.DAT",
+            "sha256": "2b007ef8b26a4f6e1eafbddbdcc4d90a114cd24992c6583de04a6d0f81b21a5e"
+          },
+          {
+            "path": "C:\\Users\\erict\\OneDrive\\Documents\\Zemax\\Coatings\\THORA.ZEC",
+            "sha256": "2209e6a15f4aca3b76aa4544a3601084b2adff6e74421925d6269be1659e2f10"
+          },
+          {
+            "path": "C:\\Users\\erict\\OneDrive\\Documents\\Zemax\\Coatings\\THORB.ZEC",
+            "sha256": "f661f6a47fa30ee0b4531a7f759443da29d5de0227f617509b40c03ef3db73b3"
+          }
+        ],
+        "environment": {
+          "AdjustIndexToEnvironment": "False",
+          "Temperature": "20.0",
+          "Pressure": "1.0"
+        },
+        "polarization": {
+          "Unpolarized": "True",
+          "Jx": "0.0",
+          "Jy": "1.0",
+          "XPhase": "0.0",
+          "YPhase": "0.0",
+          "Method": "XAxisMethod",
+          "ConvertThinFilmPhaseToRayEquivalent": "True"
+        },
+        "surfaces": [
+          {
+            "index": 0,
+            "type": "Standard",
+            "comment": "",
+            "radius_mm": "inf",
+            "thickness_mm": 0.0,
+            "material": "",
+            "catalog": "AMTIR.AGF",
+            "conic": 0.0,
+            "coating": "",
+            "semi_diameter_mm": 0.0,
+            "stop": false,
+            "parameters": [
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "pop": {
+              "ResampleAfterRefraction": "False",
+              "AutoResample": "False",
+              "XSampling": "S32",
+              "YSampling": "S32",
+              "XWidth": "1.0",
+              "YWidth": "1.0",
+              "UseRaysToPropagateToNextSurface": "False",
+              "DoNotRescaleBeamSizeUsingRayData": "False",
+              "UseAngularSpectrumPropagator": "False",
+              "ReComputePilotBeamParameters": "False",
+              "UseXaxisReference": "False",
+              "OutputPilotRadius": "BestFit",
+              "XRadius": "0.0",
+              "YRadius": "0.0"
+            }
+          },
+          {
+            "index": 1,
+            "type": "Standard",
+            "comment": "F240APC-780",
+            "radius_mm": "inf",
+            "thickness_mm": 5.826264914596,
+            "material": "",
+            "catalog": "AMTIR.AGF",
+            "conic": 0.0,
+            "coating": "",
+            "semi_diameter_mm": 0.0,
+            "stop": false,
+            "parameters": [
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "pop": {
+              "ResampleAfterRefraction": "False",
+              "AutoResample": "False",
+              "XSampling": "S32",
+              "YSampling": "S32",
+              "XWidth": "1.0",
+              "YWidth": "1.0",
+              "UseRaysToPropagateToNextSurface": "False",
+              "DoNotRescaleBeamSizeUsingRayData": "False",
+              "UseAngularSpectrumPropagator": "False",
+              "ReComputePilotBeamParameters": "False",
+              "UseXaxisReference": "False",
+              "OutputPilotRadius": "BestFit",
+              "XRadius": "0.0",
+              "YRadius": "0.0"
+            }
+          },
+          {
+            "index": 2,
+            "type": "Standard",
+            "comment": "",
+            "radius_mm": "inf",
+            "thickness_mm": 3.43399164397,
+            "material": "D-ZK3M",
+            "catalog": "LIGHTPATH.AGF",
+            "conic": 0.0,
+            "coating": "THORA",
+            "semi_diameter_mm": 4.97,
+            "stop": true,
+            "parameters": [
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "pop": {
+              "ResampleAfterRefraction": "False",
+              "AutoResample": "False",
+              "XSampling": "S32",
+              "YSampling": "S32",
+              "XWidth": "1.0",
+              "YWidth": "1.0",
+              "UseRaysToPropagateToNextSurface": "False",
+              "DoNotRescaleBeamSizeUsingRayData": "False",
+              "UseAngularSpectrumPropagator": "False",
+              "ReComputePilotBeamParameters": "False",
+              "UseXaxisReference": "False",
+              "OutputPilotRadius": "BestFit",
+              "XRadius": "0.0",
+              "YRadius": "0.0"
+            }
+          },
+          {
+            "index": 3,
+            "type": "EvenAspheric",
+            "comment": "",
+            "radius_mm": -4.638123819132748,
+            "thickness_mm": 4.992788443928,
+            "material": "",
+            "catalog": "AMTIR.AGF",
+            "conic": -0.9255214874874,
+            "coating": "THORA",
+            "semi_diameter_mm": 4.97,
+            "stop": false,
+            "parameters": [
+              "0.00000000000000000E+00",
+              "-4.78973499846200017E-04",
+              "-4.04969154789600023E-06",
+              "-3.12818122274699979E-08",
+              "6.49869887030499952E-10",
+              "0.00000000000000000E+00",
+              "0.00000000000000000E+00",
+              "0.00000000000000000E+00",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "pop": {
+              "ResampleAfterRefraction": "False",
+              "AutoResample": "False",
+              "XSampling": "S32",
+              "YSampling": "S32",
+              "XWidth": "1.0",
+              "YWidth": "1.0",
+              "UseRaysToPropagateToNextSurface": "False",
+              "DoNotRescaleBeamSizeUsingRayData": "False",
+              "UseAngularSpectrumPropagator": "False",
+              "ReComputePilotBeamParameters": "False",
+              "UseXaxisReference": "False",
+              "OutputPilotRadius": "BestFit",
+              "XRadius": "0.0",
+              "YRadius": "0.0"
+            }
+          },
+          {
+            "index": 4,
+            "type": "Standard",
+            "comment": "INPUT_FIELD - fixed source output",
+            "radius_mm": "inf",
+            "thickness_mm": 0.0,
+            "material": "",
+            "catalog": "AMTIR.AGF",
+            "conic": 0.0,
+            "coating": "",
+            "semi_diameter_mm": 100.0,
+            "stop": false,
+            "parameters": [
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "pop": {
+              "ResampleAfterRefraction": "True",
+              "AutoResample": "False",
+              "XSampling": "S2048",
+              "YSampling": "S2048",
+              "XWidth": "8.0",
+              "YWidth": "8.0",
+              "UseRaysToPropagateToNextSurface": "False",
+              "DoNotRescaleBeamSizeUsingRayData": "False",
+              "UseAngularSpectrumPropagator": "False",
+              "ReComputePilotBeamParameters": "False",
+              "UseXaxisReference": "False",
+              "OutputPilotRadius": "BestFit",
+              "XRadius": "0.0",
+              "YRadius": "0.0"
+            }
+          },
+          {
+            "index": 5,
+            "type": "CoordinateBreak",
+            "comment": "Rotate catalog powered axis to global X",
+            "radius_mm": "inf",
+            "thickness_mm": 0.0,
+            "material": "-",
+            "catalog": "AMTIR.AGF",
+            "conic": "inf",
+            "coating": "",
+            "semi_diameter_mm": 0.0,
+            "stop": false,
+            "parameters": [
+              "0.00000000000000000E+00",
+              "0.00000000000000000E+00",
+              "0.00000000000000000E+00",
+              "0.00000000000000000E+00",
+              "9.00000000000000000E+01",
+              "0",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "pop": {
+              "ResampleAfterRefraction": "False",
+              "AutoResample": "False",
+              "XSampling": "S32",
+              "YSampling": "S32",
+              "XWidth": "1.0",
+              "YWidth": "1.0",
+              "UseRaysToPropagateToNextSurface": "False",
+              "DoNotRescaleBeamSizeUsingRayData": "False",
+              "UseAngularSpectrumPropagator": "False",
+              "ReComputePilotBeamParameters": "False",
+              "UseXaxisReference": "False",
+              "OutputPilotRadius": "BestFit",
+              "XRadius": "0.0",
+              "YRadius": "0.0"
+            }
+          },
+          {
+            "index": 6,
+            "type": "Toroidal",
+            "comment": "LK1087L1-B catalog surface",
+            "radius_mm": "inf",
+            "thickness_mm": 2.0,
+            "material": "N-BK7",
+            "catalog": "SCHOTT.AGF",
+            "conic": 0.0,
+            "coating": "THORB",
+            "semi_diameter_mm": 3.0,
+            "stop": false,
+            "parameters": [
+              "0.00000000000000000E+00",
+              "-0.00000000000000000E+00",
+              "-0.00000000000000000E+00",
+              "-0.00000000000000000E+00",
+              "-0.00000000000000000E+00",
+              "-0.00000000000000000E+00",
+              "-0.00000000000000000E+00",
+              "-0.00000000000000000E+00",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "pop": {
+              "ResampleAfterRefraction": "False",
+              "AutoResample": "False",
+              "XSampling": "S32",
+              "YSampling": "S32",
+              "XWidth": "1.0",
+              "YWidth": "1.0",
+              "UseRaysToPropagateToNextSurface": "False",
+              "DoNotRescaleBeamSizeUsingRayData": "False",
+              "UseAngularSpectrumPropagator": "False",
+              "ReComputePilotBeamParameters": "False",
+              "UseXaxisReference": "False",
+              "OutputPilotRadius": "BestFit",
+              "XRadius": "0.0",
+              "YRadius": "0.0"
+            }
+          },
+          {
+            "index": 7,
+            "type": "Toroidal",
+            "comment": "LK1087L1-B catalog surface",
+            "radius_mm": 3.2800000000000002,
+            "thickness_mm": 5.95,
+            "material": "",
+            "catalog": "AMTIR.AGF",
+            "conic": 0.0,
+            "coating": "THORB",
+            "semi_diameter_mm": 3.0,
+            "stop": false,
+            "parameters": [
+              "0.00000000000000000E+00",
+              "-0.00000000000000000E+00",
+              "-0.00000000000000000E+00",
+              "-0.00000000000000000E+00",
+              "-0.00000000000000000E+00",
+              "-0.00000000000000000E+00",
+              "-0.00000000000000000E+00",
+              "-0.00000000000000000E+00",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "pop": {
+              "ResampleAfterRefraction": "False",
+              "AutoResample": "False",
+              "XSampling": "S32",
+              "YSampling": "S32",
+              "XWidth": "1.0",
+              "YWidth": "1.0",
+              "UseRaysToPropagateToNextSurface": "False",
+              "DoNotRescaleBeamSizeUsingRayData": "False",
+              "UseAngularSpectrumPropagator": "False",
+              "ReComputePilotBeamParameters": "False",
+              "UseXaxisReference": "False",
+              "OutputPilotRadius": "BestFit",
+              "XRadius": "0.0",
+              "YRadius": "0.0"
+            }
+          },
+          {
+            "index": 8,
+            "type": "Toroidal",
+            "comment": "LJ1636L1-B catalog surface",
+            "radius_mm": "inf",
+            "thickness_mm": 3.82,
+            "material": "N-BK7",
+            "catalog": "SCHOTT.AGF",
+            "conic": 0.0,
+            "coating": "THORB",
+            "semi_diameter_mm": 5.0,
+            "stop": false,
+            "parameters": [
+              "0.00000000000000000E+00",
+              "-0.00000000000000000E+00",
+              "-0.00000000000000000E+00",
+              "-0.00000000000000000E+00",
+              "-0.00000000000000000E+00",
+              "-0.00000000000000000E+00",
+              "-0.00000000000000000E+00",
+              "-0.00000000000000000E+00",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "pop": {
+              "ResampleAfterRefraction": "False",
+              "AutoResample": "False",
+              "XSampling": "S32",
+              "YSampling": "S32",
+              "XWidth": "1.0",
+              "YWidth": "1.0",
+              "UseRaysToPropagateToNextSurface": "False",
+              "DoNotRescaleBeamSizeUsingRayData": "False",
+              "UseAngularSpectrumPropagator": "False",
+              "ReComputePilotBeamParameters": "False",
+              "UseXaxisReference": "False",
+              "OutputPilotRadius": "BestFit",
+              "XRadius": "0.0",
+              "YRadius": "0.0"
+            }
+          },
+          {
+            "index": 9,
+            "type": "Toroidal",
+            "comment": "LJ1636L1-B catalog surface",
+            "radius_mm": -7.750000000000002,
+            "thickness_mm": 0.1,
+            "material": "",
+            "catalog": "AMTIR.AGF",
+            "conic": 0.0,
+            "coating": "THORB",
+            "semi_diameter_mm": 5.0,
+            "stop": false,
+            "parameters": [
+              "0.00000000000000000E+00",
+              "-0.00000000000000000E+00",
+              "-0.00000000000000000E+00",
+              "-0.00000000000000000E+00",
+              "-0.00000000000000000E+00",
+              "-0.00000000000000000E+00",
+              "-0.00000000000000000E+00",
+              "-0.00000000000000000E+00",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "pop": {
+              "ResampleAfterRefraction": "False",
+              "AutoResample": "False",
+              "XSampling": "S32",
+              "YSampling": "S32",
+              "XWidth": "1.0",
+              "YWidth": "1.0",
+              "UseRaysToPropagateToNextSurface": "False",
+              "DoNotRescaleBeamSizeUsingRayData": "False",
+              "UseAngularSpectrumPropagator": "False",
+              "ReComputePilotBeamParameters": "False",
+              "UseXaxisReference": "False",
+              "OutputPilotRadius": "BestFit",
+              "XRadius": "0.0",
+              "YRadius": "0.0"
+            }
+          },
+          {
+            "index": 10,
+            "type": "CoordinateBreak",
+            "comment": "Restore global coordinates",
+            "radius_mm": "inf",
+            "thickness_mm": 0.0,
+            "material": "-",
+            "catalog": "AMTIR.AGF",
+            "conic": "inf",
+            "coating": "",
+            "semi_diameter_mm": 0.0,
+            "stop": false,
+            "parameters": [
+              "0.00000000000000000E+00",
+              "0.00000000000000000E+00",
+              "0.00000000000000000E+00",
+              "0.00000000000000000E+00",
+              "-9.00000000000000000E+01",
+              "0",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "pop": {
+              "ResampleAfterRefraction": "False",
+              "AutoResample": "False",
+              "XSampling": "S32",
+              "YSampling": "S32",
+              "XWidth": "1.0",
+              "YWidth": "1.0",
+              "UseRaysToPropagateToNextSurface": "False",
+              "DoNotRescaleBeamSizeUsingRayData": "False",
+              "UseAngularSpectrumPropagator": "False",
+              "ReComputePilotBeamParameters": "False",
+              "UseXaxisReference": "False",
+              "OutputPilotRadius": "BestFit",
+              "XRadius": "0.0",
+              "YRadius": "0.0"
+            }
+          },
+          {
+            "index": 11,
+            "type": "Standard",
+            "comment": "OBS_SHAPER_EXIT - analysis plane",
+            "radius_mm": "inf",
+            "thickness_mm": 5.9,
+            "material": "",
+            "catalog": "AMTIR.AGF",
+            "conic": 0.0,
+            "coating": "",
+            "semi_diameter_mm": 100.0,
+            "stop": false,
+            "parameters": [
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "pop": {
+              "ResampleAfterRefraction": "False",
+              "AutoResample": "False",
+              "XSampling": "S32",
+              "YSampling": "S32",
+              "XWidth": "1.0",
+              "YWidth": "1.0",
+              "UseRaysToPropagateToNextSurface": "False",
+              "DoNotRescaleBeamSizeUsingRayData": "False",
+              "UseAngularSpectrumPropagator": "False",
+              "ReComputePilotBeamParameters": "False",
+              "UseXaxisReference": "False",
+              "OutputPilotRadius": "BestFit",
+              "XRadius": "0.0",
+              "YRadius": "0.0"
+            }
+          },
+          {
+            "index": 12,
+            "type": "Toroidal",
+            "comment": "LK1836L1-B rear",
+            "radius_mm": "inf",
+            "thickness_mm": 2.0,
+            "material": "N-BK7",
+            "catalog": "SCHOTT.AGF",
+            "conic": 0.0,
+            "coating": "I.995",
+            "semi_diameter_mm": 5.0,
+            "stop": false,
+            "parameters": [
+              "0.00000000000000000E+00",
+              "-0.00000000000000000E+00",
+              "-0.00000000000000000E+00",
+              "-0.00000000000000000E+00",
+              "-0.00000000000000000E+00",
+              "-0.00000000000000000E+00",
+              "-0.00000000000000000E+00",
+              "-0.00000000000000000E+00",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "pop": {
+              "ResampleAfterRefraction": "False",
+              "AutoResample": "False",
+              "XSampling": "S32",
+              "YSampling": "S32",
+              "XWidth": "1.0",
+              "YWidth": "1.0",
+              "UseRaysToPropagateToNextSurface": "False",
+              "DoNotRescaleBeamSizeUsingRayData": "False",
+              "UseAngularSpectrumPropagator": "False",
+              "ReComputePilotBeamParameters": "False",
+              "UseXaxisReference": "False",
+              "OutputPilotRadius": "BestFit",
+              "XRadius": "0.0",
+              "YRadius": "0.0"
+            }
+          },
+          {
+            "index": 13,
+            "type": "Toroidal",
+            "comment": "LK1836L1-B Y-expander front",
+            "radius_mm": 5.01,
+            "thickness_mm": 43.9075358175792,
+            "material": "",
+            "catalog": "AMTIR.AGF",
+            "conic": 0.0,
+            "coating": "I.995",
+            "semi_diameter_mm": 5.0,
+            "stop": false,
+            "parameters": [
+              "0.00000000000000000E+00",
+              "-0.00000000000000000E+00",
+              "-0.00000000000000000E+00",
+              "-0.00000000000000000E+00",
+              "-0.00000000000000000E+00",
+              "-0.00000000000000000E+00",
+              "-0.00000000000000000E+00",
+              "-0.00000000000000000E+00",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "pop": {
+              "ResampleAfterRefraction": "False",
+              "AutoResample": "False",
+              "XSampling": "S32",
+              "YSampling": "S32",
+              "XWidth": "1.0",
+              "YWidth": "1.0",
+              "UseRaysToPropagateToNextSurface": "False",
+              "DoNotRescaleBeamSizeUsingRayData": "False",
+              "UseAngularSpectrumPropagator": "False",
+              "ReComputePilotBeamParameters": "False",
+              "UseXaxisReference": "False",
+              "OutputPilotRadius": "BestFit",
+              "XRadius": "0.0",
+              "YRadius": "0.0"
+            }
+          },
+          {
+            "index": 14,
+            "type": "Toroidal",
+            "comment": "LJ1477L1-B front",
+            "radius_mm": "inf",
+            "thickness_mm": 5.25,
+            "material": "N-BK7",
+            "catalog": "SCHOTT.AGF",
+            "conic": 0.0,
+            "coating": "I.995",
+            "semi_diameter_mm": 15.0,
+            "stop": false,
+            "parameters": [
+              "0.00000000000000000E+00",
+              "-0.00000000000000000E+00",
+              "-0.00000000000000000E+00",
+              "-0.00000000000000000E+00",
+              "-0.00000000000000000E+00",
+              "-0.00000000000000000E+00",
+              "-0.00000000000000000E+00",
+              "-0.00000000000000000E+00",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "pop": {
+              "ResampleAfterRefraction": "False",
+              "AutoResample": "False",
+              "XSampling": "S32",
+              "YSampling": "S32",
+              "XWidth": "1.0",
+              "YWidth": "1.0",
+              "UseRaysToPropagateToNextSurface": "False",
+              "DoNotRescaleBeamSizeUsingRayData": "False",
+              "UseAngularSpectrumPropagator": "False",
+              "ReComputePilotBeamParameters": "False",
+              "UseXaxisReference": "False",
+              "OutputPilotRadius": "BestFit",
+              "XRadius": "0.0",
+              "YRadius": "0.0"
+            }
+          },
+          {
+            "index": 15,
+            "type": "Toroidal",
+            "comment": "LJ1477L1-B rear",
+            "radius_mm": -36.170000000000066,
+            "thickness_mm": 99.9999999997294,
+            "material": "",
+            "catalog": "AMTIR.AGF",
+            "conic": 0.0,
+            "coating": "I.995",
+            "semi_diameter_mm": 15.0,
+            "stop": false,
+            "parameters": [
+              "0.00000000000000000E+00",
+              "-0.00000000000000000E+00",
+              "-0.00000000000000000E+00",
+              "-0.00000000000000000E+00",
+              "-0.00000000000000000E+00",
+              "-0.00000000000000000E+00",
+              "-0.00000000000000000E+00",
+              "-0.00000000000000000E+00",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "pop": {
+              "ResampleAfterRefraction": "True",
+              "AutoResample": "False",
+              "XSampling": "S2048",
+              "YSampling": "S2048",
+              "XWidth": "64.0",
+              "YWidth": "64.0",
+              "UseRaysToPropagateToNextSurface": "False",
+              "DoNotRescaleBeamSizeUsingRayData": "False",
+              "UseAngularSpectrumPropagator": "False",
+              "ReComputePilotBeamParameters": "False",
+              "UseXaxisReference": "False",
+              "OutputPilotRadius": "BestFit",
+              "XRadius": "0.0",
+              "YRadius": "0.0"
+            }
+          },
+          {
+            "index": 16,
+            "type": "Standard",
+            "comment": "AC254-100-B front",
+            "radius_mm": 66.6800000000001,
+            "thickness_mm": 4.0,
+            "material": "N-LAK22",
+            "catalog": "SCHOTT.AGF",
+            "conic": 0.0,
+            "coating": "I.995",
+            "semi_diameter_mm": 12.7,
+            "stop": false,
+            "parameters": [
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "pop": {
+              "ResampleAfterRefraction": "False",
+              "AutoResample": "False",
+              "XSampling": "S32",
+              "YSampling": "S32",
+              "XWidth": "1.0",
+              "YWidth": "1.0",
+              "UseRaysToPropagateToNextSurface": "False",
+              "DoNotRescaleBeamSizeUsingRayData": "False",
+              "UseAngularSpectrumPropagator": "False",
+              "ReComputePilotBeamParameters": "False",
+              "UseXaxisReference": "False",
+              "OutputPilotRadius": "BestFit",
+              "XRadius": "0.0",
+              "YRadius": "0.0"
+            }
+          },
+          {
+            "index": 17,
+            "type": "Standard",
+            "comment": "AC254-100-B cement",
+            "radius_mm": -53.699999999999996,
+            "thickness_mm": 1.5,
+            "material": "N-SF6HT",
+            "catalog": "SCHOTT.AGF",
+            "conic": 0.0,
+            "coating": "",
+            "semi_diameter_mm": 12.7,
+            "stop": false,
+            "parameters": [
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "pop": {
+              "ResampleAfterRefraction": "False",
+              "AutoResample": "False",
+              "XSampling": "S32",
+              "YSampling": "S32",
+              "XWidth": "1.0",
+              "YWidth": "1.0",
+              "UseRaysToPropagateToNextSurface": "False",
+              "DoNotRescaleBeamSizeUsingRayData": "False",
+              "UseAngularSpectrumPropagator": "False",
+              "ReComputePilotBeamParameters": "False",
+              "UseXaxisReference": "False",
+              "OutputPilotRadius": "BestFit",
+              "XRadius": "0.0",
+              "YRadius": "0.0"
+            }
+          },
+          {
+            "index": 18,
+            "type": "Standard",
+            "comment": "AC254-100-B rear",
+            "radius_mm": -259.4099999999993,
+            "thickness_mm": 203.944349719342,
+            "material": "",
+            "catalog": "AMTIR.AGF",
+            "conic": 0.0,
+            "coating": "I.995",
+            "semi_diameter_mm": 12.7,
+            "stop": false,
+            "parameters": [
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "pop": {
+              "ResampleAfterRefraction": "False",
+              "AutoResample": "False",
+              "XSampling": "S32",
+              "YSampling": "S32",
+              "XWidth": "1.0",
+              "YWidth": "1.0",
+              "UseRaysToPropagateToNextSurface": "False",
+              "DoNotRescaleBeamSizeUsingRayData": "False",
+              "UseAngularSpectrumPropagator": "False",
+              "ReComputePilotBeamParameters": "False",
+              "UseXaxisReference": "False",
+              "OutputPilotRadius": "BestFit",
+              "XRadius": "0.0",
+              "YRadius": "0.0"
+            }
+          },
+          {
+            "index": 19,
+            "type": "Standard",
+            "comment": "AC254-080-B reversed front",
+            "radius_mm": -373.96961686320293,
+            "thickness_mm": 2.027306446738,
+            "material": "N-SF6HT",
+            "catalog": "SCHOTT.AGF",
+            "conic": 0.0,
+            "coating": "I.995",
+            "semi_diameter_mm": 12.7,
+            "stop": false,
+            "parameters": [
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "pop": {
+              "ResampleAfterRefraction": "False",
+              "AutoResample": "False",
+              "XSampling": "S32",
+              "YSampling": "S32",
+              "XWidth": "1.0",
+              "YWidth": "1.0",
+              "UseRaysToPropagateToNextSurface": "False",
+              "DoNotRescaleBeamSizeUsingRayData": "False",
+              "UseAngularSpectrumPropagator": "False",
+              "ReComputePilotBeamParameters": "False",
+              "UseXaxisReference": "False",
+              "OutputPilotRadius": "BestFit",
+              "XRadius": "0.0",
+              "YRadius": "0.0"
+            }
+          },
+          {
+            "index": 20,
+            "type": "Standard",
+            "comment": "AC254-080-B cement",
+            "radius_mm": 43.2038777008382,
+            "thickness_mm": 6.582144861689,
+            "material": "N-BAF10",
+            "catalog": "SCHOTT.AGF",
+            "conic": 0.0,
+            "coating": "",
+            "semi_diameter_mm": 12.7,
+            "stop": false,
+            "parameters": [
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "pop": {
+              "ResampleAfterRefraction": "False",
+              "AutoResample": "False",
+              "XSampling": "S32",
+              "YSampling": "S32",
+              "XWidth": "1.0",
+              "YWidth": "1.0",
+              "UseRaysToPropagateToNextSurface": "False",
+              "DoNotRescaleBeamSizeUsingRayData": "False",
+              "UseAngularSpectrumPropagator": "False",
+              "ReComputePilotBeamParameters": "False",
+              "UseXaxisReference": "False",
+              "OutputPilotRadius": "BestFit",
+              "XRadius": "0.0",
+              "YRadius": "0.0"
+            }
+          },
+          {
+            "index": 21,
+            "type": "Standard",
+            "comment": "AC254-080-B rear",
+            "radius_mm": -38.66985177933538,
+            "thickness_mm": 71.5895098008701,
+            "material": "",
+            "catalog": "AMTIR.AGF",
+            "conic": 0.0,
+            "coating": "I.995",
+            "semi_diameter_mm": 12.7,
+            "stop": false,
+            "parameters": [
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "pop": {
+              "ResampleAfterRefraction": "False",
+              "AutoResample": "False",
+              "XSampling": "S32",
+              "YSampling": "S32",
+              "XWidth": "1.0",
+              "YWidth": "1.0",
+              "UseRaysToPropagateToNextSurface": "False",
+              "DoNotRescaleBeamSizeUsingRayData": "False",
+              "UseAngularSpectrumPropagator": "False",
+              "ReComputePilotBeamParameters": "False",
+              "UseXaxisReference": "False",
+              "OutputPilotRadius": "BestFit",
+              "XRadius": "0.0",
+              "YRadius": "0.0"
+            }
+          },
+          {
+            "index": 22,
+            "type": "Standard",
+            "comment": "PROVISIONAL BS014 transmitted port - N-BK7 cube entrance",
+            "radius_mm": "inf",
+            "thickness_mm": 12.7,
+            "material": "N-BK7",
+            "catalog": "SCHOTT.AGF",
+            "conic": 0.0,
+            "coating": "I.995",
+            "semi_diameter_mm": 100.0,
+            "stop": false,
+            "parameters": [
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "pop": {
+              "ResampleAfterRefraction": "False",
+              "AutoResample": "False",
+              "XSampling": "S32",
+              "YSampling": "S32",
+              "XWidth": "1.0",
+              "YWidth": "1.0",
+              "UseRaysToPropagateToNextSurface": "False",
+              "DoNotRescaleBeamSizeUsingRayData": "False",
+              "UseAngularSpectrumPropagator": "False",
+              "ReComputePilotBeamParameters": "False",
+              "UseXaxisReference": "False",
+              "OutputPilotRadius": "BestFit",
+              "XRadius": "0.0",
+              "YRadius": "0.0"
+            }
+          },
+          {
+            "index": 23,
+            "type": "Standard",
+            "comment": "BS014 equivalent internal splitter - nominal 50 percent T",
+            "radius_mm": "inf",
+            "thickness_mm": 12.7,
+            "material": "N-BK7",
+            "catalog": "SCHOTT.AGF",
+            "conic": 0.0,
+            "coating": "SPLIT",
+            "semi_diameter_mm": 100.0,
+            "stop": false,
+            "parameters": [
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "pop": {
+              "ResampleAfterRefraction": "False",
+              "AutoResample": "False",
+              "XSampling": "S32",
+              "YSampling": "S32",
+              "XWidth": "1.0",
+              "YWidth": "1.0",
+              "UseRaysToPropagateToNextSurface": "False",
+              "DoNotRescaleBeamSizeUsingRayData": "False",
+              "UseAngularSpectrumPropagator": "False",
+              "ReComputePilotBeamParameters": "False",
+              "UseXaxisReference": "False",
+              "OutputPilotRadius": "BestFit",
+              "XRadius": "0.0",
+              "YRadius": "0.0"
+            }
+          },
+          {
+            "index": 24,
+            "type": "Standard",
+            "comment": "BS014 transmitted exit - unfolded internal interface",
+            "radius_mm": "inf",
+            "thickness_mm": 71.5895098008701,
+            "material": "",
+            "catalog": "AMTIR.AGF",
+            "conic": 0.0,
+            "coating": "I.995",
+            "semi_diameter_mm": 100.0,
+            "stop": false,
+            "parameters": [
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "pop": {
+              "ResampleAfterRefraction": "True",
+              "AutoResample": "False",
+              "XSampling": "S2048",
+              "YSampling": "S2048",
+              "XWidth": "64.0",
+              "YWidth": "64.0",
+              "UseRaysToPropagateToNextSurface": "False",
+              "DoNotRescaleBeamSizeUsingRayData": "False",
+              "UseAngularSpectrumPropagator": "False",
+              "ReComputePilotBeamParameters": "False",
+              "UseXaxisReference": "False",
+              "OutputPilotRadius": "BestFit",
+              "XRadius": "0.0",
+              "YRadius": "0.0"
+            }
+          },
+          {
+            "index": 25,
+            "type": "Standard",
+            "comment": "AC254-080-B sample objective front",
+            "radius_mm": 38.66985177933538,
+            "thickness_mm": 6.582144861689,
+            "material": "N-BAF10",
+            "catalog": "SCHOTT.AGF",
+            "conic": 0.0,
+            "coating": "I.995",
+            "semi_diameter_mm": 12.7,
+            "stop": false,
+            "parameters": [
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "pop": {
+              "ResampleAfterRefraction": "False",
+              "AutoResample": "False",
+              "XSampling": "S32",
+              "YSampling": "S32",
+              "XWidth": "1.0",
+              "YWidth": "1.0",
+              "UseRaysToPropagateToNextSurface": "False",
+              "DoNotRescaleBeamSizeUsingRayData": "False",
+              "UseAngularSpectrumPropagator": "False",
+              "ReComputePilotBeamParameters": "False",
+              "UseXaxisReference": "False",
+              "OutputPilotRadius": "BestFit",
+              "XRadius": "0.0",
+              "YRadius": "0.0"
+            }
+          },
+          {
+            "index": 26,
+            "type": "Standard",
+            "comment": "AC254-080-B cement",
+            "radius_mm": -43.2038777008382,
+            "thickness_mm": 2.027306446738,
+            "material": "N-SF6HT",
+            "catalog": "SCHOTT.AGF",
+            "conic": 0.0,
+            "coating": "",
+            "semi_diameter_mm": 12.7,
+            "stop": false,
+            "parameters": [
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "pop": {
+              "ResampleAfterRefraction": "False",
+              "AutoResample": "False",
+              "XSampling": "S32",
+              "YSampling": "S32",
+              "XWidth": "1.0",
+              "YWidth": "1.0",
+              "UseRaysToPropagateToNextSurface": "False",
+              "DoNotRescaleBeamSizeUsingRayData": "False",
+              "UseAngularSpectrumPropagator": "False",
+              "ReComputePilotBeamParameters": "False",
+              "UseXaxisReference": "False",
+              "OutputPilotRadius": "BestFit",
+              "XRadius": "0.0",
+              "YRadius": "0.0"
+            }
+          },
+          {
+            "index": 27,
+            "type": "Standard",
+            "comment": "AC254-080-B rear",
+            "radius_mm": 373.96961686320293,
+            "thickness_mm": 74.025,
+            "material": "",
+            "catalog": "AMTIR.AGF",
+            "conic": 0.0,
+            "coating": "I.995",
+            "semi_diameter_mm": 12.7,
+            "stop": false,
+            "parameters": [
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "pop": {
+              "ResampleAfterRefraction": "False",
+              "AutoResample": "False",
+              "XSampling": "S32",
+              "YSampling": "S32",
+              "XWidth": "1.0",
+              "YWidth": "1.0",
+              "UseRaysToPropagateToNextSurface": "False",
+              "DoNotRescaleBeamSizeUsingRayData": "False",
+              "UseAngularSpectrumPropagator": "False",
+              "ReComputePilotBeamParameters": "False",
+              "UseXaxisReference": "False",
+              "OutputPilotRadius": "BestFit",
+              "XRadius": "0.0",
+              "YRadius": "0.0"
+            }
+          },
+          {
+            "index": 28,
+            "type": "Standard",
+            "comment": "SAMPLE - line along X, narrow focus Y",
+            "radius_mm": "inf",
+            "thickness_mm": "inf",
+            "material": "",
+            "catalog": "AMTIR.AGF",
+            "conic": 0.0,
+            "coating": "",
+            "semi_diameter_mm": 100.0,
+            "stop": false,
+            "parameters": [
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "pop": {
+              "ResampleAfterRefraction": "False",
+              "AutoResample": "False",
+              "XSampling": "S32",
+              "YSampling": "S32",
+              "XWidth": "1.0",
+              "YWidth": "1.0",
+              "UseRaysToPropagateToNextSurface": "False",
+              "DoNotRescaleBeamSizeUsingRayData": "False",
+              "UseAngularSpectrumPropagator": "False",
+              "ReComputePilotBeamParameters": "False",
+              "UseXaxisReference": "False",
+              "OutputPilotRadius": "BestFit",
+              "XRadius": "0.0",
+              "YRadius": "0.0"
+            }
+          }
+        ],
+        "wavelengths": [
+          {
+            "index": 1,
+            "wavelength_um": 0.8,
+            "weight": 8.00813580474e-05,
+            "primary": false
+          },
+          {
+            "index": 2,
+            "wavelength_um": 0.805,
+            "weight": 0.00145182651678,
+            "primary": false
+          },
+          {
+            "index": 3,
+            "wavelength_um": 0.81,
+            "weight": 0.0137974382439,
+            "primary": false
+          },
+          {
+            "index": 4,
+            "wavelength_um": 0.815,
+            "weight": 0.0638604700337,
+            "primary": false
+          },
+          {
+            "index": 5,
+            "wavelength_um": 0.82,
+            "weight": 0.107255127018,
+            "primary": false
+          },
+          {
+            "index": 6,
+            "wavelength_um": 0.825,
+            "weight": 0.0877906593253,
+            "primary": false
+          },
+          {
+            "index": 7,
+            "wavelength_um": 0.83,
+            "weight": 0.073092075817,
+            "primary": false
+          },
+          {
+            "index": 8,
+            "wavelength_um": 0.835,
+            "weight": 0.0763261608099,
+            "primary": false
+          },
+          {
+            "index": 9,
+            "wavelength_um": 0.84,
+            "weight": 0.0878706985119,
+            "primary": true
+          },
+          {
+            "index": 10,
+            "wavelength_um": 0.845,
+            "weight": 0.0999058535978,
+            "primary": false
+          },
+          {
+            "index": 11,
+            "wavelength_um": 0.85,
+            "weight": 0.107134991533,
+            "primary": false
+          },
+          {
+            "index": 12,
+            "wavelength_um": 0.855,
+            "weight": 0.104151208454,
+            "primary": false
+          },
+          {
+            "index": 13,
+            "wavelength_um": 0.86,
+            "weight": 0.08747018172,
+            "primary": false
+          },
+          {
+            "index": 14,
+            "wavelength_um": 0.865,
+            "weight": 0.0570819287658,
+            "primary": false
+          },
+          {
+            "index": 15,
+            "wavelength_um": 0.87,
+            "weight": 0.0248513301449,
+            "primary": false
+          },
+          {
+            "index": 16,
+            "wavelength_um": 0.875,
+            "weight": 0.00643817777344,
+            "primary": false
+          },
+          {
+            "index": 17,
+            "wavelength_um": 0.88,
+            "weight": 0.00128161136364,
+            "primary": false
+          },
+          {
+            "index": 18,
+            "wavelength_um": 0.885,
+            "weight": 0.000160179012667,
+            "primary": false
+          }
+        ],
+        "fields": [
+          {
+            "index": 1,
+            "x": 0.0,
+            "y": 0.0,
+            "weight": 1.0,
+            "vignetting": {
+              "VDX": 0.0,
+              "VDY": 0.0,
+              "VCX": 0.0,
+              "VCY": 0.0,
+              "VAN": 0.0,
+              "TAN": 0.0
+            },
+            "ignore": false
+          }
+        ],
+        "field_type": "Angle",
+        "aperture": {
+          "ApertureType": "ObjectSpaceNA",
+          "ApertureValue": "0.1841836390306114",
+          "ApodizationType": "Gaussian",
+          "ApodizationFactor": "3.0"
+        },
+        "huygens_reference": "Planar",
+        "lens_units": "Millimeters"
+      }
+    }
+  ],
+  "records": [
+    {
+      "model_id": "Stock",
+      "case_id": "huygens_y_w0_p128_i128",
+      "raw_file": "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-real-benchmark\\docs\\research\\real-benchmark\\smoke\\raw\\5_Stock--huygens_y_w0_p128_i128.json",
+      "raw_sha256": "3b212525bb3c295bf89aedade28cb880b44b6fa28d380ea8f7a924966d9f3032",
+      "restored": true,
+      "diagnostics": {
+        "y": {
+          "status": "partial",
+          "profile_kind": "cut",
+          "intensity_semantics": "intensity_not_field_amplitude",
+          "fwhm_mm": 0.007411166329448606,
+          "d1e2_mm": 0.013130137247411824,
+          "cv_roi": null,
+          "fwhm_status": "ok",
+          "d1e2_status": "ok",
+          "cv_roi_status": "roi_not_covered",
+          "connected_segments_fwhm": 1,
+          "connected_segments_1e2": 1,
+          "threshold_details": {
+            "fwhm": {
+              "width_mm": 0.007411166329448606,
+              "status": "ok",
+              "level_fraction": 0.5,
+              "left_crossing_mm": -0.0037055831647177287,
+              "right_crossing_mm": 0.003705583164730877,
+              "connected_segments": 1,
+              "samples_per_segment": [
+                15
+              ]
+            },
+            "1e2": {
+              "width_mm": 0.013130137247411824,
+              "status": "ok",
+              "level_fraction": 0.1353352832366127,
+              "left_crossing_mm": -0.00656506862370059,
+              "right_crossing_mm": 0.006565068623711233,
+              "connected_segments": 1,
+              "samples_per_segment": [
+                27
+              ]
+            }
+          },
+          "grid": {
+            "sample_count": 129,
+            "bounds_mm": [
+              -0.032,
+              0.032
+            ],
+            "min_step_mm": 0.000499999999999997,
+            "max_step_mm": 0.0005000000000000004,
+            "uniform": true
+          },
+          "peak_intensity": 1.0,
+          "peak_x_mm": 0.0,
+          "edge_fraction_of_peak": [
+            5.4463049782339225e-05,
+            5.3927259223972055e-05
+          ],
+          "roi": {
+            "bounds_mm": [
+              -0.21,
+              0.21
+            ],
+            "fully_covered": false,
+            "sample_count": 129,
+            "max_gap_mm": 0.178,
+            "cv_convention": "population_std_ddof0_over_mean_of_original_roi_samples"
+          },
+          "sampling_policy": {
+            "min_roi_samples": 5,
+            "max_roi_gap_fraction": 0.25,
+            "min_threshold_component_samples": 3
+          },
+          "edge_warning_fraction": 0.001,
+          "warnings": [
+            "ROI is not fully covered by the grid; CV unavailable"
+          ],
+          "method": "outermost linearly interpolated sampled-peak intensity threshold crossings; no extrapolation, peak fit, recentering, or width clamping"
+        }
+      },
+      "comparison": {
+        "passes": true,
+        "axes": {
+          "y": {
+            "passes": true,
+            "shape_matches": true,
+            "grid_matches": true,
+            "intensity_matches": true,
+            "max_abs_intensity_error": 0.0,
+            "interpolation": false,
+            "normalization": "none"
+          }
+        },
+        "power": null,
+        "settings": {
+          "rtol": 1e-06,
+          "atol": 1e-08,
+          "coordinate_atol_mm": 1e-10
+        }
+      }
+    },
+    {
+      "model_id": "Stock",
+      "case_id": "pop_w9_n1024",
+      "raw_file": "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-real-benchmark\\docs\\research\\real-benchmark\\smoke\\raw\\5_Stock--pop_w9_n1024.json",
+      "raw_sha256": "639485b5711398ed79a075c309c63ab84019c839cda15f6e4b62fcd2946151df",
+      "restored": true,
+      "diagnostics": {
+        "x": {
+          "status": "ok",
+          "profile_kind": "cut",
+          "intensity_semantics": "intensity_not_field_amplitude",
+          "fwhm_mm": 0.6491024019403723,
+          "d1e2_mm": 0.7408604928443541,
+          "cv_roi": 0.07262195717521146,
+          "fwhm_status": "ok",
+          "d1e2_status": "ok",
+          "cv_roi_status": "ok",
+          "connected_segments_fwhm": 1,
+          "connected_segments_1e2": 1,
+          "threshold_details": {
+            "fwhm": {
+              "width_mm": 0.6491024019403723,
+              "status": "ok",
+              "level_fraction": 0.5,
+              "left_crossing_mm": -0.3245512036944631,
+              "right_crossing_mm": 0.32455119824590917,
+              "connected_segments": 1,
+              "samples_per_segment": [
+                37
+              ]
+            },
+            "1e2": {
+              "width_mm": 0.7408604928443541,
+              "status": "ok",
+              "level_fraction": 0.1353352832366127,
+              "left_crossing_mm": -0.3704302451349611,
+              "right_crossing_mm": 0.37043024770939303,
+              "connected_segments": 1,
+              "samples_per_segment": [
+                43
+              ]
+            }
+          },
+          "grid": {
+            "sample_count": 1024,
+            "bounds_mm": [
+              -8.83050351323108,
+              8.8132564360568
+            ],
+            "min_step_mm": 0.017247077174278758,
+            "max_step_mm": 0.01724707717428231,
+            "uniform": true
+          },
+          "peak_intensity": 90.45613068020621,
+          "peak_x_mm": 0.0,
+          "edge_fraction_of_peak": [
+            3.367934429589569e-09,
+            3.3711146949124387e-09
+          ],
+          "roi": {
+            "bounds_mm": [
+              -0.21,
+              0.21
+            ],
+            "fully_covered": true,
+            "sample_count": 25,
+            "max_gap_mm": 0.017247077174280534,
+            "cv_convention": "population_std_ddof0_over_mean_of_original_roi_samples"
+          },
+          "sampling_policy": {
+            "min_roi_samples": 5,
+            "max_roi_gap_fraction": 0.25,
+            "min_threshold_component_samples": 3
+          },
+          "edge_warning_fraction": 0.001,
+          "warnings": [],
+          "method": "outermost linearly interpolated sampled-peak intensity threshold crossings; no extrapolation, peak fit, recentering, or width clamping"
+        },
+        "y": {
+          "status": "ok",
+          "profile_kind": "cut",
+          "intensity_semantics": "intensity_not_field_amplitude",
+          "fwhm_mm": 0.0075982385903354925,
+          "d1e2_mm": 0.01248462191355761,
+          "cv_roi": 6.020161389298535,
+          "fwhm_status": "ok",
+          "d1e2_status": "ok",
+          "cv_roi_status": "ok",
+          "connected_segments_fwhm": 1,
+          "connected_segments_1e2": 1,
+          "threshold_details": {
+            "fwhm": {
+              "width_mm": 0.0075982385903354925,
+              "status": "ok",
+              "level_fraction": 0.5,
+              "left_crossing_mm": -0.0037991192951677497,
+              "right_crossing_mm": 0.0037991192951677432,
+              "connected_segments": 1,
+              "samples_per_segment": [
+                7
+              ]
+            },
+            "1e2": {
+              "width_mm": 0.01248462191355761,
+              "status": "ok",
+              "level_fraction": 0.1353352832366127,
+              "left_crossing_mm": -0.00624231095677896,
+              "right_crossing_mm": 0.0062423109567786485,
+              "connected_segments": 1,
+              "samples_per_segment": [
+                11
+              ]
+            }
+          },
+          "grid": {
+            "sample_count": 1024,
+            "bounds_mm": [
+              -0.5395302235879385,
+              0.5384764536199933
+            ],
+            "min_step_mm": 0.0010537699679451507,
+            "max_step_mm": 0.0010537699679453727,
+            "uniform": true
+          },
+          "peak_intensity": 90.45613068020621,
+          "peak_x_mm": 0.0,
+          "edge_fraction_of_peak": [
+            6.706336112850921e-07,
+            3.41974370612042e-07
+          ],
+          "roi": {
+            "bounds_mm": [
+              -0.21,
+              0.21
+            ],
+            "fully_covered": true,
+            "sample_count": 399,
+            "max_gap_mm": 0.0010537699679452617,
+            "cv_convention": "population_std_ddof0_over_mean_of_original_roi_samples"
+          },
+          "sampling_policy": {
+            "min_roi_samples": 5,
+            "max_roi_gap_fraction": 0.25,
+            "min_threshold_component_samples": 3
+          },
+          "edge_warning_fraction": 0.001,
+          "warnings": [],
+          "method": "outermost linearly interpolated sampled-peak intensity threshold crossings; no extrapolation, peak fit, recentering, or width clamping"
+        }
+      },
+      "comparison": {
+        "passes": true,
+        "axes": {
+          "x": {
+            "passes": true,
+            "shape_matches": true,
+            "grid_matches": true,
+            "intensity_matches": true,
+            "max_abs_intensity_error": 0.0,
+            "interpolation": false,
+            "normalization": "none"
+          },
+          "y": {
+            "passes": true,
+            "shape_matches": true,
+            "grid_matches": true,
+            "intensity_matches": true,
+            "max_abs_intensity_error": 0.0,
+            "interpolation": false,
+            "normalization": "none"
+          }
+        },
+        "power": {
+          "passes": true,
+          "actual_w": 0.4044939850260847,
+          "reference_w": 0.4044939850250477
+        },
+        "settings": {
+          "rtol": 1e-06,
+          "atol": 1e-08,
+          "coordinate_atol_mm": 1e-10
+        }
+      }
+    }
+  ],
+  "started_at_utc": "2026-09-12T20:06:43.888169+00:00",
+  "finished_at_utc": "2026-09-12T20:07:16.684179+00:00",
+  "expected_records": 2,
+  "reproducibility": {
+    "manifest_sha256": "a1c68ff8d12d32f8f97e836e6ed80318f1e04b430d0d9d8d354e383a692aadd2",
+    "reference_sha256": "38c46a213d67019f7af5d91493dbbd81e96bdc259c86ac903463cde1846b1936",
+    "python_version": "3.11.15",
+    "comparison": {
+      "rtol": 1e-06,
+      "atol": 1e-08,
+      "coordinate_atol_mm": 1e-10
+    },
+    "metric_diagnostics_affect_reproduction": false,
+    "no_reference_policy": "completed means unvalidated; no benchmark acceptance claimed"
+  }
+}

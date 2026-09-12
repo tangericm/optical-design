@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "name": "Final CLI native smoke with preserved Stock model",
+  "models": [
+    {
+      "id": "Stock",
+      "path": "C:/Users/erict/OneDrive/Desktop/Projects/ZEMAX/Line-Field-OCT-Optics/source/full_sample/SamplePath_Stock.ZMX",
+      "sha256": "04f882d3384bed689551c56aa22dcba4d0206698cbde77bf0a75dc86031b9748"
+    }
+  ],
+  "cases": [
+    {
+      "id": "huygens_y_w0_p128_i128",
+      "method": "huygens",
+      "field": 1,
+      "wavelength": 0,
+      "polarization": true,
+      "axis": "y",
+      "pupil": 128,
+      "image": 128,
+      "delta_um": 0.5,
+      "reference": "Planar"
+    },
+    {
+      "id": "pop_w9_n1024",
+      "method": "pop",
+      "field": 1,
+      "wavelength": 9,
+      "polarization": true,
+      "sampling": 1024,
+      "window_mm": 0.4,
+      "waist_x_mm": 0.002471428571428571,
+      "waist_y_mm": 0.002471428571428571,
+      "start_surface": 1,
+      "end_surface": 28,
+      "power_w": 1,
+      "separate_xy": true,
+      "resampling": [
+        {
+          "surface": 4,
+          "width_mm": 8
+        },
+        {
+          "surface": 15,
+          "width_mm": 64
+        },
+        {
+          "surface": 24,
+          "width_mm": 64
+        }
+      ]
+    }
+  ],
+  "reference": {
+    "path": "smoke-reference.json",
+    "sha256": "38c46a213d67019f7af5d91493dbbd81e96bdc259c86ac903463cde1846b1936"
+  },
+  "comparison": {
+    "rtol": 1e-06,
+    "atol": 1e-08
+  }
+}
