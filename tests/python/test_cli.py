@@ -1,3 +1,4 @@
+import io
 import json
 
 import pytest
@@ -32,3 +33,14 @@ def test_require_exits_3_for_missing_module(capsys):
 
 def test_require_returns_module():
     assert cli.require("json", "") is json
+
+
+def test_human_output_survives_cp1252_stream():
+    raw = io.BytesIO()
+    out = io.TextIOWrapper(raw, encoding="cp1252", errors="strict")
+    env = cli.Envelope(tool="demo", subcommand="x", tier=0, inputs={}, results={"r": 1.0},
+                       units={"r": "waves"}, method="λ ≈ √2 − π")
+    cli.emit(env, as_json=False, out=out)
+    out.flush()
+    text = raw.getvalue().decode("cp1252")
+    assert "method:" in text and "r" in text and "waves" in text

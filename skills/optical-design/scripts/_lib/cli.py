@@ -46,18 +46,28 @@ def _fmt(value: Any) -> str:
     return str(value)
 
 
+def _write(out: Any, text: str) -> None:
+    """Write text to out; degrade gracefully on narrow console encodings (e.g. Windows cp1252)."""
+    try:
+        out.write(text)
+    except UnicodeEncodeError:
+        encoding = getattr(out, "encoding", None) or "ascii"
+        safe = text.encode(encoding, errors="replace").decode(encoding)
+        out.write(safe)
+
+
 def emit(env: Envelope, as_json: bool, out=None) -> None:
     out = out or sys.stdout
     if as_json:
         out.write(json.dumps(env.to_dict(), indent=2, sort_keys=True, default=_json_default) + "\n")
         return
-    out.write(f"{env.tool} {env.subcommand} (tier {env.tier})\n")
-    out.write(f"  method: {env.method}\n")
+    _write(out, f"{env.tool} {env.subcommand} (tier {env.tier})\n")
+    _write(out, f"  method: {env.method}\n")
     for key, value in env.results.items():
         unit = env.units.get(key, "")
-        out.write(f"  {key:<30} {_fmt(value)} {unit}".rstrip() + "\n")
+        _write(out, f"  {key:<30} {_fmt(value)} {unit}".rstrip() + "\n")
     for warning in env.warnings:
-        out.write(f"  warning: {warning}\n")
+        _write(out, f"  warning: {warning}\n")
 
 
 def _json_default(value: Any) -> Any:
