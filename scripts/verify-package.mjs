@@ -28,6 +28,7 @@ try {
     assert.ok(files.includes(required), `Missing package file: ${required}`);
   }
   assert.ok(files.every(f => !/^(?:tests|node_modules|docs\/superpowers|docs\/research|\.github)\//u.test(f)), "Package contains local files");
+  assert.ok(files.every(f => !/(^|\/)__pycache__\/|\.pyc$/u.test(f)), "Package contains python bytecode");
   const consumer = path.join(root, "consumer");
   fs.mkdirSync(consumer);
   fs.writeFileSync(path.join(consumer, "package.json"), JSON.stringify({ name: "consumer", private: true }));

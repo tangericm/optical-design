@@ -5,6 +5,8 @@
   "type": "module",
   "files": [
     "skills",
+    "!skills/**/__pycache__/**",
+    "!skills/**/*.pyc",
     "docs/install.md",
     "docs/tiers.md",
     "docs/compatibility.md",
