@@ -89,6 +89,23 @@ def test_fit_recovers_known_coefficients(run_json, tmp_path):
     out = run_json(zernike.main, ["fit", "--map", str(path), "--scheme", "fringe", "--nterms", "9"])
     np.testing.assert_allclose(out["results"]["coefficients"], truth, atol=1e-6)
     assert out["results"]["residual_rms_waves"] == pytest.approx(0.0, abs=1e-6)
+    assert out["results"]["normalization_radius_px"] == pytest.approx(64.0)   # inscribed in 128 px
+
+
+def test_fit_normalizes_to_the_pupil_not_the_canvas(run_json, tmp_path):
+    # 0.1 waves of Fringe Z9 on a 128-px pupil centred in a 256² NaN canvas. Normalizing to
+    # the inscribed circle of the canvas would scale Z9 by (R_grid/R_pupil)^4 with zero residual.
+    truth = [0.0] * 8 + [0.1]
+    pupil_map, _ = coefficients_to_map("fringe", truth, npix=128)
+    canvas = np.full((256, 256), np.nan)
+    canvas[64:192, 64:192] = pupil_map
+    path = tmp_path / "padded.npy"
+    np.save(path, canvas)
+    out = run_json(zernike.main, ["fit", "--map", str(path), "--scheme", "fringe", "--nterms", "9"])
+    r = out["results"]
+    assert r["coefficients"][8] == pytest.approx(0.1, abs=1e-3)
+    assert r["normalization_radius_px"] == pytest.approx(64.0, abs=1.0)
+    assert r["pupil_center_px"] == pytest.approx([127.5, 127.5], abs=0.5)
 
 
 def test_fit_accepts_csv_with_nan_outside_pupil(run_json, tmp_path):

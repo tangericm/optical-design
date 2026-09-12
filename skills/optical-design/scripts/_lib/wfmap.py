@@ -18,8 +18,17 @@ import _lib.zernike as Z
 LOW_ORDER = {(0, 0), (1, 1), (1, -1)}
 
 
-def coefficients_to_map(scheme: str, coeffs: list[float], npix: int = 256):
-    rho, theta, mask = Z.unit_disk(npix)
+def coefficients_to_map(scheme: str, coeffs: list[float], npix: int = 256,
+                        pupil: dict[str, Any] | None = None):
+    """Sum a scheme's terms on an npix² grid; NaN outside the pupil.
+
+    Without `pupil` the unit circle is inscribed in the grid; pass the `pupil` a fit
+    reported to put the map back on that fit's normalization circle.
+    """
+    if pupil is None:
+        rho, theta, mask = Z.unit_disk(npix)
+    else:
+        rho, theta, mask = pupil_grid((npix, npix), pupil)
     B = Z.basis(scheme, len(coeffs), rho, theta)
     wmap = np.tensordot(np.asarray(coeffs, float), B, axes=1)
     wmap[~mask] = np.nan
@@ -33,21 +42,65 @@ def load_map(path: str) -> np.ndarray:
     return np.loadtxt(p, delimiter=",").astype(float)
 
 
+def pupil_grid(shape: tuple[int, int], pupil: dict[str, Any]):
+    """rho, theta and a boolean mask for the circular pupil `{center_px, radius_px}`."""
+    cy, cx = pupil["center_px"]
+    radius = float(pupil["radius_px"])
+    yy, xx = np.indices(shape)
+    dy, dx = yy - float(cy), xx - float(cx)
+    rho = np.hypot(dy, dx) / radius
+    return rho, np.arctan2(dy, dx), rho <= 1.0
+
+
+def _pupil_radius(valid: np.ndarray, cy: float, cx: float) -> float:
+    """Pupil radius in pixels from a boolean pupil mask and its centre.
+
+    The edge lies between the outermost valid pixel and the innermost invalid one; take the
+    middle of that bracket, and prefer a whole or half pixel radius when one lies in it.
+    """
+    ys, xs = np.nonzero(valid)
+    inner = float(np.max(np.hypot(ys - cy, xs - cx)))
+    oy, ox = np.nonzero(~valid)
+    outer = float(np.min(np.hypot(oy - cy, ox - cx))) if oy.size else inner + 1.0
+    radius = 0.5 * (inner + outer)
+    snapped = round(radius * 2.0) / 2.0
+    return snapped if inner <= snapped < outer else radius
+
+
 def fit_map(wmap: np.ndarray, scheme: str, nterms: int, mask: np.ndarray | None = None):
-    """Least-squares Zernike fit on the inscribed unit disk; NaN samples are ignored."""
-    npix = wmap.shape[0]
-    if wmap.shape[0] != wmap.shape[1]:
+    """Least-squares Zernike fit over the pupil the valid samples occupy.
+
+    The normalization circle comes from the data, not from the canvas, so a pupil filling
+    only part of the canvas still returns unscaled coefficients. Its centre is the centroid
+    of the valid pixels; its radius is bracketed by the outermost valid pixel and the
+    innermost invalid one and taken at the midpoint, snapped to a whole or half pixel when
+    one falls inside that bracket (digitized pupils are generated on such a radius, and the
+    snap makes map → fit round trips exact). An all-finite square input carries no pupil
+    boundary, so the inscribed circle is assumed; that case reproduces `Z.unit_disk`
+    exactly (centre (npix−1)/2, radius npix/2). NaN samples are ignored.
+
+    Returns (coefficients, residual_rms, pupil) with
+    pupil = {"center_px": [cy, cx], "radius_px": r}.
+    """
+    if wmap.ndim != 2 or wmap.shape[0] != wmap.shape[1]:
         raise ValueError("map must be square (pupil inscribed)")
-    rho, theta, disk = Z.unit_disk(npix)
-    valid = disk & np.isfinite(wmap)
+    valid = np.isfinite(wmap)
     if mask is not None:
-        valid &= mask.astype(bool)
+        valid = valid & mask.astype(bool)
+    if valid.all():
+        valid = valid & Z.unit_disk(wmap.shape[0])[2]
+    if not valid.any():
+        raise ValueError("map has no valid samples inside the pupil")
+    ys, xs = np.nonzero(valid)
+    cy, cx = float(ys.mean()), float(xs.mean())
+    pupil = {"center_px": [cy, cx], "radius_px": _pupil_radius(valid, cy, cx)}
+    rho, theta, _circle = pupil_grid(wmap.shape, pupil)
     B = Z.basis(scheme, nterms, rho, theta)
     A = B[:, valid].T
     y = wmap[valid]
     coeffs, *_ = np.linalg.lstsq(A, y, rcond=None)
     residual = y - A @ coeffs
-    return [float(c) for c in coeffs], float(np.sqrt(np.mean(residual**2)))
+    return [float(c) for c in coeffs], float(np.sqrt(np.mean(residual**2))), pupil
 
 
 def rms_from_coeffs(scheme: str, coeffs: list[float], exclude_low_order: bool = True) -> float:

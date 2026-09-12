@@ -14,28 +14,41 @@ import numpy as np
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import _lib.zernike as Z  # noqa: E402, RUF100
 from _lib import cli, fourier, optics  # noqa: E402, RUF100
-from _lib.wfmap import coefficients_to_map, fit_map, load_map, rms_from_coeffs  # noqa: E402, RUF100
+from _lib.wfmap import (  # noqa: E402, RUF100
+    coefficients_to_map,
+    fit_map,
+    load_map,
+    pupil_grid,
+    rms_from_coeffs,
+)
 
 TOOL = "wavefront"
 
 
 def _wavefront(parser, args, npix: int):
+    """wavefront map, pupil mask, RMS in waves, envelope inputs and the pupil circle."""
     if args.map:
         wmap_raw = load_map(args.map)
-        if wmap_raw.shape[0] != wmap_raw.shape[1]:
+        if wmap_raw.ndim != 2 or wmap_raw.shape[0] != wmap_raw.shape[1]:
             parser.error("map must be square")
-        _, _, mask = Z.unit_disk(wmap_raw.shape[0])
-        mask &= np.isfinite(wmap_raw)
-        low_order_coeffs, _ = fit_map(wmap_raw, "fringe", 3, mask=mask)
-        low_order, _ = coefficients_to_map("fringe", low_order_coeffs, npix=wmap_raw.shape[0])
+        low_order_coeffs, _resid, pupil = fit_map(wmap_raw, "fringe", 3)
+        mask = np.isfinite(wmap_raw) & pupil_grid(wmap_raw.shape, pupil)[2]
+        low_order, _ = coefficients_to_map("fringe", low_order_coeffs, npix=wmap_raw.shape[0], pupil=pupil)
         wmap = np.where(mask, wmap_raw - low_order, np.nan)
         rms = float(np.sqrt(np.nanmean(wmap[mask] ** 2)))
-        return wmap, mask, rms, {"map": args.map}
+        return wmap, mask, rms, {"map": args.map}, pupil
     if args.coeffs is None or args.scheme is None:
         parser.error("give --scheme with --coeffs, or --map")
     coeffs = cli.parse_floats(args.coeffs)
     wmap, mask = coefficients_to_map(args.scheme, coeffs, npix=npix)
-    return wmap, mask, rms_from_coeffs(args.scheme, coeffs), {"scheme": args.scheme, "coefficients": coeffs}
+    pupil = {"center_px": [(npix - 1) / 2, (npix - 1) / 2], "radius_px": npix / 2}
+    return wmap, mask, rms_from_coeffs(args.scheme, coeffs), {"scheme": args.scheme, "coefficients": coeffs}, pupil
+
+
+def _pupil_results(results, units, pupil):
+    results["normalization_radius_px"] = pupil["radius_px"]
+    results["pupil_center_px"] = pupil["center_px"]
+    units.update({"normalization_radius_px": "px", "pupil_center_px": "px (row, col)"})
 
 
 def _physical(results, units, args):
@@ -48,11 +61,12 @@ def _physical(results, units, args):
 
 
 def cmd_psf(parser, args):
-    wmap, mask, rms, inputs = _wavefront(parser, args, args.npix)
+    wmap, mask, rms, inputs, pupil = _wavefront(parser, args, args.npix)
     res = fourier.psf_from_wavefront(wmap, mask, pad=args.pad)
     results = {"strehl": res["strehl"], "rms_waves": rms, "fwhm_lambda_fnum": res["fwhm_lambda_fnum"],
                "encircled_energy_airy": res["encircled_energy_airy"], "pixel_lambda_fnum": res["pixel_lambda_fnum"]}
     units = {"rms_waves": "waves", "fwhm_lambda_fnum": "lambda*F#", "pixel_lambda_fnum": "lambda*F#"}
+    _pupil_results(results, units, pupil)
     _physical(results, units, args)
     warnings = []
     if rms <= 0.1:
@@ -70,11 +84,12 @@ def cmd_psf(parser, args):
 
 
 def cmd_mtf(parser, args):
-    wmap, mask, rms, inputs = _wavefront(parser, args, args.npix)
+    wmap, mask, rms, inputs, pupil = _wavefront(parser, args, args.npix)
     res = fourier.psf_from_wavefront(wmap, mask, pad=args.pad)
     nu, mx, my = fourier.mtf_from_psf(res["psf"], res["pixel_lambda_fnum"])
     results = {"strehl": res["strehl"], "rms_waves": rms}
     units = {"rms_waves": "waves"}
+    _pupil_results(results, units, pupil)
     warnings = []
     if args.wavelength_um is not None and args.fnum is not None:
         cutoff = optics.mtf_cutoff_cyc_per_mm(args.wavelength_um, args.fnum)

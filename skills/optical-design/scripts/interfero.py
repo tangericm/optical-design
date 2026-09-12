@@ -15,7 +15,14 @@ import numpy as np
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import _lib.zernike as Z  # noqa: E402, RUF100
 from _lib import cli  # noqa: E402, RUF100
-from _lib.wfmap import fit_map, load_map, rms_from_coeffs, terms  # noqa: E402, RUF100
+from _lib.wfmap import (  # noqa: E402, RUF100
+    LOW_ORDER,
+    fit_map,
+    load_map,
+    pupil_grid,
+    rms_from_coeffs,
+    terms,
+)
 
 TOOL = "interfero"
 ALGORITHMS = ("3step", "4step", "5step")
@@ -74,16 +81,22 @@ def cmd_fringe_to_wfe(parser, args):
     wfe = phase / (2 * math.pi) / args.passes
     results = {"passes": args.passes}
     units = {}
+    pupil = None
     if args.nterms:
-        coeffs, resid = fit_map(wfe, args.scheme, args.nterms)
-        low = [c if (n, m) in {(0, 0), (1, 1), (1, -1)} else 0.0 for c, (n, m) in zip(coeffs, Z.indices(args.scheme, len(coeffs)))]
-        rho, theta, _mask = Z.unit_disk(wfe.shape[0])
+        coeffs, resid, pupil = fit_map(wfe, args.scheme, args.nterms)
+        low = [c if (n, m) in LOW_ORDER else 0.0 for c, (n, m) in zip(coeffs, Z.indices(args.scheme, len(coeffs)))]
+        rho, theta, _circle = pupil_grid(wfe.shape, pupil)
         wfe = wfe - np.tensordot(np.asarray(low), Z.basis(args.scheme, len(low), rho, theta), axes=1)
         results.update({"coefficients": coeffs, "terms": terms(args.scheme, coeffs), "scheme": args.scheme,
-                        "rms_waves": rms_from_coeffs(args.scheme, coeffs), "fit_residual_rms_waves": resid})
-        units.update({"rms_waves": "waves", "fit_residual_rms_waves": "waves"})
-    valid = np.isfinite(wfe)
-    results["pv_waves"] = float(np.nanmax(wfe) - np.nanmin(wfe))
+                        "rms_waves": rms_from_coeffs(args.scheme, coeffs), "fit_residual_rms_waves": resid,
+                        "normalization_radius_px": pupil["radius_px"], "pupil_center_px": pupil["center_px"]})
+        units.update({"rms_waves": "waves", "fit_residual_rms_waves": "waves",
+                      "normalization_radius_px": "px", "pupil_center_px": "px (row, col)"})
+    # PV and map RMS are pupil quantities: a full square carries no NaN boundary, so the
+    # fitted circle (inscribed circle when no fit ran) bounds them instead of the canvas.
+    circle = pupil_grid(wfe.shape, pupil)[2] if pupil else Z.unit_disk(wfe.shape[0])[2]
+    valid = circle & np.isfinite(wfe)
+    results["pv_waves"] = float(np.max(wfe[valid]) - np.min(wfe[valid]))
     results["rms_map_waves"] = float(np.sqrt(np.mean((wfe[valid] - wfe[valid].mean()) ** 2)))
     units.update({"pv_waves": "waves", "rms_map_waves": "waves"})
     if args.out:
@@ -91,7 +104,7 @@ def cmd_fringe_to_wfe(parser, args):
         results["wfe_file"] = args.out
     return cli.Envelope(TOOL, "fringe-to-wfe", 0, inputs={"phase": args.phase, "passes": args.passes, "scheme": args.scheme, "nterms": args.nterms},
                         results=results, units=units,
-                        method="W = φ/(2π)/passes (passes=2 for Fizeau/Twyman-Green reflection tests); piston/tilt removed after Zernike fit")
+                        method="W = φ/(2π)/passes (passes=2 for Fizeau/Twyman-Green reflection tests); piston/tilt removed after Zernike fit; PV and map RMS over the pupil circle only")
 
 
 def cmd_cavity(parser, args):
@@ -139,7 +152,9 @@ def build_parser() -> argparse.ArgumentParser:
     add("unwrap", "2-D phase unwrapping", "unwrap --phase phase.npy --out unwrapped.npy", cmd_unwrap, unwrap)
 
     def f2w(sub):
-        sub.add_argument("--phase", required=True, help="unwrapped phase map in radians")
+        sub.add_argument("--phase", required=True,
+                         help="unwrapped phase map in radians, NaN outside the pupil, "
+                              "or a full square (inscribed circle assumed)")
         sub.add_argument("--passes", type=int, default=2)
         sub.add_argument("--scheme", choices=Z.SCHEMES, default="fringe")
         sub.add_argument("--nterms", type=int, default=37)

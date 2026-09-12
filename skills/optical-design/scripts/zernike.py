@@ -133,13 +133,17 @@ def cmd_seidel(parser, args):
 
 def cmd_fit(parser, args):
     wmap = load_map(args.map)
-    coeffs, resid = fit_map(wmap, args.scheme, args.nterms)
+    coeffs, resid, pupil = fit_map(wmap, args.scheme, args.nterms)
     return cli.Envelope(TOOL, "fit", 0,
                         inputs={"map": args.map, "scheme": args.scheme, "nterms": args.nterms, "shape": list(wmap.shape)},
                         results={"coefficients": coeffs, "terms": terms(args.scheme, coeffs), "residual_rms_waves": resid,
-                                 "rms_waves": rms_from_coeffs(args.scheme, coeffs)},
-                        units={"coefficients": "map units", "residual_rms_waves": "map units", "rms_waves": "map units"},
-                        method="Linear least squares on the inscribed unit disk; NaN samples excluded; RMS excludes piston/tilt")
+                                 "rms_waves": rms_from_coeffs(args.scheme, coeffs),
+                                 "normalization_radius_px": pupil["radius_px"], "pupil_center_px": pupil["center_px"]},
+                        units={"coefficients": "map units", "residual_rms_waves": "map units", "rms_waves": "map units",
+                               "normalization_radius_px": "px", "pupil_center_px": "px (row, col)"},
+                        method="Linear least squares over the pupil found in the valid samples (centroid + enclosing "
+                               "radius; inscribed circle for an all-finite square); coefficients are normalized to "
+                               "that radius, NaN samples excluded; RMS excludes piston/tilt")
 
 
 def build_parser() -> argparse.ArgumentParser:
