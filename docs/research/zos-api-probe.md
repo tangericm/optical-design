@@ -8,16 +8,19 @@ results back -> clean disconnect. Exit code 0, no license or .NET loading errors
 
 ## Environment
 
+Paths use `<home>` for the Windows user-profile directory and `<scratchpad>` for the
+throwaway working directory the probe ran in.
+
 - OpticStudio install: `C:\Program Files\Ansys Zemax OpticStudio 2024 R1.00` (confirmed present)
 - ZOS-API reported version (via `zos.version`): 24.1.0
 - License status (via `zos.Application.LicenseStatus`): PremiumEdition
 - Python versions available on machine: only Python 3.13.7 was installed (`py -0p` showed a single
-  interpreter, `C:\Users\erict\AppData\Local\Programs\Python\Python313\python.exe`). No 3.11/3.12
+  interpreter, `<home>\AppData\Local\Programs\Python\Python313\python.exe`). No 3.11/3.12
   were present, so no fallback was needed.
 - Python used: 3.13.7 (system interpreter, via a fresh venv) -- pythonnet 3.1.0 ships a
   cp313 wheel (`pythonnet-3.1.0-cp310.cp311.cp312.cp313.cp314-none-win32.win_amd64.whl`), so 3.13
   worked without any downgrade.
-- venv location: `C:\Users\erict\AppData\Local\Temp\claude\C--Users-erict-OneDrive-Desktop-Projects\704edb22-276c-4f8d-bbe3-a625496a44d8\scratchpad\zosprobe\.venv`
+- venv location: `<scratchpad>\zosprobe\.venv`
 - zospy version: 2.1.5
 - pythonnet version: 3.1.0
 - clr_loader version: 0.3.1
@@ -25,9 +28,9 @@ results back -> clean disconnect. Exit code 0, no license or .NET loading errors
 
 ## ZOS-API Libraries folder check
 
-- `C:\Users\erict\OneDrive\Documents\Zemax\ZOS-API\Libraries` -> exists (this is the active
+- `<home>\OneDrive\Documents\Zemax\ZOS-API\Libraries` -> exists (this is the active
   OneDrive-redirected Documents folder, and is what zospy/pythonnet actually located and used).
-- `C:\Users\erict\Documents\Zemax\ZOS-API\Libraries` -> does not exist (this machine's "Documents"
+- `<home>\Documents\Zemax\ZOS-API\Libraries` -> does not exist (this machine's "Documents"
   is redirected into OneDrive, so this plain path is expected to be absent; not an error).
 
 No `ZOSAPI_NetHelper` / native-DLL-load errors were encountered -- pythonnet's `clr_loader`
@@ -102,7 +105,7 @@ probe.py; the corrected script is the one whose output is captured above.
 
 ## Working probe.py
 
-See `C:\Users\erict\AppData\Local\Temp\claude\C--Users-erict-OneDrive-Desktop-Projects\704edb22-276c-4f8d-bbe3-a625496a44d8\scratchpad\zosprobe\probe.py`
+See `<scratchpad>\zosprobe\probe.py`
 (the exact file that produced the successful run above).
 
 ## Conclusion

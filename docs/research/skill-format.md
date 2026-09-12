@@ -1,6 +1,6 @@
 # What makes a production-grade, widely-adopted Agent Skill
 
-Sources checked locally: Anthropic `skill-creator` plugin (`C:\Users\erict\.claude\plugins\marketplaces\claude-plugins-official\plugins\skill-creator\skills\skill-creator\SKILL.md` + `references/schemas.md`), superpowers `writing-skills` SKILL.md (v6.3.0), mattpocock-skills `writing-for-agents` + `SKILL-MECHANICS.md`. Web: agentskills.io/specification, github.com/anthropics/skills, code.claude.com/docs/en/skills, vercel-labs/skills + skills.sh, obra/superpowers README.
+Sources checked locally: Anthropic `skill-creator` plugin (`<home>\.claude\plugins\marketplaces\claude-plugins-official\plugins\skill-creator\skills\skill-creator\SKILL.md` + `references/schemas.md`), superpowers `writing-skills` SKILL.md (v6.3.0), mattpocock-skills `writing-for-agents` + `SKILL-MECHANICS.md`. Web: agentskills.io/specification, github.com/anthropics/skills, code.claude.com/docs/en/skills, vercel-labs/skills + skills.sh, obra/superpowers README.
 
 ---
 
