@@ -1,0 +1,34 @@
+[project]
+name = "optical-design-dev"
+version = "0.0.0"
+description = "Development environment for the optical-design skill scripts (not published)."
+requires-python = ">=3.11"
+dependencies = []
+
+[dependency-groups]
+dev = [
+  "pytest>=8.3",
+  "numpy>=1.26",
+  "scipy>=1.11",
+  "scikit-image>=0.22",
+  "ruff>=0.5",
+]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests/python"]
+markers = [
+  "tier1: needs optiland",
+  "zos: needs Windows and Ansys Zemax OpticStudio with ZOS-API",
+  "uv: runs a script through `uv run` (PEP 723)",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+extend-exclude = ["docs"]
+
+[tool.ruff.lint]
+ignore = ["E501"]
