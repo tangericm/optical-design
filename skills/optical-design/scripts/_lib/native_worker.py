@@ -39,6 +39,8 @@ def _invalidate_artifact(argv, payload, reason):
             if report != payload.get('report'):
                 return
             report.update(status='failed', saved_candidate_verified=False, native_process_error=reason)
+            if 'reference_validated' in report:
+                report['reference_validated'] = False
             path.write_text(json.dumps(report, indent=2, allow_nan=False), encoding='utf-8')
             (directory / 'failure.json').write_text(json.dumps(
                 {'status': 'failed', 'stage': 'native_process_shutdown', 'error': reason}, indent=2), encoding='utf-8')
@@ -73,6 +75,7 @@ def run_worker(script, argv):
                     expected = 0 if report['available'] is True else 3
                 else:
                     expected = {'improved': 0, 'requirements_met': 0, 'completed': 0,
+                                'benchmark_passed': 0, 'benchmark_failed': 1,
                                 'requirements_not_met': 1, 'no_acceptable_improvement': 1}.get(report.get('status'))
                 if result.returncode != expected:
                     reason = f'native process exit {result.returncode} inconsistent with result; acceptance invalidated'

@@ -28,6 +28,9 @@ try {
     "skills/optical-design/scripts/catalog.py", "skills/optical-design/scripts/_lib/design_jobs.py",
     "skills/optical-design/scripts/_lib/zos_backend.py", "skills/optical-design/scripts/_lib/optiland_backend.py",
     "skills/optical-design/scripts/_lib/tolerancing.py", "skills/optical-design/references/design-workflow.md",
+    "skills/optical-design/scripts/benchmark.py", "skills/optical-design/scripts/_lib/profile_benchmark.py",
+    "skills/optical-design/scripts/_lib/native_profiles.py", "skills/optical-design/scripts/_lib/profiles.py",
+    "skills/optical-design/references/profile-benchmark.md",
     "skills/optical-design/assets/refocus-spec.json", "skills/optical-design/assets/portable-singlet.json",
     "docs/tiers.md", "docs/install.md", "LICENSE", "README.md", "SECURITY.md"]) {
     assert.ok(files.includes(required), `Missing package file: ${required}`);

@@ -9,7 +9,7 @@ compatibility: Python 3.11+ and uv. Portable prescription jobs require Optiland 
 metadata:
   author: Eric Tang
   repo: https://github.com/tangericm/optical-design
-  version: "0.1.0-dev.1"
+  version: "0.1.0-dev.2"
 ---
 
 # optical-design
@@ -29,12 +29,17 @@ units and analysis settings. Distinguish measured performance from estimates and
 | Improve focus within authorized travel | `scripts/design.py refocus` | [Optimization](references/optimization.md) |
 | Sensitivity or seeded Monte Carlo | `scripts/design.py tolerance` | [Tolerancing](references/tolerancing.md) |
 | Local stock-lens shortlist | `scripts/catalog.py validate` / `match` | [Specifications and catalog schema](references/specifications.md) |
+| Reproduce native Huygens/POP intensity profiles on unchanged models | `scripts/benchmark.py` | [Profile benchmark contract](references/profile-benchmark.md) |
 | Numerical equivalence | `scripts/compare.py` | [Comparison boundaries](references/design-workflow.md#comparison) |
 
-These are bounded sequential-imaging workflows. General multi-variable redesign, live GUI
-attachment, non-sequential/stray-light analysis, polarization, coatings optimization,
-thermal/structural coupling, manufacturing release and automatic web-catalog import are
-outside the shipped adapters. Answer supported parts and state what needs another tool.
+Prescription audit/refocus/tolerance adapters remain restricted to centered spherical/plane
+sequential systems and scalar analyses. The separate native profile backend can analyze
+complex surfaces and enable native polarization in mm, single-configuration sequential
+models; its POP launch is an explicitly seeded Gaussian waist. This does not establish
+general validity for arbitrary prescriptions, beam launches or polarization models.
+General multi-variable redesign, live GUI attachment, non-sequential/stray-light analysis,
+coatings optimization, thermal/structural coupling, manufacturing release and automatic
+web-catalog import remain outside these workflows.
 
 ## Run and interpret
 
@@ -62,6 +67,13 @@ acceptable refocus improvement; 2 usage; 3 missing engine/dependency; 4 analysis
 Tolerance completion (0) does not imply every trial passed. Inspect the report's yield.
 After a failed job, inspect `failure.json`; use a fresh output directory for a retry.
 
+For a profile benchmark, pin model/reference hashes and every case's analysis settings.
+Analyze a copy in an owned native session without saving prescription changes. A run without
+a reference can complete with `reference_validated: false`; completion is not validation.
+Reference agreement establishes same-method numerical reproduction, not design acceptance.
+Preserve native coordinate pitch and inspect threshold/ROI sampling status before interpreting
+width or flatness. See [profile units and limitations](references/profile-benchmark.md).
+
 ## Scientific checks that change decisions
 
 - State pupil geometry and amplitude, coherence, wavelength, image/object-space convention,
@@ -85,6 +97,11 @@ After a failed job, inspect `failure.json`; use a fresh output directory for a r
 - Geometric RMS spot radius, PSF width, Strehl and MTF are different metrics. Compare
   identical field/wavelength/axis/frequency and sampling settings, then assess the actual
   requirement. A visually attractive spot or nominal diffraction limit does not prove yield.
+- An illumination intensity cut, a point-image PSF and an integrated marginal answer
+  different questions. Huygens central cuts are normalized; POP cuts retain absolute
+  irradiance. Combine incoherent spectral intensities with declared weights before peak
+  normalization. Interpolated coordinates add no native spatial resolution, and a partially
+  covered flatness ROI cannot support the full-ROI requirement.
 
 ## Representative start
 

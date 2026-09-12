@@ -47,3 +47,24 @@ with open(os.environ['OPTICAL_DESIGN_WORKER_RESULT'],'w') as f: f.write('{')
 ''')
     assert run_worker(worker, []) == 4
     assert 'invalid' in capsys.readouterr().err.lower()
+
+
+def test_native_crash_clears_benchmark_acceptance_without_erasing_provenance(tmp_path, capsys):
+    out = tmp_path / 'job'
+    out.mkdir()
+    report = {'status': 'benchmark_passed', 'reference_validated': True,
+              'saved_candidate_verified': True, 'reference_integrity_verified': True,
+              'reference_supplied': True, 'source_unchanged': True}
+    (out / 'report.json').write_text(json.dumps(report))
+    worker = tmp_path / 'engine.py'
+    payload = {'report': report, 'as_json': True, 'summary': 'benchmark_passed'}
+    worker.write_text('import json,os\nfrom pathlib import Path\n'
+                      f'Path(os.environ["OPTICAL_DESIGN_WORKER_RESULT"]).write_text(json.dumps({payload!r}))\n'
+                      'os._exit(7)\n')
+    assert run_worker(worker, ['--out', str(out)]) == 4
+    assert not capsys.readouterr().out
+    result = json.loads((out / 'report.json').read_text())
+    assert result['status'] == 'failed'
+    assert result['reference_validated'] is False and result['saved_candidate_verified'] is False
+    assert result['source_unchanged'] is True and result['reference_integrity_verified'] is True
+    assert json.loads((out / 'failure.json').read_text())['stage'] == 'native_process_shutdown'

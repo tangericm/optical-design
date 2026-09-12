@@ -4,3 +4,5 @@
 *.zmx binary
 skills/optical-design/assets/portable-singlet.json -text whitespace=cr-at-eol
 docs/research/copilot-live/*/*.json -text whitespace=cr-at-eol
+docs/research/real-benchmark/**/*.json -text whitespace=cr-at-eol
+docs/research/real-benchmark/*.json -text whitespace=cr-at-eol

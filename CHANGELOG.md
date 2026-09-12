@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+### 0.1.0-dev.2
+
+- Add strict, source-preserving Huygens/POP profile benchmarks with native settings
+  readback, reference coverage checks, dependency hashes and failure receipts.
+- Add interpolated intensity widths, fixed-ROI diagnostics and absolute spectral
+  sums with explicit sampling and cut-position provenance.
+- Separate complex native illumination analysis from the restricted spherical
+  optimization adapters; retain real-design reference and live validation evidence.
+
 ### 0.1.0-dev.1
 
 - Fix explicit pupil scaling, matched-pupil MTF references, defocus approximation diagnostics,
