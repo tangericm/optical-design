@@ -1,0 +1,33 @@
+{
+  "name": "optical-design",
+  "version": "0.1.0-dev.0",
+  "description": "Agent skill for optical design review, analysis and optimization, with Zemax OpticStudio interoperability.",
+  "type": "module",
+  "files": [
+    "skills",
+    "docs/install.md",
+    "docs/tiers.md",
+    "docs/compatibility.md",
+    "SECURITY.md",
+    "CONTRIBUTING.md"
+  ],
+  "scripts": {
+    "test": "vitest run",
+    "lint:skills": "skillcrit lint . --fail-on error",
+    "verify:package": "node scripts/verify-package.mjs"
+  },
+  "engines": { "node": ">=22" },
+  "license": "MIT",
+  "author": "Eric Tang <eric.tang22@gmail.com>",
+  "homepage": "https://github.com/tangericm/optical-design#readme",
+  "bugs": { "url": "https://github.com/tangericm/optical-design/issues" },
+  "repository": { "type": "git", "url": "git+https://github.com/tangericm/optical-design.git" },
+  "keywords": ["agent-skills", "ai-agents", "optics", "optical-design", "lens-design", "zemax", "opticstudio", "psf", "mtf", "zernike", "oct", "microscopy", "interferometry"],
+  "devDependencies": {
+    "@types/node": "^26.4.1",
+    "gray-matter": "^4.0.3",
+    "skillcrit": "^0.6.0",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.0"
+  }
+}
