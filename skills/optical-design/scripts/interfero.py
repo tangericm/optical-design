@@ -124,7 +124,9 @@ def cmd_cavity(parser, args):
     return cli.Envelope(TOOL, "cavity", 0,
                         inputs={"gap_mm": args.gap_mm, "wavelength_um": args.wavelength_um, "tilt_arcsec": args.tilt_arcsec, "linewidth_nm": args.linewidth_nm},
                         results=results, units=units, warnings=warnings,
-                        method="Double-pass cavity: OPD = 2·gap; tilt fringe spacing λ/(2 tan θ); coherence length λ²/Δλ (Malacara ch. 1)")
+                        method="Double-pass cavity: OPD = 2·gap; tilt fringe spacing λ/(2 tan θ); coherence length "
+                               "λ²/Δλ for a source of linewidth Δλ (Malacara ch. 1). resolve.py oct-axial reports the "
+                               "Gaussian-spectrum FWHM coherence length instead, smaller by 2 ln2/π ≈ 0.44")
 
 
 def build_parser() -> argparse.ArgumentParser:

@@ -65,6 +65,7 @@ def test_cavity(run_json):
     assert r["coherence_length_mm"] == pytest.approx(400.4, rel=1e-3)   # λ²/Δλ = 0.4004 µm² / 1e-6 µm = 400.4 mm
     assert r["opd_mm"] == pytest.approx(10.0)
     assert out["warnings"] == []
+    assert "oct-axial" in out["method"]      # names the other coherence-length convention
 
 
 def test_fringe_to_wfe_missing_phase_exits_4(run, tmp_path):

@@ -120,9 +120,13 @@ def cmd_oct_axial(parser, args):
     dz = optics.oct_axial_resolution(args.center_wavelength_um, args.bandwidth_nm * 1e-3, args.n)
     return cli.Envelope(TOOL, "oct-axial", 0,
                         inputs={"center_wavelength_um": args.center_wavelength_um, "bandwidth_nm": args.bandwidth_nm, "n": args.n},
-                        results={"axial_resolution_um": dz, "coherence_length_um": 2 * dz * args.n},
-                        units={"axial_resolution_um": "um", "coherence_length_um": "um"},
-                        method="Δz = (2 ln2/π) λ0²/Δλ / n, Gaussian spectrum FWHM Δλ (Drexler & Fujimoto, OCT, ch. 2)")
+                        results={"axial_resolution_um": dz, "coherence_length_um": dz * args.n,
+                                 "round_trip_opd_um": 2 * dz * args.n},
+                        units={"axial_resolution_um": "um", "coherence_length_um": "um", "round_trip_opd_um": "um"},
+                        method="Δz = (2 ln2/π) λ0²/Δλ / n, Gaussian spectrum FWHM Δλ; the Gaussian FWHM coherence "
+                               "length l_c = Δz·n is the free-space value of that resolution, and the round-trip OPD it "
+                               "spans is 2·l_c (Drexler & Fujimoto, OCT, ch. 2). This is not the λ²/Δλ "
+                               "coherence length interfero.py cavity reports, which is larger by π/(2 ln2) ≈ 2.27")
 
 
 def cmd_oct_lateral(parser, args):

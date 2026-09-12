@@ -69,6 +69,17 @@ def test_oct_axial(run_json):
     assert out_t["results"]["axial_resolution_um"] == pytest.approx(6.227 / 1.38, rel=1e-3)
 
 
+def test_oct_axial_coherence_length_is_the_gaussian_definition(run_json):
+    out = run_json(resolve.main, ["oct-axial", "--center-wavelength-um", "0.84", "--bandwidth-nm", "50", "--n", "1.38"])
+    r = out["results"]
+    dz = r["axial_resolution_um"]
+    # Gaussian-spectrum FWHM coherence length is the axial resolution in the medium;
+    # the round-trip OPD that resolution corresponds to is twice it.
+    assert r["coherence_length_um"] == pytest.approx(dz * 1.38, rel=1e-12)
+    assert r["round_trip_opd_um"] == pytest.approx(2 * dz * 1.38, rel=1e-12)
+    assert "Gaussian" in out["method"] and "cavity" in out["method"]
+
+
 def test_oct_lateral(run_json):
     out = run_json(resolve.main, ["oct-lateral", "--wavelength-um", "0.84", "--focal-mm", "36", "--beam-diameter-mm", "3"])
     # 4 λ f / (π D) = 4·0.84e-3·36/(π·3) mm = 12.83 µm ; b = π Δx²/(2λ) = 0.3079 mm
