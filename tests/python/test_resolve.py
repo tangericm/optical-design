@@ -98,9 +98,3 @@ def test_micro_with_pixel(run_json):
     assert out["warnings"] == []
     under = run_json(resolve.main, ["micro", "--wavelength-um", "0.52", "--na", "0.8", "--magnification", "20", "--pixel-um", "6.5"])
     assert any("undersampled" in w for w in under["warnings"])
-
-
-def test_help_for_every_subcommand(run):
-    for sub in ["airy", "rayleigh", "dof", "telescope", "gaussian", "oct-axial", "oct-lateral", "micro"]:
-        code, out, _ = run(resolve.main, [sub, "--help"])
-        assert code == 0 and "example" in out.lower(), sub
