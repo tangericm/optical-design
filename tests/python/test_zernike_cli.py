@@ -19,6 +19,14 @@ def test_convert_noll_to_ansi_keeps_wavefront(run_json):
     assert c[3] == pytest.approx(0.3) and c[5] == pytest.approx(0.1)
 
 
+def test_convert_default_nterms_covers_all_source_terms(run_json):
+    # only Fringe Z9 (spherical, (4,0)) is nonzero; Noll needs 11 terms to reach (4,0)
+    out = run_json(zernike.main, ["convert", "--from", "fringe", "--to", "noll", "--coeffs", "0,0,0,0,0,0,0,0,0.1"])
+    c = out["results"]["coefficients"]
+    assert len(c) == 11 and c[10] == pytest.approx(0.1 / math.sqrt(5))
+    assert out["warnings"] == []
+
+
 def test_convert_warns_on_unmapped_terms(run_json):
     out = run_json(zernike.main, ["convert", "--from", "fringe", "--to", "noll", "--nterms", "4", "--coeffs", "0,0,0,0,0,0,0,0,0.1"])
     assert any("dropped" in w for w in out["warnings"])

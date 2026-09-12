@@ -43,11 +43,28 @@ def _terms(scheme: str, coeffs: list[float]):
             for i, (c, (n, m)) in enumerate(zip(coeffs, Z.indices(scheme, len(coeffs))))]
 
 
+def _default_nterms(dst: str, coeffs: list[float], src_idx: list[tuple[int, int]]) -> int:
+    """Smallest destination term count covering every (n, m) with a nonzero source
+    coefficient, never less than len(coeffs). Searches a generous bound of destination
+    indices (37 is the whole fringe scheme; 400 comfortably covers noll/ansi radial orders)."""
+    needed = {nm for c, nm in zip(coeffs, src_idx) if c != 0.0}
+    bound = 37 if dst == "fringe" else 400
+    dst_bound_idx = Z.indices(dst, bound)
+    covering = 0
+    for nm in needed:
+        if nm in dst_bound_idx:
+            covering = max(covering, dst_bound_idx.index(nm) + 1)
+    nterms = max(len(coeffs), covering, 1)
+    if dst == "fringe":
+        nterms = min(nterms, 37)
+    return nterms
+
+
 def cmd_convert(parser, args):
     src, dst = args.from_scheme, args.to_scheme
     coeffs = cli.parse_floats(args.coeffs)
     src_idx = Z.indices(src, len(coeffs))
-    nterms = args.nterms or (37 if dst == "fringe" else max(len(coeffs), 1))
+    nterms = args.nterms or _default_nterms(dst, coeffs, src_idx)
     dst_idx = Z.indices(dst, nterms)
     lookup = {nm: i for i, nm in enumerate(dst_idx)}
     out = [0.0] * len(dst_idx)
@@ -83,7 +100,7 @@ def cmd_rms(parser, args):
                         inputs={"scheme": args.scheme, "coefficients": coeffs, "include_low_order": args.include_low_order},
                         results={"rms_waves": rms, "pv_waves": pv, "per_term_rms": contributions},
                         units={"rms_waves": "waves", "pv_waves": "waves"},
-                        method="RMS = √Σ(c_j/N_j)² over the unit disk (orthogonality); piston and tilt excluded unless --include-low-order; PV sampled on 256² grid")
+                        method="RMS = √Σ(c_j/N_j)² over the unit disk (orthogonality); piston and tilt excluded unless --include-low-order; PV sampled on 256² grid (Noll 1976; Wyant & Creath 1992)")
 
 
 def load_map(path: str) -> np.ndarray:
