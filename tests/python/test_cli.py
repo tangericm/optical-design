@@ -31,6 +31,14 @@ def test_require_exits_3_for_missing_module(capsys):
     assert "pip install nothing" in capsys.readouterr().err
 
 
+def test_fail_writes_error_and_exits_with_the_given_code(capsys):
+    with pytest.raises(SystemExit) as e:
+        cli.fail("map has no valid samples", cli.EXIT_ANALYSIS)
+    assert e.value.code == cli.EXIT_ANALYSIS
+    err = capsys.readouterr().err
+    assert err.startswith("error:") and "map has no valid samples" in err
+
+
 def test_require_returns_module():
     assert cli.require("json", "") is json
 

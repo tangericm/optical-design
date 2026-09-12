@@ -167,9 +167,9 @@ def build_parser() -> argparse.ArgumentParser:
         sub.set_defaults(func=func, sub=sub)
 
     def aperture(sub):
-        sub.add_argument("--wavelength-um", type=float, required=True)
-        sub.add_argument("--fnum", type=float)
-        sub.add_argument("--na", type=float)
+        sub.add_argument("--wavelength-um", type=cli.positive_float, required=True)
+        sub.add_argument("--fnum", type=cli.positive_float)
+        sub.add_argument("--na", type=cli.positive_float)
 
     add("airy", "Airy disk radius/diameter and FWHM", "airy --wavelength-um 0.55 --fnum 4", cmd_airy, aperture)
     add("rayleigh", "Rayleigh, Abbe and Sparrow two-point resolution", "rayleigh --wavelength-um 0.5 --na 0.5", cmd_rayleigh, aperture)
@@ -180,48 +180,44 @@ def build_parser() -> argparse.ArgumentParser:
     add("dof", "Depth of focus (diffraction and geometric)", "dof --wavelength-um 0.55 --fnum 4", cmd_dof, dof)
 
     def telescope(sub):
-        sub.add_argument("--diameter-mm", type=float, required=True)
-        sub.add_argument("--wavelength-um", type=float, default=0.55)
+        sub.add_argument("--diameter-mm", type=cli.positive_float, required=True)
+        sub.add_argument("--wavelength-um", type=cli.positive_float, default=0.55)
     add("telescope", "Angular resolution: Rayleigh and Dawes", "telescope --diameter-mm 100", cmd_telescope, telescope)
 
     def gaussian(sub):
-        sub.add_argument("--wavelength-um", type=float, required=True)
-        sub.add_argument("--w0-um", type=float, help="waist radius (1/e²)")
+        sub.add_argument("--wavelength-um", type=cli.positive_float, required=True)
+        sub.add_argument("--w0-um", type=cli.positive_float, help="waist radius (1/e²)")
         sub.add_argument("--z-mm", type=float, help="distance from waist for w(z)")
-        sub.add_argument("--input-w-mm", type=float, help="collimated input 1/e² radius at the lens")
-        sub.add_argument("--focal-mm", type=float)
+        sub.add_argument("--input-w-mm", type=cli.positive_float, help="collimated input 1/e² radius at the lens")
+        sub.add_argument("--focal-mm", type=cli.positive_float)
         sub.add_argument("--m2", type=float, default=1.0)
     add("gaussian", "Gaussian beam waist, Rayleigh range, divergence, focused spot", "gaussian --wavelength-um 0.85 --input-w-mm 1 --focal-mm 50", cmd_gaussian, gaussian)
 
     def oct_axial(sub):
-        sub.add_argument("--center-wavelength-um", type=float, required=True)
-        sub.add_argument("--bandwidth-nm", type=float, required=True, help="FWHM spectral bandwidth")
+        sub.add_argument("--center-wavelength-um", type=cli.positive_float, required=True)
+        sub.add_argument("--bandwidth-nm", type=cli.positive_float, required=True, help="FWHM spectral bandwidth")
         sub.add_argument("--n", type=float, default=1.0, help="tissue refractive index")
     add("oct-axial", "OCT axial resolution from source bandwidth", "oct-axial --center-wavelength-um 0.84 --bandwidth-nm 50", cmd_oct_axial, oct_axial)
 
     def oct_lateral(sub):
-        sub.add_argument("--wavelength-um", type=float, required=True)
-        sub.add_argument("--focal-mm", type=float, required=True)
-        sub.add_argument("--beam-diameter-mm", type=float, required=True, help="1/e² beam diameter at the objective")
+        sub.add_argument("--wavelength-um", type=cli.positive_float, required=True)
+        sub.add_argument("--focal-mm", type=cli.positive_float, required=True)
+        sub.add_argument("--beam-diameter-mm", type=cli.positive_float, required=True, help="1/e² beam diameter at the objective")
     add("oct-lateral", "OCT lateral spot and confocal parameter", "oct-lateral --wavelength-um 0.84 --focal-mm 36 --beam-diameter-mm 3", cmd_oct_lateral, oct_lateral)
 
     def micro(sub):
-        sub.add_argument("--wavelength-um", type=float, required=True)
-        sub.add_argument("--na", type=float, required=True)
+        sub.add_argument("--wavelength-um", type=cli.positive_float, required=True)
+        sub.add_argument("--na", type=cli.positive_float, required=True)
         sub.add_argument("--n", type=float, default=1.0, help="immersion index")
         sub.add_argument("--magnification", type=float)
-        sub.add_argument("--pixel-um", type=float, help="camera pixel pitch")
+        sub.add_argument("--pixel-um", type=cli.positive_float, help="camera pixel pitch")
     add("micro", "Microscope lateral/axial resolution and Nyquist pixel", "micro --wavelength-um 0.52 --na 0.8 --magnification 40 --pixel-um 6.5", cmd_micro, micro)
 
     return parser
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = build_parser()
-    args = parser.parse_args(argv)
-    env = args.func(args.sub, args)
-    cli.emit(env, as_json=args.json)
-    return cli.EXIT_OK
+    return cli.run(build_parser, argv)
 
 
 if __name__ == "__main__":

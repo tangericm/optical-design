@@ -91,6 +91,8 @@ def cmd_rms(parser, args):
 def cmd_strehl(parser, args):
     if args.rms_waves is None and args.coeffs is None:
         parser.error("give --rms-waves or --scheme with --coeffs")
+    if args.rms_waves is None and args.scheme is None:
+        parser.error("--coeffs needs --scheme: a coefficient means nothing without its scheme")
     rms = args.rms_waves if args.rms_waves is not None else rms_from_coeffs(args.scheme, cli.parse_floats(args.coeffs))
     marechal, extended = strehl_pair(rms)
     warnings = []
@@ -188,11 +190,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = build_parser()
-    args = parser.parse_args(argv)
-    env = args.func(args.sub, args)
-    cli.emit(env, as_json=args.json)
-    return cli.EXIT_OK
+    return cli.run(build_parser, argv)
 
 
 if __name__ == "__main__":

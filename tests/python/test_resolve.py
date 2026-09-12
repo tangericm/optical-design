@@ -15,6 +15,11 @@ def test_airy_requires_fnum_or_na(run):
     assert code == 2 and "fnum" in err.lower()
 
 
+def test_nonpositive_aperture_is_a_usage_error(run):
+    code, _, err = run(resolve.main, ["airy", "--wavelength-um", "0.55", "--na", "0"])
+    assert code == 2 and "na" in err.lower()
+
+
 def test_rayleigh_reports_three_criteria(run_json):
     out = run_json(resolve.main, ["rayleigh", "--wavelength-um", "0.5", "--na", "0.5"])
     r = out["results"]

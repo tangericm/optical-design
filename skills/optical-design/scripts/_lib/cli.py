@@ -95,6 +95,37 @@ def fail(message: str, code: int = EXIT_ANALYSIS) -> NoReturn:
     sys.exit(code)
 
 
+def positive_float(text: str) -> float:
+    """argparse type for a physical quantity that must be strictly positive."""
+    try:
+        value = float(text)
+    except ValueError:
+        raise argparse.ArgumentTypeError(f"invalid float value: {text!r}") from None
+    if not value > 0:
+        raise argparse.ArgumentTypeError(f"must be greater than 0, got {text}")
+    return value
+
+
+def run(build_parser, argv: list[str] | None = None) -> int:
+    """Parse argv, run the subcommand, emit the envelope; map failures to exit codes.
+
+    ValueError (bad scheme, non-square map, wrong frame count) is a usage error (2);
+    unreadable or unparseable input files are an analysis failure (4).
+    """
+    parser = build_parser()
+    args = parser.parse_args(argv)
+    try:
+        env = args.func(args.sub, args)
+    except json.JSONDecodeError as e:                       # subclass of ValueError
+        fail(f"could not parse JSON input: {e}", EXIT_ANALYSIS)
+    except ValueError as e:
+        parser.error(str(e))
+    except OSError as e:
+        fail(f"could not read input: {e}", EXIT_ANALYSIS)
+    emit(env, as_json=args.json)
+    return EXIT_OK
+
+
 def common_parser() -> argparse.ArgumentParser:
     parent = argparse.ArgumentParser(add_help=False)
     parent.add_argument("--json", action="store_true", help="emit the JSON envelope instead of a table")

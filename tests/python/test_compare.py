@@ -40,3 +40,17 @@ def test_missing_keys_are_reported(run, tmp_path):
     _code, out, _ = run(compare.main, [a, b, "--json"])
     data = json.loads(out)
     assert set(data["results"]["only_in_a"]) == {"results.only_a"} and set(data["results"]["only_in_b"]) == {"results.only_b"}
+
+
+def test_missing_file_exits_4(run, tmp_path):
+    a = _write(tmp_path, "a.json", {"strehl": 0.8})
+    code, _, err = run(compare.main, [a, str(tmp_path / "nosuch.json")])
+    assert code == 4 and err.startswith("error:")
+
+
+def test_invalid_json_exits_4(run, tmp_path):
+    a = _write(tmp_path, "a.json", {"strehl": 0.8})
+    bad = tmp_path / "bad.json"
+    bad.write_text("{not json", encoding="utf-8")
+    code, _, err = run(compare.main, [a, str(bad)])
+    assert code == 4 and err.startswith("error:")

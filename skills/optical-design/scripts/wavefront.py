@@ -147,8 +147,8 @@ def build_parser() -> argparse.ArgumentParser:
         sub.add_argument("--scheme", choices=Z.SCHEMES)
         sub.add_argument("--coeffs", help="Zernike coefficients in waves")
         sub.add_argument("--map", help=".npy/.csv wavefront map in waves, NaN outside pupil")
-        sub.add_argument("--wavelength-um", type=float)
-        sub.add_argument("--fnum", type=float)
+        sub.add_argument("--wavelength-um", type=cli.positive_float)
+        sub.add_argument("--fnum", type=cli.positive_float)
         sub.add_argument("--npix", type=int, default=128, help="pupil samples across (coefficient input)")
         sub.add_argument("--pad", type=int, default=8, help="FFT zero-padding factor")
 
@@ -159,24 +159,20 @@ def build_parser() -> argparse.ArgumentParser:
 
     def mtf(sub):
         source(sub)
-        sub.add_argument("--pixel-um", type=float, help="detector pitch, adds MTF at Nyquist")
+        sub.add_argument("--pixel-um", type=cli.positive_float, help="detector pitch, adds MTF at Nyquist")
         sub.add_argument("--freqs", help="comma list of cyc/mm to report")
     add("mtf", "MTF curve with diffraction-limit comparison", "mtf --scheme noll --coeffs 0 --wavelength-um 0.5 --fnum 4 --pixel-um 5 --freqs 50,100", cmd_mtf, mtf)
 
     def sample(sub):
-        sub.add_argument("--wavelength-um", type=float, required=True)
-        sub.add_argument("--fnum", type=float, required=True)
-        sub.add_argument("--pixel-um", type=float, required=True)
+        sub.add_argument("--wavelength-um", type=cli.positive_float, required=True)
+        sub.add_argument("--fnum", type=cli.positive_float, required=True)
+        sub.add_argument("--pixel-um", type=cli.positive_float, required=True)
     add("sample-check", "Detector sampling Q vs. optical cutoff", "sample-check --wavelength-um 0.5 --fnum 4 --pixel-um 1", cmd_sample_check, sample)
     return parser
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = build_parser()
-    args = parser.parse_args(argv)
-    env = args.func(args.sub, args)
-    cli.emit(env, as_json=args.json)
-    return cli.EXIT_OK
+    return cli.run(build_parser, argv)
 
 
 if __name__ == "__main__":

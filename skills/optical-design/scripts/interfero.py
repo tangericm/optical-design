@@ -53,10 +53,7 @@ def psi_phase(frames: np.ndarray, algorithm: str) -> np.ndarray:
 
 def cmd_psi(parser, args):
     frames = np.load(args.frames)
-    try:
-        phase = psi_phase(frames, args.algorithm)
-    except ValueError as e:
-        parser.error(str(e))
+    phase = psi_phase(frames, args.algorithm)   # wrong frame count -> ValueError -> exit 2
     np.save(args.out, phase)
     return cli.Envelope(TOOL, "psi", 0, inputs={"frames": args.frames, "algorithm": args.algorithm, "n_frames": int(frames.shape[0])},
                         results={"phase_file": args.out, "shape": list(phase.shape), "wrapped": True},
@@ -162,8 +159,8 @@ def build_parser() -> argparse.ArgumentParser:
     add("fringe-to-wfe", "Phase map to wavefront error, with Zernike fit", "fringe-to-wfe --phase unwrapped.npy --passes 2 --nterms 37", cmd_fringe_to_wfe, f2w)
 
     def cavity(sub):
-        sub.add_argument("--gap-mm", type=float, required=True)
-        sub.add_argument("--wavelength-um", type=float, required=True)
+        sub.add_argument("--gap-mm", type=cli.positive_float, required=True)
+        sub.add_argument("--wavelength-um", type=cli.positive_float, required=True)
         sub.add_argument("--tilt-arcsec", type=float)
         sub.add_argument("--linewidth-nm", type=float)
     add("cavity", "Fizeau/Twyman-Green cavity OPD, tilt fringes, coherence check", "cavity --gap-mm 5 --wavelength-um 0.6328 --tilt-arcsec 10 --linewidth-nm 0.001", cmd_cavity, cavity)
@@ -171,11 +168,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = build_parser()
-    args = parser.parse_args(argv)
-    env = args.func(args.sub, args)
-    cli.emit(env, as_json=args.json)
-    return cli.EXIT_OK
+    return cli.run(build_parser, argv)
 
 
 if __name__ == "__main__":

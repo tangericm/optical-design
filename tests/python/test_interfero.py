@@ -65,3 +65,13 @@ def test_cavity(run_json):
     assert r["coherence_length_mm"] == pytest.approx(400.4, rel=1e-3)   # λ²/Δλ = 0.4004 µm² / 1e-6 µm = 400.4 mm
     assert r["opd_mm"] == pytest.approx(10.0)
     assert out["warnings"] == []
+
+
+def test_fringe_to_wfe_missing_phase_exits_4(run, tmp_path):
+    code, _, err = run(interfero.main, ["fringe-to-wfe", "--phase", str(tmp_path / "nosuch.npy")])
+    assert code == 4 and err.startswith("error:")
+
+
+def test_cavity_rejects_nonpositive_gap(run):
+    code, _, err = run(interfero.main, ["cavity", "--gap-mm", "0", "--wavelength-um", "0.6328"])
+    assert code == 2 and "gap" in err.lower()

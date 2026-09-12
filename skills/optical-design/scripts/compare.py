@@ -4,7 +4,8 @@
 # ///
 """Compare two JSON envelopes (tier vs tier, before vs after) with tolerances (Tier 0).
 
-Exit 0 when every shared numeric value is within tolerance, 1 otherwise.
+Exit 0 when every shared numeric value is within tolerance, 1 otherwise; 2 usage,
+4 when an input file cannot be read or parsed.
 """
 from __future__ import annotations
 
@@ -44,8 +45,13 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--section", default="results", help="top-level key to compare (default results; use '' for all)")
     args = parser.parse_args(argv)
 
-    da = json.loads(Path(args.a).read_text(encoding="utf-8"))
-    db = json.loads(Path(args.b).read_text(encoding="utf-8"))
+    try:
+        da = json.loads(Path(args.a).read_text(encoding="utf-8"))
+        db = json.loads(Path(args.b).read_text(encoding="utf-8"))
+    except json.JSONDecodeError as e:
+        cli.fail(f"could not parse JSON input: {e}", cli.EXIT_ANALYSIS)
+    except OSError as e:
+        cli.fail(f"could not read input: {e}", cli.EXIT_ANALYSIS)
     if args.section:
         da, db = {args.section: da.get(args.section, {})}, {args.section: db.get(args.section, {})}
     fa, fb = flatten(da), flatten(db)

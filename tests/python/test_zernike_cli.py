@@ -115,3 +115,25 @@ def test_fit_accepts_csv_with_nan_outside_pupil(run_json, tmp_path):
     np.savetxt(path, wmap, delimiter=",")
     out = run_json(zernike.main, ["fit", "--map", str(path), "--scheme", "noll", "--nterms", "11"])
     assert out["results"]["coefficients"][8] == pytest.approx(0.1, abs=1e-6)
+
+
+def test_strehl_without_scheme_is_a_usage_error(run):
+    code, _, err = run(zernike.main, ["strehl", "--coeffs", "0,0,0,0.1"])
+    assert code == 2 and "scheme" in err.lower()
+
+
+def test_convert_beyond_the_fringe_scheme_is_a_usage_error(run):
+    code, _, err = run(zernike.main, ["convert", "--from", "noll", "--to", "fringe", "--nterms", "40", "--coeffs", "0"])
+    assert code == 2 and "37" in err
+
+
+def test_fit_missing_map_exits_4(run, tmp_path):
+    code, _, err = run(zernike.main, ["fit", "--map", str(tmp_path / "nosuch.npy")])
+    assert code == 4 and err.startswith("error:")
+
+
+def test_fit_non_square_map_is_a_usage_error(run, tmp_path):
+    path = tmp_path / "bad.npy"
+    np.save(path, np.zeros((64, 32)))
+    code, _, err = run(zernike.main, ["fit", "--map", str(path)])
+    assert code == 2 and "square" in err
