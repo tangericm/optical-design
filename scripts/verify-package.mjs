@@ -24,11 +24,17 @@ try {
     "skills/optical-design/scripts/_lib/cli.py", "skills/optical-design/scripts/resolve.py",
     "skills/optical-design/scripts/zernike.py", "skills/optical-design/scripts/wavefront.py",
     "skills/optical-design/scripts/interfero.py", "skills/optical-design/scripts/compare.py",
+    "skills/optical-design/scripts/design.py", "skills/optical-design/scripts/zos.py",
+    "skills/optical-design/scripts/catalog.py", "skills/optical-design/scripts/_lib/design_jobs.py",
+    "skills/optical-design/scripts/_lib/zos_backend.py", "skills/optical-design/scripts/_lib/optiland_backend.py",
+    "skills/optical-design/scripts/_lib/tolerancing.py", "skills/optical-design/references/design-workflow.md",
+    "skills/optical-design/assets/refocus-spec.json", "skills/optical-design/assets/portable-singlet.json",
     "docs/tiers.md", "docs/install.md", "LICENSE", "README.md", "SECURITY.md"]) {
     assert.ok(files.includes(required), `Missing package file: ${required}`);
   }
   assert.ok(files.every(f => !/^(?:tests|node_modules|docs\/superpowers|docs\/research|\.github)\//u.test(f)), "Package contains local files");
   assert.ok(files.every(f => !/(^|\/)__pycache__\/|\.pyc$/u.test(f)), "Package contains python bytecode");
+  assert.ok(files.every(f => !/\.(?:ZDA|zda|bak)$/u.test(f)), "Package contains native analysis caches/backups");
   const consumer = path.join(root, "consumer");
   fs.mkdirSync(consumer);
   fs.writeFileSync(path.join(consumer, "package.json"), JSON.stringify({ name: "consumer", private: true }));

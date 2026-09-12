@@ -6,6 +6,7 @@
 from __future__ import annotations
 
 import argparse
+import math
 import sys
 from pathlib import Path
 
@@ -20,6 +21,10 @@ def _need_fnum_or_na(parser: argparse.ArgumentParser, args: argparse.Namespace) 
         parser.error("one of --fnum or --na is required")
     fnum = args.fnum if args.fnum is not None else optics.fnum_from_na(args.na)
     na = args.na if args.na is not None else optics.na_from_fnum(args.fnum)
+    if na > 1:
+        parser.error("--na must not exceed 1 for this air-space model")
+    if not math.isclose(na, optics.na_from_fnum(fnum), rel_tol=1e-6):
+        parser.error("--na and --fnum are inconsistent with the paraxial air-space relation NA = 1/(2F#)")
     return fnum, na
 
 
@@ -36,7 +41,7 @@ def cmd_airy(parser, args):
             "fnum": fnum, "na": na,
         },
         units={"airy_radius_um": "um", "airy_diameter_um": "um", "fwhm_um": "um"},
-        method="Airy first zero 1.22 λ F# (Smith, Modern Optical Engineering); FWHM 0.51 λ/NA; paraxial NA = 1/(2F#)",
+        method="Scalar clear circular pupil in image-space air; wavelength in vacuum; Airy first zero 1.22 λ F# (Smith, Modern Optical Engineering); FWHM 0.51 λ/NA; paraxial NA = 1/(2F#), not a high-NA vector model",
     )
 
 
@@ -91,6 +96,8 @@ def cmd_telescope(parser, args):
 
 
 def cmd_gaussian(parser, args):
+    if args.m2 < 1:
+        parser.error("--m2 must be at least 1 for an ordinary physical beam")
     lam_um = args.wavelength_um
     results, units, inputs = {}, {}, {"wavelength_um": lam_um, "m2": args.m2}
     if args.w0_um is not None:
@@ -141,6 +148,8 @@ def cmd_oct_lateral(parser, args):
 
 def cmd_micro(parser, args):
     lam, na = args.wavelength_um, args.na
+    if na > args.n:
+        parser.error("--na must not exceed the immersion refractive index --n")
     results = {"rayleigh_um": optics.rayleigh(lam, na), "abbe_um": optics.abbe(lam, na),
                "fwhm_um": optics.airy_fwhm(lam, na), "axial_um": optics.micro_axial_resolution(lam, na, args.n)}
     units = {k: "um" for k in results}
@@ -152,11 +161,11 @@ def cmd_micro(parser, args):
         if args.pixel_um is not None:
             results["sampling_ratio"] = nyq / args.pixel_um
             if args.pixel_um > nyq * 1.001:
-                warnings.append(f"undersampled: pixel {args.pixel_um} µm exceeds Nyquist pixel {nyq:.3g} µm at {args.magnification}x")
+                warnings.append(f"undersampled for the assumed incoherent cutoff: pixel {args.pixel_um} µm exceeds Nyquist pixel {nyq:.3g} µm at {args.magnification}x; aliasing risk depends on specimen and illumination")
     return cli.Envelope(TOOL, "micro", 0,
                         inputs={"wavelength_um": lam, "na": na, "n": args.n, "magnification": args.magnification, "pixel_um": args.pixel_um},
                         results=results, units=units, warnings=warnings,
-                        method="Lateral: Rayleigh 0.61λ/NA, Abbe λ/(2NA), FWHM 0.51λ/NA; axial 2λn/NA²; Nyquist camera pixel = M·Abbe/2")
+                        method="Scalar circular pupil, vacuum wavelength, object-space NA=n sin(theta); lateral Rayleigh 0.61λ/NA, Abbe λ/(2NA), FWHM 0.51λ/NA; approximate axial 2λn/NA²; Nyquist camera pixel = M·Abbe/2 for incoherent cutoff 2NA/λ; coherence, polarization and high-NA vector effects require a suitable transfer model")
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -180,7 +189,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     def dof(sub):
         aperture(sub)
-        sub.add_argument("--coc-um", type=float, help="allowed blur circle diameter for geometric DOF")
+        sub.add_argument("--coc-um", type=cli.nonnegative_float, help="allowed blur circle diameter for geometric DOF")
     add("dof", "Depth of focus (diffraction and geometric)", "dof --wavelength-um 0.55 --fnum 4", cmd_dof, dof)
 
     def telescope(sub):
@@ -191,16 +200,16 @@ def build_parser() -> argparse.ArgumentParser:
     def gaussian(sub):
         sub.add_argument("--wavelength-um", type=cli.positive_float, required=True)
         sub.add_argument("--w0-um", type=cli.positive_float, help="waist radius (1/e²)")
-        sub.add_argument("--z-mm", type=float, help="distance from waist for w(z)")
+        sub.add_argument("--z-mm", type=cli.finite_float, help="distance from waist for w(z)")
         sub.add_argument("--input-w-mm", type=cli.positive_float, help="collimated input 1/e² radius at the lens")
         sub.add_argument("--focal-mm", type=cli.positive_float)
-        sub.add_argument("--m2", type=float, default=1.0)
+        sub.add_argument("--m2", type=cli.positive_float, default=1.0)
     add("gaussian", "Gaussian beam waist, Rayleigh range, divergence, focused spot", "gaussian --wavelength-um 0.85 --input-w-mm 1 --focal-mm 50", cmd_gaussian, gaussian)
 
     def oct_axial(sub):
         sub.add_argument("--center-wavelength-um", type=cli.positive_float, required=True)
         sub.add_argument("--bandwidth-nm", type=cli.positive_float, required=True, help="FWHM spectral bandwidth")
-        sub.add_argument("--n", type=float, default=1.0, help="tissue refractive index")
+        sub.add_argument("--n", type=cli.positive_float, default=1.0, help="tissue refractive index")
     add("oct-axial", "OCT axial resolution from source bandwidth", "oct-axial --center-wavelength-um 0.84 --bandwidth-nm 50", cmd_oct_axial, oct_axial)
 
     def oct_lateral(sub):
@@ -212,8 +221,8 @@ def build_parser() -> argparse.ArgumentParser:
     def micro(sub):
         sub.add_argument("--wavelength-um", type=cli.positive_float, required=True)
         sub.add_argument("--na", type=cli.positive_float, required=True)
-        sub.add_argument("--n", type=float, default=1.0, help="immersion index")
-        sub.add_argument("--magnification", type=float)
+        sub.add_argument("--n", type=cli.positive_float, default=1.0, help="immersion index")
+        sub.add_argument("--magnification", type=cli.positive_float)
         sub.add_argument("--pixel-um", type=cli.positive_float, help="camera pixel pitch")
     add("micro", "Microscope lateral/axial resolution and Nyquist pixel", "micro --wavelength-um 0.52 --na 0.8 --magnification 40 --pixel-um 6.5", cmd_micro, micro)
 

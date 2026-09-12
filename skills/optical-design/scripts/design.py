@@ -1,0 +1,68 @@
+# /// script
+# requires-python = ">=3.11"
+# dependencies = ["numpy>=1.26"]
+# ///
+"""Audit, refocus, or tolerance a copied sequential optical model against explicit requirements.
+
+Install a pinned optional engine using uv --with: optiland==0.6.2, or
+zospy==2.1.5 and pythonnet==3.1.0 on licensed Windows. See references/design-workflow.md.
+"""
+from __future__ import annotations
+
+import argparse
+import json
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from _lib.design_contract import DesignSpec
+from _lib.design_jobs import run_job
+from _lib.native_worker import emit_report, in_worker, run_worker
+
+
+def main(argv=None):
+    parser = argparse.ArgumentParser(description=__doc__, epilog='Example: uv run --with optiland==0.6.2 design.py audit --backend optiland --model lens.json --spec spec.json --out audit --json')
+    parser.add_argument('action', choices=['audit', 'refocus', 'tolerance'])
+    parser.add_argument('--model', required=True)
+    parser.add_argument('--spec', required=True)
+    parser.add_argument('--out', required=True, help='new or empty output directory')
+    parser.add_argument('--backend', choices=['zos', 'optiland'], required=True)
+    parser.add_argument('--tolerances', help='tolerance JSON; required for tolerance action')
+    parser.add_argument('--json', action='store_true')
+    args = parser.parse_args(argv)
+    if (args.action == 'tolerance') != (args.tolerances is not None):
+        parser.error('--tolerances is required only with tolerance action')
+    if args.backend == 'zos' and not in_worker():
+        return run_worker(Path(__file__).resolve(), sys.argv[1:] if argv is None else argv)
+    try:
+        spec = DesignSpec.from_dict(json.loads(Path(args.spec).read_text(encoding='utf-8-sig')))
+        if args.backend == 'zos':
+            from _lib.zos_backend import ZOSBackend
+            factory = ZOSBackend
+        else:
+            from _lib.optiland_backend import OptilandBackend
+            factory = OptilandBackend
+        if args.action == 'tolerance':
+            from _lib.tolerancing import run_tolerance_job
+            tolerance = json.loads(Path(args.tolerances).read_text(encoding='utf-8-sig'))
+            report = run_tolerance_job(args.model, spec, args.out, factory, tolerance)
+        else:
+            report = run_job(args.model, spec, args.out, factory, action=args.action)
+        emit_report(report, as_json=args.json,
+                    summary=f"{report['status']}: {Path(args.out).resolve() / 'report.json'}")
+        if args.action == 'tolerance':
+            return 0
+        return 0 if report['status'] in {'requirements_met', 'improved'} else 1
+    except ImportError as exc:
+        print(f'Missing optional backend dependency: {exc}. Use uv run --with optiland==0.6.2, or --with zospy==2.1.5 --with pythonnet==3.1.0.', file=sys.stderr)
+        return 3
+    except KeyboardInterrupt:
+        print('Job interrupted; inspect failure.json for restoration evidence.', file=sys.stderr)
+        return 4
+    except Exception as exc:  # noqa: BLE001 -- native engines expose backend-specific exceptions at CLI boundary
+        print(f'{type(exc).__name__}: {exc}', file=sys.stderr)
+        return 4
+
+
+if __name__ == '__main__':
+    sys.exit(main())

@@ -35,6 +35,13 @@ def psi_phase(frames: np.ndarray, algorithm: str) -> np.ndarray:
     4step: steps 0, π/2, π, 3π/2 -> atan2(I4 − I2, I1 − I3)
     5step (Hariharan): steps −π, −π/2, 0, π/2, π -> atan2(2 (I2 − I4), 2 I3 − I1 − I5)
     """
+    frames = np.asarray(frames)
+    if frames.ndim != 3 or min(frames.shape) < 1:
+        raise ValueError("frames must have nonempty shape (N, H, W)")
+    if not np.issubdtype(frames.dtype, np.number) or np.iscomplexobj(frames):
+        raise ValueError("intensity frames must be real numeric arrays")
+    if not np.isfinite(frames).all():
+        raise ValueError("intensity frames must contain finite values")
     I = [f.astype(float) for f in frames]
     if algorithm == "3step":
         if len(I) != 3:
@@ -74,34 +81,74 @@ def cmd_unwrap(parser, args):
 
 
 def cmd_fringe_to_wfe(parser, args):
+    measurement = args.measurement or "single-pass"
+    warnings = []
+    if args.measurement is None:
+        warnings.append("Legacy default assumes inferred single-pass error with additive identical passes; specify --measurement to declare the quantity. Pass count alone does not establish retrace cancellation.")
+    if measurement != "single-pass" and args.passes is not None:
+        parser.error("--passes applies only to --measurement single-pass")
+    if measurement != "surface-height" and args.incidence_deg != 0:
+        parser.error("--incidence-deg applies only to --measurement surface-height")
+    if not 0 <= args.incidence_deg < 90:
+        parser.error("--incidence-deg must be in [0, 90) from the surface normal")
+    passes = args.passes if args.passes is not None else 2
+    divisor = (passes if measurement == "single-pass" else
+               2 * math.cos(math.radians(args.incidence_deg)) if measurement == "surface-height" else 1.0)
     phase = load_map(args.phase)
-    wfe = phase / (2 * math.pi) / args.passes
-    results = {"passes": args.passes}
+    measured_opd = phase / (2 * math.pi)
+    wfe = measured_opd / divisor
+    results = {"passes": passes if measurement == "single-pass" else None,
+               "measurement": measurement, "opd_conversion_divisor": divisor,
+               "output_quantity": {"single-pass": "inferred single-pass OPD", "measured-opd": "measured OPD",
+                                   "surface-height": "inferred reflective surface height"}[measurement],
+               "removed_terms": []}
     units = {}
     pupil = None
     if args.nterms:
         coeffs, resid, pupil = fit_map(wfe, args.scheme, args.nterms)
+        results["removed_terms"] = [Z.name(n, m) for n, m in Z.indices(args.scheme, args.nterms)
+                                    if (n, m) in LOW_ORDER]
         low = [c if (n, m) in LOW_ORDER else 0.0 for c, (n, m) in zip(coeffs, Z.indices(args.scheme, len(coeffs)))]
         rho, theta, _circle = pupil_grid(wfe.shape, pupil)
         wfe = wfe - np.tensordot(np.asarray(low), Z.basis(args.scheme, len(low), rho, theta), axes=1)
         results.update({"coefficients": coeffs, "terms": terms(args.scheme, coeffs), "scheme": args.scheme,
                         "rms_waves": rms_from_coeffs(args.scheme, coeffs), "fit_residual_rms_waves": resid,
+                        "coefficient_full_disk_rms_waves": rms_from_coeffs(args.scheme, coeffs),
+                        "fit_rms_on_mask_waves": pupil["fit_rms_on_mask"],
+                        "fit_diagnostics": {k: pupil[k] for k in ("rank", "condition_number", "valid_samples", "valid_coverage_fraction", "fit_terms")},
                         "normalization_radius_px": pupil["radius_px"], "pupil_center_px": pupil["center_px"]})
         units.update({"rms_waves": "waves", "fit_residual_rms_waves": "waves",
+                      "coefficient_full_disk_rms_waves": "waves", "fit_rms_on_mask_waves": "waves",
+                      "coefficients": "waves",
                       "normalization_radius_px": "px", "pupil_center_px": "px (row, col)"})
     # PV and map RMS are pupil quantities: a full square carries no NaN boundary, so the
     # fitted circle (inscribed circle when no fit ran) bounds them instead of the canvas.
-    circle = pupil_grid(wfe.shape, pupil)[2] if pupil else Z.unit_disk(wfe.shape[0])[2]
-    valid = circle & np.isfinite(wfe)
+    valid = np.isfinite(wfe)
+    if pupil:
+        valid &= pupil_grid(wfe.shape, pupil)[2]
+    elif valid.all():
+        valid &= Z.unit_disk(wfe.shape[0])[2]
+    if not valid.any():
+        raise ValueError("phase map has no valid pupil samples")
+    measured = measured_opd[valid]
+    results["measured_opd_pv_waves"] = float(np.ptp(measured))
+    results["measured_opd_rms_waves"] = float(np.std(measured))
+    units.update({"measured_opd_pv_waves": "waves", "measured_opd_rms_waves": "waves"})
     results["pv_waves"] = float(np.max(wfe[valid]) - np.min(wfe[valid]))
     results["rms_map_waves"] = float(np.sqrt(np.mean((wfe[valid] - wfe[valid].mean()) ** 2)))
     units.update({"pv_waves": "waves", "rms_map_waves": "waves"})
+    if measurement == "surface-height":
+        units.update({k: "wavelengths of surface height" for k in
+                      ("pv_waves", "rms_map_waves", "rms_waves", "fit_residual_rms_waves",
+                       "coefficient_full_disk_rms_waves", "fit_rms_on_mask_waves", "coefficients") if k in results})
     if args.out:
         np.save(args.out, wfe)
         results["wfe_file"] = args.out
-    return cli.Envelope(TOOL, "fringe-to-wfe", 0, inputs={"phase": args.phase, "passes": args.passes, "scheme": args.scheme, "nterms": args.nterms},
-                        results=results, units=units,
-                        method="W = φ/(2π)/passes (passes=2 for Fizeau/Twyman-Green reflection tests); piston/tilt removed after Zernike fit; PV and map RMS over the pupil circle only")
+    return cli.Envelope(TOOL, "fringe-to-wfe", 0,
+                        inputs={"phase": args.phase, "passes": results["passes"], "scheme": args.scheme,
+                                "nterms": args.nterms, "measurement": measurement, "incidence_deg": args.incidence_deg},
+                        results=results, units=units, warnings=warnings,
+                        method="Measured OPD in waves = φ/(2π), reported before low-order removal. Single-pass inference assumes additive identical pass errors: OPD/passes, without a retrace model. Reflective surface height = OPD/(2 cos incidence), in wavelengths, for a single reflection with known incidence and no other OPD contributors (Malacara, Optical Shop Testing). Legacy *_waves and wfe_file describe output_quantity; fitted low-order terms are removed from output map only. fit_rms_on_mask_waves is reconstructed-map standard deviation before tilt removal; fit_residual_rms_waves is measured-minus-fit RMS. coefficient_full_disk_rms_waves (legacy rms_waves) assumes full-disk orthogonality and excludes piston/tilt; rms_map_waves uses actual valid samples after removed_terms.")
 
 
 def cmd_cavity(parser, args):
@@ -111,20 +158,26 @@ def cmd_cavity(parser, args):
     warnings = []
     if args.tilt_arcsec is not None:
         theta = math.radians(args.tilt_arcsec / 3600)
-        results["fringe_spacing_mm"] = lam_mm / (2 * math.tan(theta))
-        results["fringes_across_100mm"] = 100.0 / results["fringe_spacing_mm"]
+        if abs(theta) >= math.pi / 2:
+            parser.error("--tilt-arcsec must have magnitude below 90 degrees")
+        spacing = lam_mm / (2 * abs(math.tan(theta))) if theta else None
+        results["fringe_spacing_mm"] = spacing
+        results["fringes_across_100mm"] = 100.0 / spacing if spacing else 0.0
+        results["tilt_fringe_status"] = "finite_spacing" if theta else "no_tilt_fringes"
         units["fringe_spacing_mm"] = "mm"
     if args.linewidth_nm is not None:
         lc = (args.wavelength_um ** 2) / (args.linewidth_nm * 1e-3) * 1e-3  # µm²/µm -> µm -> mm
         results["coherence_length_mm"] = lc
         units["coherence_length_mm"] = "mm"
         results["opd_over_coherence_length"] = results["opd_mm"] / lc
+        results["coherence_length_convention"] = "inverse-bandwidth scale lambda^2/delta_lambda; not a contrast threshold"
+        results["contrast_prediction"] = "undetermined_without_spectral_line_shape"
         if results["opd_over_coherence_length"] > 0.5:
-            warnings.append("cavity OPD exceeds half the coherence length: fringe contrast will collapse")
+            warnings.append("cavity OPD exceeds half the inverse-bandwidth coherence scale; contrast requires spectral line shape and a declared visibility convention")
     return cli.Envelope(TOOL, "cavity", 0,
                         inputs={"gap_mm": args.gap_mm, "wavelength_um": args.wavelength_um, "tilt_arcsec": args.tilt_arcsec, "linewidth_nm": args.linewidth_nm},
                         results=results, units=units, warnings=warnings,
-                        method="Double-pass cavity: OPD = 2·gap; tilt fringe spacing λ/(2 tan θ); coherence length "
+                        method="Normal-incidence cavity in air: OPD = 2·gap; plane-mirror tilt fringe spacing λ/(2 |tan θ|), zero tilt has no finite spacing; coherence length "
                                "λ²/Δλ for a source of linewidth Δλ (Malacara ch. 1). resolve.py oct-axial reports the "
                                "Gaussian-spectrum FWHM coherence length instead, smaller by 2 ln2/π ≈ 0.44")
 
@@ -154,17 +207,21 @@ def build_parser() -> argparse.ArgumentParser:
         sub.add_argument("--phase", required=True,
                          help="unwrapped phase map in radians, NaN outside the pupil, "
                               "or a full square (inscribed circle assumed)")
-        sub.add_argument("--passes", type=int, default=2)
+        sub.add_argument("--measurement", choices=("measured-opd", "single-pass", "surface-height"),
+                         help="quantity inferred from phase; omitted retains legacy single-pass assumption")
+        sub.add_argument("--passes", type=cli.positive_int, help="identical additive passes for single-pass inference (default 2)")
+        sub.add_argument("--incidence-deg", type=cli.finite_float, default=0.0,
+                         help="angle from surface normal for reflective surface-height inference (default 0)")
         sub.add_argument("--scheme", choices=Z.SCHEMES, default="fringe")
-        sub.add_argument("--nterms", type=int, default=37)
+        sub.add_argument("--nterms", type=cli.nonnegative_int, default=37, help="fit terms; 0 disables fit and low-order removal")
         sub.add_argument("--out")
     add("fringe-to-wfe", "Phase map to wavefront error, with Zernike fit", "fringe-to-wfe --phase unwrapped.npy --passes 2 --nterms 37", cmd_fringe_to_wfe, f2w)
 
     def cavity(sub):
         sub.add_argument("--gap-mm", type=cli.positive_float, required=True)
         sub.add_argument("--wavelength-um", type=cli.positive_float, required=True)
-        sub.add_argument("--tilt-arcsec", type=float)
-        sub.add_argument("--linewidth-nm", type=float)
+        sub.add_argument("--tilt-arcsec", type=cli.finite_float)
+        sub.add_argument("--linewidth-nm", type=cli.positive_float)
     add("cavity", "Fizeau/Twyman-Green cavity OPD, tilt fringes, coherence check", "cavity --gap-mm 5 --wavelength-um 0.6328 --tilt-arcsec 10 --linewidth-nm 0.001", cmd_cavity, cavity)
     return parser
 

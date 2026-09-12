@@ -1,96 +1,94 @@
 ---
 name: optical-design
 description: >
-  Optical design review, analysis and optimization: resolution limits, PSF/MTF, wavefront
-  error, Zernike and Seidel aberrations, Strehl, depth of focus, Gaussian beams, tolerancing,
-  merit-function design, and design guidance (audit a lens, flag its limitations, suggest and
-  apply corrections, find comparable published or stock designs). Use when the user asks
-  about lens or imaging system performance, wants a design reviewed or improved, works with
-  OCT/microscopy/interferometer optics, Zemax OpticStudio files (.zmx) or ZOS-API, or wants
-  numbers checked against diffraction limits — even if they do not name a tool.
+  Use when reviewing or improving sequential imaging optics, checking resolution,
+  PSF/MTF, wavefront or interferometry data, analyzing OpticStudio prescriptions,
+  or investigating microscopy and OCT performance and optical tolerances.
 license: MIT
-compatibility: Requires Python 3.11+ and uv (scripts install their own dependencies on first run). Tier 1 needs optiland; Tier 2 needs Windows with Ansys Zemax OpticStudio Professional/Premium (ZOS-API).
+compatibility: Python 3.11+ and uv. Portable prescription jobs require Optiland 0.6.2. Native jobs require Windows, a valid OpticStudio ZOS-API license, ZOSPy 2.1.5 and pythonnet 3.1.0.
 metadata:
   author: Eric Tang
   repo: https://github.com/tangericm/optical-design
-  version: "0.1.0-dev.0"
+  version: "0.1.0-dev.1"
 ---
 
 # optical-design
 
-Act as a senior optical designer reviewing a colleague's system. Numbers come from the
-scripts, never from memory. Every formula you quote names its source.
+Turn a system requirement into computed optical evidence and a reviewable model change.
+Use the scripts for numerical results; identify assumptions, sources, engine versions,
+units and analysis settings. Distinguish measured performance from estimates and unavailable data.
 
-## Not for
+## Choose the workflow
 
-Non-sequential or illumination design, stray light, thin-film coatings, opto-mechanics,
-thermal analysis, and physics homework with no system behind it. Say so and stop.
-
-## Modes
-
-State the mode before answering.
-
-| Mode | Use when | Output |
+| Request | Entry point | Read when relevant |
 |---|---|---|
-| Ask | conceptual or single-number question | formula, source, computed value |
-| Analyze | a prescription or wavefront exists | performance table vs diffraction limit and vs spec |
-| Audit | user wants review | ranked limitation flags with evidence |
-| Improve | audit flags exist | ranked corrections with expected gain/cost, applied and re-verified |
-| Research | user needs starting points or comparables | shortlist of designs with citations, imported and analyzed |
+| Resolution, sampling, Gaussian beam, OCT limits | `scripts/resolve.py` | [Microscopy](references/microscopy.md), [OCT](references/oct.md) |
+| Zernike coefficients, wavefront PSF/MTF | `scripts/zernike.py`, `scripts/wavefront.py` | [PSF/MTF validity](references/psf-mtf.md) |
+| Interferometer maps and pass/surface interpretation | `scripts/interfero.py` | [Interferometry](references/interferometry.md) |
+| Audit a sequential prescription against requirements | `scripts/design.py audit` | [Design workflow and schema](references/design-workflow.md) |
+| Improve focus within authorized travel | `scripts/design.py refocus` | [Optimization](references/optimization.md) |
+| Sensitivity or seeded Monte Carlo | `scripts/design.py tolerance` | [Tolerancing](references/tolerancing.md) |
+| Local stock-lens shortlist | `scripts/catalog.py validate` / `match` | [Specifications and catalog schema](references/specifications.md) |
+| Numerical equivalence | `scripts/compare.py` | [Comparison boundaries](references/design-workflow.md#comparison) |
 
-This release ships Tier 0 only (closed-form and wavefront math). Prescription analysis
-(Tier 1), OpticStudio (Tier 2), audit/improve scripts and references arrive in later releases;
-in Audit/Improve/Research modes use Tier 0 scripts for every number and state what could not
-be computed.
+These are bounded sequential-imaging workflows. General multi-variable redesign, live GUI
+attachment, non-sequential/stray-light analysis, polarization, coatings optimization,
+thermal/structural coupling, manufacturing release and automatic web-catalog import are
+outside the shipped adapters. Answer supported parts and state what needs another tool.
 
-## Preflight
+## Run and interpret
 
-1. `uv --version`. If missing, tell the user to install uv; do not pip-install into their environment.
-2. Run scripts as `uv run <skill-dir>/scripts/<name>.py <subcommand> ... --json`. First run downloads dependencies.
-3. Exit codes: 0 = ok, 1 = `compare.py` found a value outside tolerance (a result, not an
-   error — report which values), 2 = usage (read `--help`), 3 = missing tier dependency
-   (report the hint verbatim), 4 = analysis failed (unreadable or unparseable input).
+Run `uv --version`, then `uv run <skill-dir>/scripts/<name>.py --help` if syntax is unfamiliar.
+Tier 0 scripts declare dependencies. Read the design workflow for pinned optional-engine
+commands; use `uv run <skill-dir>/scripts/zos.py check --json` to test an actual native license.
 
-## Conventions
+For prescription work, establish fields, wavelengths, pupil, units, hard requirements and
+analysis settings before optimizing. Use the user's existing specification when supplied.
+Ask only for information that materially determines acceptance; label any provisional
+assumption. The example specification is a synthetic demonstration, not a default requirement.
 
-- Lengths in mm, wavelengths in µm (`--wavelength-um`), wavefront in waves at the stated wavelength.
-- Zernike coefficients always carry a scheme: `fringe` (Zemax Fringe, unnormalized), `noll`
-  (Zemax Standard, RMS-normalized), `ansi` (OSA/ANSI Z80.28, 0-based). Never mix schemes
-  without `scripts/zernike.py convert`.
-- NA ↔ F/#: paraxial `NA = 1/(2 F#)`. Say "paraxial" when you use it above NA ≈ 0.3.
-- Report: quantity, value, unit, method/tier, and the limit it is compared to.
+Jobs open a **copy** in an owned backend session. `refocus` changes only the final air gap,
+within explicit bounds. The source remains unchanged. Accept a candidate only when all
+declared constraints pass, its objective gain exceeds the threshold, and native save/reload
+reproduces the result. Return baseline/candidate metrics, limitations, source/artifact hashes
+and model/report paths. A failed or unavailable metric cannot support acceptance.
 
-## Sanity rules
+`tolerance` uses independent radius/thickness perturbations and no compensator. Report the
+seed, distributions, analysis failures, sample count and Wilson interval; sampled pass rate
+is conditional on those assumptions and is not a manufacturing-yield certification.
 
-- Strehl and RMS wavefront error must agree with Maréchal (`S ≈ 1 − (2πσ)²`) when σ ≤ 0.1 waves. If not, the scheme or normalization radius is wrong.
-- No MTF value exceeds the diffraction-limited curve. `wavefront.py mtf` overlays it.
-- PSF and detector sampling: `Q = λF#/p`; Q < 2 aliases. Run `wavefront.py sample-check`.
-- When geometric and diffraction numbers disagree, report both and say which governs.
-- Diffraction limit is a floor, not a target: a design at the floor with no margin fails tolerancing.
+Exit codes: 0 completed/success; 1 comparison mismatch, unmet design requirements or no
+acceptable refocus improvement; 2 usage; 3 missing engine/dependency; 4 analysis failure.
+Tolerance completion (0) does not imply every trial passed. Inspect the report's yield.
+After a failed job, inspect `failure.json`; use a fresh output directory for a retry.
 
-## Scripts
+## Scientific checks that change decisions
 
-| Script | Subcommands | Use for |
-|---|---|---|
-| `scripts/resolve.py` | airy, rayleigh, dof, gaussian, oct-axial, oct-lateral, micro, telescope | closed-form limits |
-| `scripts/zernike.py` | convert, rms, strehl, seidel-from-zernike, fit | coefficient math |
-| `scripts/wavefront.py` | psf, mtf, sample-check | diffraction from a wavefront |
-| `scripts/interfero.py` | psi, unwrap, fringe-to-wfe, cavity | interferometer data |
-| `scripts/compare.py` | (two JSON files) | before/after and cross-engine checks |
+- State pupil geometry and amplitude, coherence, wavelength, image/object-space convention,
+  and metric definition. Zernike coefficients require an explicit `fringe`, `noll` or `ansi`
+  scheme; normalization and fit aperture affect RMS.
+- For wavefront maps, NaNs mean opaque/outside-pupil pixels. They do not encode unknown
+  samples to interpolate. Supply the pupil center/radius for translated, clipped or
+  obstructed apertures; inspect inferred-geometry warnings.
+- Maréchal is an approximation near high Strehl, not a convention detector. At 0.1 waves,
+  disagreement with the truncated `1-(2πσ)^2` formula alone does not prove a scheme error.
+  Pure defocus has an exact pupil-integral check; use computed diffraction results and
+  the stated approximation range. See [PSF/MTF](references/psf-mtf.md).
+- Compare aberrated MTF with the **same pupil amplitude and support** with phase removed.
+  An annular or apodized pupil can exceed a clear circular reference at some frequencies.
+  The clear-circle overlay is a separate reference, not a universal upper bound.
+- Scalar/paraxial formulas do not establish high-NA vectorial performance. Express NA with
+  refractive index and state approximation limits. Camera sampling also depends on
+  magnification, coherence and pixel response; do not apply a universal `Q < 2` verdict.
+- Interferometric measured OPD, single-pass wavefront and surface height differ. Set the
+  quantity, pass factor and incidence angle explicitly; report removed piston/tilt/defocus.
+- Geometric RMS spot radius, PSF width, Strehl and MTF are different metrics. Compare
+  identical field/wavelength/axis/frequency and sampling settings, then assess the actual
+  requirement. A visually attractive spot or nominal diffraction limit does not prove yield.
 
-`--help` on any subcommand prints an example.
+## Representative start
 
-## Worked pattern
-
-User: "Is my 0.8 NA objective at 520 nm sampled properly on a 6.5 µm camera at 40×?"
-
-1. Mode: Ask. `resolve.py micro --wavelength-um 0.52 --na 0.8 --magnification 40 --pixel-um 6.5 --json`
-2. Read `nyquist_pixel_um` and `sampling_ratio`; report Abbe/Rayleigh values with the method string.
-3. If `warnings` lists "undersampled", say by how much and what magnification fixes it.
-
-## Red flags
-
-- "The diffraction limit is close enough" → run the script; quote the number and the margin.
-- "The Zernike convention doesn't matter here" → it changes the value by up to √(2(n+1)); convert.
-- "I'll estimate the PSF" → `wavefront.py psf`.
-- "OpticStudio said so" → OpticStudio output still gets checked against `resolve.py` limits.
+For a camera/objective sampling question, run `resolve.py micro` with the stated wavelength,
+NA, magnification and pixel pitch; explain its scalar model limit. For an authorized lens
+refocus, follow [the executable example](references/design-workflow.md), substitute the
+user's model/specification, and report the saved/reloaded candidate or the reason none passed.

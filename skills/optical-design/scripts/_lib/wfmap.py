@@ -37,15 +37,21 @@ def coefficients_to_map(scheme: str, coeffs: list[float], npix: int = 256,
 
 def load_map(path: str) -> np.ndarray:
     p = Path(path)
-    if p.suffix.lower() == ".npy":
-        return np.load(p).astype(float)
-    return np.loadtxt(p, delimiter=",").astype(float)
+    raw = np.load(p, allow_pickle=False) if p.suffix.lower() == ".npy" else np.loadtxt(p, delimiter=",")
+    if np.iscomplexobj(raw):
+        raise ValueError("map must contain real wavefront samples")
+    wmap = raw.astype(float)
+    if np.isinf(wmap).any():
+        raise ValueError("map cannot contain infinity; use NaN for opaque aperture pixels")
+    return wmap
 
 
 def pupil_grid(shape: tuple[int, int], pupil: dict[str, Any]):
     """rho, theta and a boolean mask for the circular pupil `{center_px, radius_px}`."""
     cy, cx = pupil["center_px"]
     radius = float(pupil["radius_px"])
+    if not np.isfinite([cy, cx, radius]).all() or radius <= 0:
+        raise ValueError("pupil center and radius must be finite; radius must be positive")
     yy, xx = np.indices(shape)
     dy, dx = yy - float(cy), xx - float(cx)
     rho = np.hypot(dy, dx) / radius
@@ -75,7 +81,24 @@ def _pupil_radius(valid: np.ndarray, cy: float, cx: float) -> float:
     return round(max_d * 2.0) / 2.0
 
 
-def fit_map(wmap: np.ndarray, scheme: str, nterms: int, mask: np.ndarray | None = None):
+def infer_pupil(valid: np.ndarray) -> dict[str, Any]:
+    """Estimate a circular outer rim; masked pixels are not measurement samples.
+
+    This centroid/rim estimate assumes a complete symmetric pupil. Supply explicit
+    geometry for clipped/asymmetric pupils; sampled data cannot determine a missing rim.
+    """
+    if valid.ndim != 2 or not valid.any():
+        raise ValueError("map has no valid samples inside the pupil")
+    ys, xs = np.nonzero(valid)
+    cy, cx = float(ys.mean()), float(xs.mean())
+    radius = _pupil_radius(valid, cy, cx)
+    if radius <= 0:
+        raise ValueError("pupil must span more than one spatial sample")
+    return {"center_px": [cy, cx], "radius_px": radius}
+
+
+def fit_map(wmap: np.ndarray, scheme: str, nterms: int, mask: np.ndarray | None = None,
+            *, pupil: dict[str, Any] | None = None):
     """Least-squares Zernike fit over the pupil the valid samples occupy.
 
     The normalization circle comes from the data, not from the canvas, so a pupil filling
@@ -86,27 +109,41 @@ def fit_map(wmap: np.ndarray, scheme: str, nterms: int, mask: np.ndarray | None 
     input carries no pupil boundary, so the inscribed circle is assumed; that case reproduces
     `Z.unit_disk` exactly (centre (npix−1)/2, radius npix/2). NaN samples are ignored.
 
-    Returns (coefficients, residual_rms, pupil) with
-    pupil = {"center_px": [cy, cx], "radius_px": r}.
+    Returns (coefficients, residual_rms, pupil). Pupil includes center/radius plus
+    rank, condition_number, valid_samples, valid_coverage_fraction, fit_terms and
+    fit_rms_on_mask (standard deviation of reconstruction; tilt retained).
     """
-    if wmap.ndim != 2 or wmap.shape[0] != wmap.shape[1]:
+    if wmap.ndim != 2 or wmap.shape[0] != wmap.shape[1] or wmap.shape[0] < 2:
         raise ValueError("map must be square (pupil inscribed)")
+    if np.iscomplexobj(wmap) or np.isinf(wmap).any():
+        raise ValueError("map must contain real waves or NaN aperture pixels, not infinity")
+    if isinstance(nterms, bool) or not isinstance(nterms, (int, np.integer)) or nterms <= 0:
+        raise ValueError("nterms must be a positive integer")
     valid = np.isfinite(wmap)
     if mask is not None:
+        if mask.shape != wmap.shape:
+            raise ValueError("map and mask must have matching shapes")
         valid = valid & mask.astype(bool)
-    if valid.all():
+    if pupil is not None:
+        valid &= pupil_grid(wmap.shape, pupil)[2]
+    elif valid.all():
         valid = valid & Z.unit_disk(wmap.shape[0])[2]
+        pupil = {"center_px": [(wmap.shape[0] - 1) / 2] * 2, "radius_px": wmap.shape[0] / 2}
     if not valid.any():
         raise ValueError("map has no valid samples inside the pupil")
-    ys, xs = np.nonzero(valid)
-    cy, cx = float(ys.mean()), float(xs.mean())
-    pupil = {"center_px": [cy, cx], "radius_px": _pupil_radius(valid, cy, cx)}
+    pupil = infer_pupil(valid) if pupil is None else dict(pupil)
     rho, theta, _circle = pupil_grid(wmap.shape, pupil)
     B = Z.basis(scheme, nterms, rho, theta)
     A = B[:, valid].T
     y = wmap[valid]
-    coeffs, *_ = np.linalg.lstsq(A, y, rcond=None)
-    residual = y - A @ coeffs
+    coeffs, _, rank, singular_values = np.linalg.lstsq(A, y, rcond=None)
+    if rank < nterms:
+        raise ValueError(f"Zernike fit is rank deficient ({rank} < {nterms}); reduce terms or provide more pupil coverage")
+    reconstructed = A @ coeffs
+    residual = y - reconstructed
+    pupil.update({"rank": int(rank), "condition_number": float(singular_values[0] / singular_values[-1]),
+                  "valid_samples": int(valid.sum()), "valid_coverage_fraction": float(valid.sum() / _circle.sum()),
+                  "fit_rms_on_mask": float(np.std(reconstructed)), "fit_terms": nterms})
     return [float(c) for c in coeffs], float(np.sqrt(np.mean(residual**2))), pupil
 
 

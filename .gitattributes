@@ -1,3 +1,6 @@
 * text=auto eol=lf
 *.png binary
-*.zmx text eol=crlf
+# Preserve native model and evidence bytes: their SHA-256 values are part of reports.
+*.zmx binary
+skills/optical-design/assets/portable-singlet.json -text whitespace=cr-at-eol
+docs/research/copilot-live/*/*.json -text whitespace=cr-at-eol

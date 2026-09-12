@@ -1,7 +1,7 @@
 {
   "name": "optical-design",
-  "version": "0.1.0-dev.0",
-  "description": "Agent skill for optical design analysis: resolution, PSF/MTF, Zernike and Seidel aberrations, Strehl, interferometry; OpticStudio interoperability planned.",
+  "version": "0.1.0-dev.1",
+  "description": "Optical-design copilot skill: numerical optics, sequential audit/refocus, tolerance evidence, and OpticStudio/Optiland adapters.",
   "type": "module",
   "files": [
     "skills",
@@ -18,13 +18,34 @@
     "lint:skills": "skillcrit lint . --fail-on error",
     "verify:package": "node scripts/verify-package.mjs"
   },
-  "engines": { "node": ">=22" },
+  "engines": {
+    "node": ">=22"
+  },
   "license": "MIT",
   "author": "Eric Tang <eric.tang22@gmail.com>",
   "homepage": "https://github.com/tangericm/optical-design#readme",
-  "bugs": { "url": "https://github.com/tangericm/optical-design/issues" },
-  "repository": { "type": "git", "url": "git+https://github.com/tangericm/optical-design.git" },
-  "keywords": ["agent-skills", "ai-agents", "optics", "optical-design", "lens-design", "zemax", "opticstudio", "psf", "mtf", "zernike", "oct", "microscopy", "interferometry"],
+  "bugs": {
+    "url": "https://github.com/tangericm/optical-design/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tangericm/optical-design.git"
+  },
+  "keywords": [
+    "agent-skills",
+    "ai-agents",
+    "optics",
+    "optical-design",
+    "lens-design",
+    "zemax",
+    "opticstudio",
+    "psf",
+    "mtf",
+    "zernike",
+    "oct",
+    "microscopy",
+    "interferometry"
+  ],
   "devDependencies": {
     "@types/node": "^26.4.1",
     "gray-matter": "^4.0.3",

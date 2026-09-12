@@ -7,10 +7,15 @@ Exit codes: 0 ok, 2 usage, 3 missing tier dependency, 4 analysis failed.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import importlib
+import importlib.metadata
 import json
+import math
+import platform
 import sys
 from dataclasses import asdict, dataclass, field
+from pathlib import Path
 from typing import Any, NoReturn
 
 SCHEMA_VERSION = "1"
@@ -31,6 +36,7 @@ class Envelope:
     method: str
     warnings: list[str] = field(default_factory=list)
     schema: str = SCHEMA_VERSION
+    provenance: dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -97,15 +103,77 @@ def fail(message: str, code: int = EXIT_ANALYSIS) -> NoReturn:
     sys.exit(code)
 
 
-def positive_float(text: str) -> float:
-    """argparse type for a physical quantity that must be strictly positive."""
+def finite_float(text: str) -> float:
+    """argparse type that excludes NaN and both infinities."""
     try:
         value = float(text)
     except ValueError:
         raise argparse.ArgumentTypeError(f"invalid float value: {text!r}") from None
-    if not value > 0:
+    if not math.isfinite(value):
+        raise argparse.ArgumentTypeError(f"must be finite, got {text}")
+    return value
+
+
+def positive_float(text: str) -> float:
+    """argparse type for a finite, strictly positive physical quantity."""
+    value = finite_float(text)
+    if value <= 0:
         raise argparse.ArgumentTypeError(f"must be greater than 0, got {text}")
     return value
+
+
+def nonnegative_float(text: str) -> float:
+    value = finite_float(text)
+    if value < 0:
+        raise argparse.ArgumentTypeError(f"must be nonnegative, got {text}")
+    return value
+
+
+def nonnegative_int(text: str) -> int:
+    try:
+        value = int(text)
+    except ValueError:
+        raise argparse.ArgumentTypeError(f"invalid integer: {text!r}") from None
+    if value < 0:
+        raise argparse.ArgumentTypeError(f"must be nonnegative, got {text}")
+    return value
+
+
+def positive_int(text: str) -> int:
+    value = nonnegative_int(text)
+    if value == 0:
+        raise argparse.ArgumentTypeError("must be greater than 0")
+    return value
+
+
+def _input_hashes(args: argparse.Namespace) -> dict[str, Any]:
+    """Hash recognized file inputs before execution, including coefficient files.
+
+    Store argument identity and digest only; no host, user, environment or path data.
+    """
+    files = {}
+    for key in ("map", "phase", "frames", "coeffs", "a", "b", "model", "spec"):
+        value = getattr(args, key, None)
+        if isinstance(value, str) and Path(value).is_file():
+            path = Path(value)
+            with path.open("rb") as source:
+                digest = hashlib.file_digest(source, "sha256").hexdigest()
+            files[key] = {"sha256": digest, "size_bytes": path.stat().st_size}
+    return files
+
+
+def _runtime_provenance(input_files: dict[str, Any]) -> dict[str, Any]:
+    dependencies = {}
+    for module, distribution in (("numpy", "numpy"), ("scipy", "scipy"),
+                                 ("skimage", "scikit-image"), ("zospy", "zospy"),
+                                 ("optiland", "optiland")):
+        if module in sys.modules:
+            try:
+                dependencies[distribution] = importlib.metadata.version(distribution)
+            except importlib.metadata.PackageNotFoundError:
+                dependencies[distribution] = "unavailable"
+    return {"python_version": platform.python_version(), "dependencies": dependencies,
+            "input_files": input_files}
 
 
 def run(build_parser, argv: list[str] | None = None) -> int:
@@ -121,7 +189,9 @@ def run(build_parser, argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
     try:
+        input_files = _input_hashes(args)
         env = args.func(args.sub, args)
+        env.provenance = {**_runtime_provenance(input_files), **env.provenance}
         try:
             emit(env, as_json=args.json)
         except ValueError as e:
@@ -143,12 +213,18 @@ def common_parser() -> argparse.ArgumentParser:
 
 def parse_floats(text: str) -> list[float]:
     """Parse '0.1, 0.2,0.3' or a path to a JSON list / newline file into floats."""
-    from pathlib import Path
-
     path = Path(text)
     if path.is_file():
         raw = path.read_text(encoding="utf-8").strip()
         if raw.startswith("["):
-            return [float(v) for v in json.loads(raw)]
-        return [float(v) for v in raw.replace(",", " ").split()]
-    return [float(v) for v in text.replace(",", " ").split()]
+            raw_values = json.loads(raw)
+            if not all(type(v) in (int, float) for v in raw_values):
+                raise ValueError("coefficient JSON must contain only real numbers")
+            values = [float(v) for v in raw_values]
+        else:
+            values = [float(v) for v in raw.replace(",", " ").split()]
+    else:
+        values = [float(v) for v in text.replace(",", " ").split()]
+    if not values or not all(math.isfinite(v) for v in values):
+        raise ValueError("coefficients must be a nonempty list of finite numbers")
+    return values

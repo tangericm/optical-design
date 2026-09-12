@@ -1,11 +1,20 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "optical-design",
-  "version": "0.1.0-dev.0",
-  "description": "Agent skill for optical design analysis: resolution, PSF/MTF, Zernike and Seidel aberrations, Strehl, interferometry; OpticStudio interoperability planned.",
-  "author": { "name": "Eric Tang", "email": "eric.tang22@gmail.com" },
+  "version": "0.1.0-dev.1",
+  "description": "Optical-design copilot skill: numerical optics, sequential audit/refocus, tolerance evidence, and OpticStudio/Optiland adapters.",
+  "author": {
+    "name": "Eric Tang",
+    "email": "eric.tang22@gmail.com"
+  },
   "homepage": "https://github.com/tangericm/optical-design#readme",
   "repository": "https://github.com/tangericm/optical-design",
   "license": "MIT",
-  "keywords": ["agent-skills", "optics", "optical-design", "zemax", "opticstudio"]
+  "keywords": [
+    "agent-skills",
+    "optics",
+    "optical-design",
+    "zemax",
+    "opticstudio"
+  ]
 }

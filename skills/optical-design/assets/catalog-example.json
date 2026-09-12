@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "entries": [
+    {
+      "vendor": "SYNTHETIC EXAMPLE - NOT A VENDOR",
+      "part": "DEMO-025",
+      "source": "urn:optical-design:synthetic-example:not-commercial-data",
+      "retrieved_on": "2026-09-12",
+      "model": "urn:optical-design:synthetic:DEMO-025:no-prescription-supplied",
+      "properties": {
+        "efl": {"value": 25, "unit": "mm"},
+        "clear_aperture": {"value": 12, "unit": "mm"}
+      }
+    },
+    {
+      "vendor": "SYNTHETIC EXAMPLE - NOT A VENDOR",
+      "part": "DEMO-0255",
+      "source": "urn:optical-design:synthetic-example:not-commercial-data",
+      "retrieved_on": "2026-09-12",
+      "model": "urn:optical-design:synthetic:DEMO-0255:no-prescription-supplied",
+      "properties": {
+        "efl": {"value": 25500, "unit": "um"},
+        "clear_aperture": {"value": 12, "unit": "mm"}
+      }
+    }
+  ]
+}

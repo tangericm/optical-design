@@ -148,16 +148,20 @@ def cmd_seidel(parser, args):
 def cmd_fit(parser, args):
     wmap = load_map(args.map)
     coeffs, resid, pupil = fit_map(wmap, args.scheme, args.nterms)
+    full_disk_rms = rms_from_coeffs(args.scheme, coeffs)
     return cli.Envelope(TOOL, "fit", 0,
                         inputs={"map": args.map, "scheme": args.scheme, "nterms": args.nterms, "shape": list(wmap.shape)},
                         results={"coefficients": coeffs, "terms": terms(args.scheme, coeffs), "residual_rms_waves": resid,
-                                 "rms_waves": rms_from_coeffs(args.scheme, coeffs),
+                                 "rms_waves": full_disk_rms, "coefficient_full_disk_rms_waves": full_disk_rms,
+                                 "fit_rms_on_mask_waves": pupil["fit_rms_on_mask"],
+                                 "fit_diagnostics": {k: pupil[k] for k in ("rank", "condition_number", "valid_samples", "valid_coverage_fraction", "fit_terms")},
                                  "normalization_radius_px": pupil["radius_px"], "pupil_center_px": pupil["center_px"]},
                         units={"coefficients": "map units", "residual_rms_waves": "map units", "rms_waves": "map units",
+                               "coefficient_full_disk_rms_waves": "map units", "fit_rms_on_mask_waves": "map units",
                                "normalization_radius_px": "px", "pupil_center_px": "px (row, col)"},
                         method="Linear least squares over the pupil found in the valid samples (centroid + enclosing "
                                "radius; inscribed circle for an all-finite square); coefficients are normalized to "
-                               "that radius, NaN samples excluded; RMS excludes piston/tilt")
+                               "that radius, NaN samples excluded. residual_rms_waves is measured minus fitted RMS on valid samples; fit_rms_on_mask_waves is reconstructed-map standard deviation with tilt retained. coefficient_full_disk_rms_waves (legacy rms_waves) assumes full-disk orthogonality and excludes piston/tilt; it is not measured-pupil RMS.")
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -174,7 +178,7 @@ def build_parser() -> argparse.ArgumentParser:
         sub.add_argument("--from", dest="from_scheme", choices=Z.SCHEMES, required=True)
         sub.add_argument("--to", dest="to_scheme", choices=Z.SCHEMES, required=True)
         sub.add_argument("--coeffs", required=True, help="comma list or file; ordered by the source scheme starting at its first index")
-        sub.add_argument("--nterms", type=int, help="terms in the output (default: enough to hold the input)")
+        sub.add_argument("--nterms", type=cli.positive_int, help="terms in the output (default: enough to hold the input)")
     add("convert", "Convert coefficients between fringe, noll and ansi schemes", "convert --from fringe --to noll --coeffs 0,0,0,0.25", cmd_convert, convert)
 
     def rms(sub):
@@ -184,7 +188,7 @@ def build_parser() -> argparse.ArgumentParser:
     add("rms", "RMS and PV wavefront error from coefficients", "rms --scheme fringe --coeffs 0,0,0,0.25", cmd_rms, rms)
 
     def strehl(sub):
-        sub.add_argument("--rms-waves", type=float)
+        sub.add_argument("--rms-waves", type=cli.nonnegative_float)
         sub.add_argument("--scheme", choices=Z.SCHEMES)
         sub.add_argument("--coeffs")
     add("strehl", "Strehl ratio from RMS wavefront error or coefficients", "strehl --rms-waves 0.0714", cmd_strehl, strehl)
@@ -196,7 +200,7 @@ def build_parser() -> argparse.ArgumentParser:
     def fit(sub):
         sub.add_argument("--map", required=True, help=".npy or .csv square wavefront map, NaN outside the pupil")
         sub.add_argument("--scheme", choices=Z.SCHEMES, default="fringe")
-        sub.add_argument("--nterms", type=int, default=37)
+        sub.add_argument("--nterms", type=cli.positive_int, default=37)
     add("fit", "Least-squares Zernike fit of a wavefront map", "fit --map wfe.npy --scheme fringe --nterms 37", cmd_fit, fit)
     return parser
 

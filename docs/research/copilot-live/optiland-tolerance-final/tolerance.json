@@ -1,0 +1,25 @@
+{
+  "schema": "1",
+  "samples": 20,
+  "seed": 20260912,
+  "timeout_s": 300,
+  "perturbations": [
+    {
+      "surface": 1,
+      "parameter": "radius_mm",
+      "distribution": "uniform",
+      "half_width_mm": 0.05
+    },
+    {
+      "surface": 1,
+      "parameter": "thickness_mm",
+      "distribution": "normal",
+      "sigma_mm": 0.01
+    }
+  ],
+  "sensitivity_steps": [
+    -1,
+    0,
+    1
+  ]
+}

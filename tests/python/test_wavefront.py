@@ -51,7 +51,7 @@ def test_sample_check(run_json):
     assert out["results"]["q"] == pytest.approx(2.0)
     assert out["warnings"] == []
     under = run_json(wavefront.main, ["sample-check", "--wavelength-um", "0.5", "--fnum", "4", "--pixel-um", "5.0"])
-    assert under["results"]["q"] == pytest.approx(0.4) and any("aliases" in w for w in under["warnings"])
+    assert under["results"]["q"] == pytest.approx(0.4) and any("aliasing risk" in w for w in under["warnings"])
 
 
 def test_map_input_matches_coefficient_input(run_json, tmp_path):
