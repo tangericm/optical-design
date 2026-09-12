@@ -35,7 +35,7 @@ inside the installable skill package. Benchmark manifests reference external mod
   agreement; do not accept an optimization from an unresolved profile disagreement.
 - [x] Add documentation and behavioral routing for illumination profiles versus point-image
   PSFs. Run meaningful unit/native/package checks and independent review.
-- [ ] Integrate verified changes into the original optical-design checkout locally; preserve
+- [x] Integrate verified changes into the original optical-design checkout locally; preserve
   original OCT models/evidence and the earlier untracked audit directory.
 
 ## Initial live cases
