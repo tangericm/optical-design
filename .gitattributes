@@ -10,3 +10,7 @@ docs/research/next-roadmap/**/*.json -text whitespace=cr-at-eol
 docs/research/next-roadmap/*.json -text whitespace=cr-at-eol
 docs/research/next-roadmap/**/*.log -text whitespace=cr-at-eol
 docs/research/next-roadmap/*.log -text whitespace=cr-at-eol
+docs/research/validation-release/**/*.json -text whitespace=cr-at-eol
+docs/research/validation-release/*.json -text whitespace=cr-at-eol
+docs/research/validation-release/**/*.log -text whitespace=cr-at-eol
+docs/research/validation-release/*.log -text whitespace=cr-at-eol

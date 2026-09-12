@@ -35,6 +35,7 @@ try {
     "skills/optical-design/scripts/server.py", "skills/optical-design/references/interactive.md",
     "skills/optical-design/references/optimization.md",
     "skills/optical-design/assets/compensation-spec.json", "skills/optical-design/assets/compensated-tolerances-example.json",
+    "skills/optical-design/assets/validation-spec.json", "skills/optical-design/references/validation.md",
     "skills/optical-design/assets/optimization-spec.json", "skills/optical-design/assets/variables-example.json",
     "skills/optical-design/assets/refocus-spec.json", "skills/optical-design/assets/portable-singlet.json",
     "docs/tiers.md", "docs/install.md", "LICENSE", "README.md", "SECURITY.md"]) {

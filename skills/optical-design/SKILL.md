@@ -9,7 +9,7 @@ compatibility: Python 3.11+ and uv. Portable prescription jobs require Optiland 
 metadata:
   author: Eric Tang
   repo: https://github.com/tangericm/optical-design
-  version: "0.1.0-dev.3"
+  version: "0.1.0-dev.4"
 ---
 
 # optical-design
@@ -28,6 +28,7 @@ units and analysis settings. Distinguish measured performance from estimates and
 | Audit a sequential prescription against requirements | `scripts/design.py audit` | [Design workflow and schema](references/design-workflow.md) |
 | Improve focus within authorized travel | `scripts/design.py refocus` | [Optimization](references/optimization.md) |
 | Improve explicit radius/thickness variables | `scripts/design.py optimize` | [Optimization](references/optimization.md) |
+| Check the saved optimum at separate fields, wavelengths or sampling | `scripts/design.py optimize --validation-spec` | [Separate validation](references/validation.md) |
 | Interactive local optical jobs | `scripts/server.py` | [MCP interface](references/interactive.md) |
 | Sensitivity or seeded Monte Carlo, with optional focus compensation | `scripts/design.py tolerance` | [Tolerancing](references/tolerancing.md) |
 | Local stock-lens shortlist | `scripts/catalog.py validate` / `match` | [Specifications and catalog schema](references/specifications.md) |
@@ -60,6 +61,12 @@ The source remains unchanged. Accept a candidate only when all
 declared constraints pass, its objective gain exceeds the threshold, and native save/reload
 reproduces the result. Return baseline/candidate metrics, limitations, source/artifact hashes
 and model/report paths. A failed or unavailable metric cannot support acceptance.
+
+When independent analysis settings or extra field/wavelength requirements are supplied,
+freeze them before searching and pass `--validation-spec`. The search winner then faces
+separate baseline/candidate checks; validation failure rejects it. Report repeated settings
+as repeated numerical checks, not an independent physical validation. Tuning against results
+from this stage makes those checks part of design iteration, not an untouched holdout.
 
 `tolerance` uses independent radius/thickness perturbations. An optional explicit bounded
 final-gap compensator retains paired uncompensated/compensated outcomes. Report the

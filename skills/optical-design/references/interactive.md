@@ -65,7 +65,9 @@ one strict `request` object:
 Actions are `audit`, `refocus`, `tolerance`, and `optimize`; backends are `optiland`
 and `zos`. For `tolerance`, add `tolerances` and `tolerances_sha256`. For `optimize`,
 add `variables` and `variables_sha256`. These additional inputs are accepted only for
-their corresponding action. Each file must resolve beneath a declared input root.
+their corresponding action. For optional post-search validation on `optimize`, add
+`validation_spec` and `validation_spec_sha256`; both are required together and undergo the
+same root, hash, snapshot and stale-input checks. Each file must resolve beneath a declared input root.
 A changed hash is rejected before creating a job. The exact verified bytes are copied
 to an owned input snapshot; the optical CLI runs on that copy.
 
@@ -86,7 +88,7 @@ this wrapper does not sandbox the installed engine.
 `state` is `running`, `completed`, `failed`, or `cancelled`. `optical_accepted` is true
 only for a fully checked `requirements_met` or `improved` result. A completed audit
 that misses requirements and a completed refocus/optimization without an acceptable
-improvement have `optical_accepted: false`; their exit code 1 is an expected optical
+improvement, or whose separate validation fails (`validation_failed`), have `optical_accepted: false`; their exit code 1 is an expected optical
 outcome. Tolerance completion is evidence collection, so it also has
 `optical_accepted: false`; inspect the conditional tolerance statistics in `report`.
 
@@ -127,3 +129,8 @@ request fields/stale hashes, dispatches the real CLI, and confirms an invalid op
 spec fails without acceptance. A symbolic-link test skips where Windows cannot create
 links. Real optical acceptance is a separate engine-enabled integration check, not
 inferred from this transport test.
+
+When validation is requested, the manager also checks the frozen specification and its
+snapshot hash, reassesses both validation measurements, and links their parameter vectors
+to the original and saved/rejected models. A successful search cannot conceal a missing
+or failed validation. See [separate validation](validation.md).

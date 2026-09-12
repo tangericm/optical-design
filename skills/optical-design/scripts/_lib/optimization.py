@@ -124,13 +124,26 @@ def _rank(entry, sign):
     return (int(entry['assessment']['passes']), -violation, sign * entry['objective_value'])
 
 
-def run_optimization_job(model, spec: DesignSpec, out, factory, variables: dict, *, cancelled=None) -> dict:
+def run_optimization_job(model, spec: DesignSpec, out, factory, variables: dict, *, cancelled=None,
+                         validation_spec: DesignSpec | None = None) -> dict:
     """Optimize a disposable copy, reserve two evaluations for candidate verification.
 
     Exceptions abort acceptance, restore the backend even after deadline/cancellation,
     and retain failure evidence. A receipt is written only after backend teardown.
     """
     config = validate_variables(variables, spec)
+    validation = None
+    if validation_spec is not None:
+        validation_spec = DesignSpec.from_dict(validation_spec.data)
+        if validation_spec.objective is not None or 'focus' in validation_spec.data:
+            raise ValueError('validation specification must contain requirements without objective or focus')
+        validation = {'status': 'not_run_no_candidate', 'spec': copy.deepcopy(validation_spec.data),
+                      'evaluations': 0, 'baseline': None, 'candidate': None,
+                      'evaluation_differences': [key for key in ('fields', 'wavelengths',
+                          'frequencies_cyc_per_mm', 'analysis') if spec.data[key] != validation_spec.data[key]],
+                      'scope': 'separate-spec numerical check; not measured physical validation or unbiased holdout',
+                      'budget_policy': 'all analyses share optimization budget; validation stage also obeys its own timeout'}
+    reserved = 4 if validation is not None else 2
     variables = config['variables']
     model, out = Path(model).resolve(strict=True), Path(out).resolve()
     if not model.is_file():
@@ -144,7 +157,8 @@ def run_optimization_job(model, spec: DesignSpec, out, factory, variables: dict,
     deadline = time.monotonic() + spec.data['budget']['timeout_s']
     maximum = spec.data['budget']['max_evaluations']
     count, history = 0, []
-    initial, baseline, candidate = None, None, None
+    initial, baseline, candidate, rejected_candidate = None, None, None, None
+    validation_deadline = None
     restored, cleanup_error = False, None
     sign = 1 if spec.objective['direction'] == 'maximize' else -1
 
@@ -153,6 +167,8 @@ def run_optimization_job(model, spec: DesignSpec, out, factory, variables: dict,
             raise InterruptedError('optimization cancelled')
         if time.monotonic() >= deadline:
             raise TimeoutError('optimization time budget exhausted between native calls')
+        if validation_deadline is not None and time.monotonic() >= validation_deadline:
+            raise TimeoutError('validation time budget exhausted between native calls')
 
     def call(function, *args):
         check_time()
@@ -165,6 +181,9 @@ def run_optimization_job(model, spec: DesignSpec, out, factory, variables: dict,
         shutil.copy2(model, snapshot)
         write_json(out / 'spec.json', spec.data)
         write_json(out / 'variables.json', config)
+        if validation is not None:
+            write_json(out / 'validation-spec.json', validation_spec.data)
+            validation['spec_sha256'] = sha256(out / 'validation-spec.json')
         with factory(working) as backend:
             recovery = snapshot
             active_error = None
@@ -196,17 +215,25 @@ def run_optimization_job(model, spec: DesignSpec, out, factory, variables: dict,
                         raise RuntimeError('fixed optical model invariants changed')
                     return inspection, actual
 
-                def evaluate(expected, kind, *, bounded=True):
+                def evaluate(expected, kind, *, bounded=True, analysis_spec=None):
                     nonlocal count
                     if count >= maximum:
                         raise RuntimeError('evaluation budget exhausted')
                     verify(expected, bounded=bounded)
                     count += 1  # Count attempted analyses, including failed or late calls.
-                    rows = call(backend.evaluate, spec)
+                    if analysis_spec is not None:
+                        validation['evaluations'] += 1
+                    selected_spec = spec if analysis_spec is None else analysis_spec
+                    if analysis_spec is not None and analysis_spec.data != validation['spec']:
+                        raise RuntimeError('validation specification changed before analysis')
+                    rows = call(backend.evaluate, selected_spec)
+                    if analysis_spec is not None and analysis_spec.data != validation['spec']:
+                        raise RuntimeError('validation specification changed during analysis')
                     inspection, actual = verify(expected, bounded=bounded)
                     entry = {'kind': kind, 'parameters_mm': actual, 'inspection': inspection,
-                             'measurements': rows, 'assessment': assess(spec, rows),
-                             'objective_value': objective_value(spec, rows)}
+                             'measurements': rows, 'assessment': assess(selected_spec, rows)}
+                    if analysis_spec is None:
+                        entry['objective_value'] = objective_value(spec, rows)
                     history.append(entry)
                     return entry
 
@@ -232,7 +259,7 @@ def run_optimization_job(model, spec: DesignSpec, out, factory, variables: dict,
                     key = tuple(point)
                     if key in cache:
                         return cache[key]
-                    if count >= maximum - 2:
+                    if count >= maximum - reserved:
                         return None
                     vector = [min(v['max_mm'], max(v['min_mm'], v['min_mm'] + x * width))
                               for x, v, width in zip(point, variables, widths)]
@@ -252,7 +279,7 @@ def run_optimization_job(model, spec: DesignSpec, out, factory, variables: dict,
                 step = .5
                 termination = 'evaluation_budget'
                 # Normalized Hooke-Jeeves-style polling, with a coupled pattern move.
-                while count < maximum - 2 and step >= 1e-6:
+                while count < maximum - reserved and step >= 1e-6:
                     before, previous = list(center), current
                     for axis in range(len(variables)):
                         for direction in (1, -1):
@@ -288,6 +315,23 @@ def run_optimization_job(model, spec: DesignSpec, out, factory, variables: dict,
                                         rel_tol=1e-5, abs_tol=1e-8):
                         raise RuntimeError('saved candidate objective changed on reload')
                     candidate = reloaded
+                    if validation is not None:
+                        # Search has ended. These results never feed back into candidate selection.
+                        validation['status'] = 'analysis_failed'
+                        validation_deadline = time.monotonic() + validation_spec.data['budget']['timeout_s']
+                        call(backend.load, baseline_path)
+                        if call(backend.inspect) != initial:
+                            raise RuntimeError('baseline did not reproduce before validation')
+                        validation['baseline'] = evaluate(baseline_vector, 'validation_baseline',
+                                                         bounded=False, analysis_spec=validation_spec)
+                        call(backend.load, candidate_path)
+                        validation['candidate'] = evaluate(candidate['parameters_mm'], 'validation_candidate',
+                                                          analysis_spec=validation_spec)
+                        validation['status'] = ('passed' if validation['candidate']['assessment']['passes']
+                                                else 'requirements_not_met')
+                        validation_deadline = None
+                        if validation['status'] != 'passed':
+                            rejected_candidate, candidate = candidate, None
             except BaseException as exc:
                 active_error = exc
                 raise
@@ -309,8 +353,14 @@ def run_optimization_job(model, spec: DesignSpec, out, factory, variables: dict,
                      'source_snapshot_sha256': sha256(snapshot)}
         if candidate:
             artifacts.update(candidate_model=str(candidate_path), candidate_sha256=sha256(candidate_path))
+        if rejected_candidate:
+            rejected_path = out / ('rejected-candidate-model' + candidate_path.suffix)
+            candidate_path.replace(rejected_path)
+            artifacts.update(rejected_candidate_model=str(rejected_path),
+                             rejected_candidate_sha256=sha256(rejected_path))
         report = {'schema': '1', 'action': 'optimize',
-                  'status': 'improved' if candidate else 'no_acceptable_improvement',
+                  'status': ('improved' if candidate else 'validation_failed' if rejected_candidate
+                             else 'no_acceptable_improvement'),
                   'source': {'path': str(model), 'sha256': original_hash}, 'source_unchanged': True,
                   'spec': spec.data, 'variables': config, 'baseline': baseline, 'candidate': candidate,
                   'history': history, 'evaluations': count, 'baseline_restored': restored,
@@ -319,15 +369,20 @@ def run_optimization_job(model, spec: DesignSpec, out, factory, variables: dict,
                   'python_version': platform.python_version(),
                   'search': {'method': 'normalized_bounded_pattern_search', 'global_optimum_proven': False,
                              'termination': termination, 'final_normalized_step': step,
-                             'verification_evaluations_reserved': 2},
+                             'verification_evaluations_reserved': reserved},
                   'parameter_readback_tolerance': {'relative': 1e-12, 'absolute_mm': 1e-12,
                                                    'nonzero_delta_requires_actual_change': True},
                   'time_budget_policy': 'cooperative_between_native_calls'}
+        if validation is not None:
+            report.update(validation=validation, rejected_candidate=rejected_candidate)
         write_json(out / 'report.json', report)
         return report
     except BaseException as exc:
-        write_json(out / 'failure.json', {'schema': '1', 'action': 'optimize', 'status': 'failed',
+        failure = {'schema': '1', 'action': 'optimize', 'status': 'failed',
                    'error': str(exc), 'error_type': type(exc).__name__, 'cleanup_error': cleanup_error,
                    'baseline_restored': restored, 'source_unchanged': model.is_file() and sha256(model) == original_hash,
-                   'evaluations': count, 'history': history})
+                   'evaluations': count, 'history': history}
+        if validation is not None:
+            failure['validation'] = validation
+        write_json(out / 'failure.json', failure)
         raise

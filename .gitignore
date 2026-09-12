@@ -20,3 +20,4 @@ docs/research/real-benchmark/probe/working.zmx
 docs/research/next-roadmap/**/models/
 # Native licensing scratch is machine-local and is not research evidence.
 docs/research/next-roadmap/**/temp/
+docs/research/validation-release/**/temp/

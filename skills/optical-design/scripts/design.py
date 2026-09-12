@@ -29,12 +29,15 @@ def main(argv=None):
     parser.add_argument('--backend', choices=['zos', 'optiland'], required=True)
     parser.add_argument('--tolerances', help='tolerance JSON; required for tolerance action')
     parser.add_argument('--variables', help='bounded variable JSON; required for optimize action')
+    parser.add_argument('--validation-spec', help='separate requirements checked after optimization; optimize only')
     parser.add_argument('--json', action='store_true')
     args = parser.parse_args(argv)
     if (args.action == 'tolerance') != (args.tolerances is not None):
         parser.error('--tolerances is required only with tolerance action')
     if (args.action == 'optimize') != (args.variables is not None):
         parser.error('--variables is required only with optimize action')
+    if args.validation_spec is not None and args.action != 'optimize':
+        parser.error('--validation-spec is supported only with optimize action')
     if args.backend == 'zos' and not in_worker():
         return run_worker(Path(__file__).resolve(), sys.argv[1:] if argv is None else argv)
     try:
@@ -52,7 +55,9 @@ def main(argv=None):
         elif args.action == 'optimize':
             from _lib.optimization import run_optimization_job
             variables = json.loads(Path(args.variables).read_text(encoding='utf-8-sig'))
-            report = run_optimization_job(args.model, spec, args.out, factory, variables)
+            validation = (DesignSpec.from_dict(json.loads(Path(args.validation_spec).read_text(encoding='utf-8-sig')))
+                          if args.validation_spec else None)
+            report = run_optimization_job(args.model, spec, args.out, factory, variables, validation_spec=validation)
         else:
             report = run_job(args.model, spec, args.out, factory, action=args.action)
         emit_report(report, as_json=args.json,

@@ -3,6 +3,16 @@ import json
 from _lib.native_worker import run_worker
 
 
+def test_native_validation_rejection_is_an_optical_outcome(tmp_path, capsys):
+    worker = tmp_path / 'rejected.py'
+    worker.write_text('import json,os,sys\n'
+        'with open(os.environ["OPTICAL_DESIGN_WORKER_RESULT"],"w") as f:\n'
+        ' json.dump({"report":{"status":"validation_failed"},"as_json":True,"summary":"rejected"},f)\n'
+        'sys.exit(1)\n')
+    assert run_worker(worker, []) == 1
+    assert json.loads(capsys.readouterr().out)['status'] == 'validation_failed'
+
+
 def test_native_shutdown_output_cannot_corrupt_json(tmp_path, capsys):
     worker = tmp_path / 'engine.py'
     worker.write_text('''import atexit,json,os

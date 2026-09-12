@@ -5,6 +5,7 @@ import ctypes
 import hashlib
 import importlib.metadata
 import json
+import math
 import os
 import signal
 import subprocess
@@ -18,7 +19,7 @@ ACTIONS = {'audit', 'refocus', 'tolerance', 'optimize'}
 BACKENDS = {'optiland', 'zos'}
 EXPECTED = {'audit': {'requirements_met': 0, 'requirements_not_met': 1},
             'refocus': {'improved': 0, 'no_acceptable_improvement': 1},
-            'optimize': {'improved': 0, 'no_acceptable_improvement': 1},
+            'optimize': {'improved': 0, 'no_acceptable_improvement': 1, 'validation_failed': 1},
             'tolerance': {'completed': 0}}
 # Gate the owned child until it belongs to our Windows job object. No user code/argv.
 _GATE = "import runpy,sys; token=sys.stdin.buffer.read(1); assert token==b'G'; sys.argv=sys.argv[1:]; runpy.run_path(sys.argv[0],run_name='__main__')"
@@ -135,7 +136,8 @@ class JobManager:
         return resolved, expected, data
 
     def start(self, *, action, backend, model, model_sha256, spec, spec_sha256,
-              tolerances=None, tolerances_sha256=None, variables=None, variables_sha256=None):
+              tolerances=None, tolerances_sha256=None, variables=None, variables_sha256=None,
+              validation_spec=None, validation_spec_sha256=None):
         with self._lock:
             if self._closed:
                 raise RuntimeError('server has closed')
@@ -154,6 +156,10 @@ class JobManager:
                     raise ValueError(f'{name} path and hash required only for its action')
                 if required:
                     inputs[name] = self._input(path, sha)
+            if validation_spec is not None or validation_spec_sha256 is not None:
+                if action != 'optimize' or validation_spec is None or validation_spec_sha256 is None:
+                    raise ValueError('validation_spec path and hash are supported together only for optimize')
+                inputs['validation_spec'] = self._input(validation_spec, validation_spec_sha256)
             # Inputs are copied from the exact verified bytes; CLI never loads a live source.
             identity = uuid.uuid4().hex
             directory = self.workspace / identity
@@ -169,7 +175,7 @@ class JobManager:
                 target = snapshots / (name + source.suffix)
                 target.write_bytes(data)
                 paths[name] = target
-                argv.extend(['--' + name, str(target)])
+                argv.extend(['--' + name.replace('_', '-'), str(target)])
             stdout_path, stderr_path = directory / 'stdout.log', directory / 'stderr.log'
             record = {'job_id': identity, 'state': 'running', 'action': action, 'backend': backend,
                       'output': str(output), 'logs': {'stdout': str(stdout_path), 'stderr': str(stderr_path)},
@@ -260,6 +266,43 @@ class JobManager:
         if report['status'] == 'improved' and (
                 report.get('saved_candidate_verified') is not True or 'candidate_model' not in artifacts):
             raise ValueError('saved improvement is not verified')
+        if 'validation_spec' in record['_inputs']:
+            from _lib.design_contract import DesignSpec, assess, finite
+            expected = DesignSpec.from_dict(json.loads(record['_inputs']['validation_spec'][2].decode('utf-8-sig')))
+            validation = report.get('validation')
+            if not isinstance(validation, dict) or validation.get('spec') != expected.data:
+                raise ValueError('requested validation specification missing or changed in receipt')
+            vpath = _inside(output / 'validation-spec.json', output)
+            if (_hash(vpath) != validation.get('spec_sha256') or
+                    json.loads(vpath.read_text(encoding='utf-8')) != expected.data):
+                raise ValueError('validation snapshot does not match receipt and input')
+            required = {'improved': 'passed', 'validation_failed': 'requirements_not_met',
+                        'no_acceptable_improvement': 'not_run_no_candidate'}[report['status']]
+            if validation.get('status') != required:
+                raise ValueError('validation outcome inconsistent with optical acceptance')
+            if required != 'not_run_no_candidate':
+                for name, selected in [('baseline', report.get('baseline')),
+                                       ('candidate', report.get('candidate') if required == 'passed'
+                                        else report.get('rejected_candidate'))]:
+                    measured = validation.get(name)
+                    if (not isinstance(measured, dict) or not isinstance(selected, dict) or
+                            not isinstance(measured.get('measurements'), list)):
+                        raise ValueError(f'validation {name} measurements or model evidence missing')  # noqa: TRY004 -- malformed serialized receipt
+                    actual, wanted = measured.get('parameters_mm'), selected.get('parameters_mm')
+                    if (not isinstance(actual, list) or not isinstance(wanted, list) or
+                            not actual or len(actual) != len(wanted) or any(not math.isclose(
+                                finite(a, 'validation parameter'), finite(b, 'model parameter'),
+                                rel_tol=1e-12, abs_tol=1e-12) for a, b in zip(actual, wanted))):
+                        raise ValueError(f'validation {name} vector differs from model evidence')
+                    assessment = assess(expected, measured['measurements'])
+                    if measured.get('assessment') != assessment:
+                        raise ValueError(f'validation {name} assessment does not match measurements')
+                if assessment['passes'] != (required == 'passed') or validation.get('evaluations') != 2:
+                    raise ValueError('validation measurements do not substantiate claimed result')
+            if required == 'requirements_not_met' and (
+                    report.get('candidate') is not None or report.get('saved_candidate_verified') is not False
+                    or 'candidate_model' in artifacts or 'rejected_candidate_model' not in artifacts):
+                raise ValueError('rejected validation candidate is not quarantined')
         # Reject NaN/Infinity even if a permissive JSON parser accepted it.
         json.dumps(report, allow_nan=False)
         return report

@@ -44,3 +44,14 @@ restricted-client failures remain preserved as rejected evidence.
 The final suite with Optiland/MCP dependencies and native live checks enabled reports
 585 passed and one Windows symbolic-link capability skip. Actual native MCP cancellation
 removed the owned engine, preserved an unrelated process and rejected partial results.
+
+The 0.1.0-dev.4 optimization workflow optionally checks the original baseline and saved
+candidate against a frozen, separate requirements specification after search. Four live
+synthetic-singlet runs exercised passing and deliberately rejected outcomes: native CLI
+and portable optimization through the official MCP client. Search sampling was 64;
+validation sampling was 256, with all 81 evaluations charged to one budget. This is a
+separate numerical acceptance check, not a sampling-convergence or physical-validation
+claim. See `docs/research/validation-release/` for retained receipts and rejection artifacts.
+The final suite reports 610 passed and one Windows symbolic-link capability skip; seven
+package tests and lint/package-install checks also pass. The earlier real OCT method
+discrepancy remains unresolved.

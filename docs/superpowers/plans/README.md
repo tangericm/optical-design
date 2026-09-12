@@ -9,6 +9,7 @@ those phases into executable copilot releases; the table below is the current st
 | `2026-09-12-copilot-sequence.md` | Scientific corrections, core references, copied-model audit/refocus, portable/native adapters, catalog shortlist and seeded tolerancing | Complete, 0.1.0-dev.1 |
 | Real-design benchmark (`docs/research/real-benchmark/`) | Native Huygens/POP reproduction on three OCT models, preserved discrepancy and evidence | Complete, 0.1.0-dev.2 |
 | `2026-09-12-remaining-roadmap.md` | Explicit multivariable optimization, focus compensation, local MCP jobs and controlled optical experiments | Complete, 0.1.0-dev.3 |
+| Separate validation continuation (`docs/research/validation-release/`) | Frozen requirements after optimization, baseline/candidate checks, rejected model artifacts and CLI/MCP acceptance evidence | Complete, 0.1.0-dev.4 |
 
 The broad original `trace.py`/`zos.py` command proposals are implemented through the narrower
 validated `design.py` backend contract where supported. A generic merit editor, topology and

@@ -110,3 +110,7 @@ After nominal improvement, run the declared manufacturing/assembly model rather 
 assuming nominal merit-function gain establishes yield. See [tolerance evidence](tolerancing.md).
 
 Primary link checked 2026-09-12. The bounded search and acceptance rules are project policy.
+
+Optional `--validation-spec` adds two post-search analyses under the same total budget;
+four slots are then reserved. The winner must satisfy the separate requirements to remain
+accepted. See [validation schema, statuses and evidence limits](validation.md).

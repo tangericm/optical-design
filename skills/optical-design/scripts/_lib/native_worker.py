@@ -76,7 +76,8 @@ def run_worker(script, argv):
                 else:
                     expected = {'improved': 0, 'requirements_met': 0, 'completed': 0,
                                 'benchmark_passed': 0, 'benchmark_failed': 1,
-                                'requirements_not_met': 1, 'no_acceptable_improvement': 1}.get(report.get('status'))
+                                'requirements_not_met': 1, 'no_acceptable_improvement': 1,
+                                'validation_failed': 1}.get(report.get('status'))
                 if result.returncode != expected:
                     reason = f'native process exit {result.returncode} inconsistent with result; acceptance invalidated'
                     _invalidate_artifact(argv, payload, reason)

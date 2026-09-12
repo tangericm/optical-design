@@ -15,6 +15,7 @@ versions, settings, search history and file hashes. The source model stays uncha
 | Prescription audit | Explicit fields, wavelengths, metric identities, units and hard requirements |
 | Refocus | Final air gap only; bounded search; fixed prescription invariants; native save/reload verification |
 | Optimization | Up to four explicit radius/thickness variables; bounded search, hard requirements and saved-candidate verification |
+| Separate validation | Predeclared requirements at extra fields/wavelengths or finer sampling; saved winner checked after search; failure rejects candidate |
 | Tolerance evidence | Seeded independent radius/thickness perturbations, optional bounded focus compensation, paired pass rates and Wilson intervals |
 | Interactive MCP tools | Local stdio capabilities/start/status/cancel/results; owned jobs and confined input/output paths |
 | Catalog shortlist | Local declared records, identity/provenance validation, unit-aware constraints and ranking |
@@ -25,6 +26,7 @@ Start with [the executable workflow and specification](skills/optical-design/ref
 Synthetic native/portable singlets and example specifications are included under
 `skills/optical-design/assets/`.
 
+For validation beyond the search settings, see [separate validation](skills/optical-design/references/validation.md).
 For interactive jobs, see [the MCP interface](skills/optical-design/references/interactive.md).
 For bounded multivariable jobs, see [optimization](skills/optical-design/references/optimization.md).
 

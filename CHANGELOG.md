@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+### 0.1.0-dev.4
+
+- Add optional predeclared validation specifications to bounded optimization, with shared
+  budgets, fresh baseline/candidate checks and rejected-candidate quarantine.
+- Carry validation inputs through strict MCP snapshots and reassess both validation results
+  with model-vector linkage before acceptance.
+- Retain two-engine acceptance/rejection and actual MCP evidence.
+
 ### 0.1.0-dev.3
 
 - Add explicit bounded multivariable radius/thickness optimization with candidate reload verification.

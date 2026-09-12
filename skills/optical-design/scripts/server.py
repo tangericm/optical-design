@@ -26,6 +26,8 @@ class StartRequest(BaseModel):
     tolerances_sha256: str | None = None
     variables: str | None = None
     variables_sha256: str | None = None
+    validation_spec: str | None = None
+    validation_spec_sha256: str | None = None
 
 
 def create_server(manager):

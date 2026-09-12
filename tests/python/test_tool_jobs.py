@@ -51,7 +51,7 @@ def jobs(tmp_path, monkeypatch):
     script.write_text('''import argparse, hashlib, json, pathlib, subprocess, sys, time
 p = argparse.ArgumentParser()
 p.add_argument('action')
-for name in ('model', 'spec', 'out', 'backend', 'tolerances', 'variables'): p.add_argument('--'+name)
+for name in ('model', 'spec', 'out', 'backend', 'tolerances', 'variables', 'validation-spec'): p.add_argument('--'+name)
 p.add_argument('--json', action='store_true')
 a = p.parse_args()
 out = pathlib.Path(a.out); out.mkdir()
@@ -67,6 +67,10 @@ r = dict(schema='1', action=a.action, status=cfg.get('status', 'requirements_met
          baseline_restored=True, saved_candidate_verified=False,
          artifacts=dict(baseline_model=str(baseline), baseline_sha256=sha(baseline)))
 r.update(cfg.get('override', {}))
+if a.validation_spec and not cfg.get('omit_validation'):
+    validation_spec = json.loads(pathlib.Path(a.validation_spec).read_text())
+    vpath = out / 'validation-spec.json'; vpath.write_text(json.dumps(validation_spec))
+    r['validation'] = dict(spec=validation_spec, spec_sha256=sha(vpath), status='not_run_no_candidate')
 if not cfg.get('no_report'): (out / 'report.json').write_text(json.dumps(r))
 if cfg.get('failure'): (out / 'failure.json').write_text('{}')
 if cfg.get('tamper'): baseline.write_text('tampered')
@@ -94,6 +98,55 @@ def wait(manager, identity):
 def configure(request, spec, **config):
     spec.write_text(json.dumps(config))
     request['spec_sha256'] = digest(spec)
+
+
+def test_optional_validation_input_is_allowlisted_hashed_and_preserved(jobs):
+    from _lib.design_contract import DesignSpec
+    from test_optimization_validation import validation
+    manager, request, spec = jobs
+    vpath = spec.parent/'validation.json'
+    vpath.write_text(json.dumps(validation().data))
+    request.update(action='optimize', variables=str(vpath), variables_sha256=digest(vpath),
+                   validation_spec=str(vpath), validation_spec_sha256=digest(vpath))
+    configure(request, spec, status='no_acceptable_improvement', exit=1)
+    identity = manager.start(**request)['job_id']
+    state = wait(manager, identity)
+    assert state['state'] == 'completed' and not state['optical_accepted']
+    report = manager.results(identity)['report']
+    assert report['validation']['spec'] == DesignSpec.from_dict(validation().data).data
+    vpath.write_text('{}')
+    assert manager.results(identity)['state'] == 'failed'
+
+
+def test_requested_validation_cannot_be_silently_dropped_from_receipt(jobs):
+    from test_optimization_validation import validation
+    manager, request, spec = jobs
+    vpath = spec.parent/'validation.json'
+    vpath.write_text(json.dumps(validation().data))
+    request.update(action='optimize', variables=str(vpath), variables_sha256=digest(vpath),
+                   validation_spec=str(vpath), validation_spec_sha256=digest(vpath))
+    configure(request, spec, status='no_acceptable_improvement', exit=1, omit_validation=True)
+    identity = manager.start(**request)['job_id']
+    assert wait(manager, identity)['state'] == 'failed'
+
+
+@pytest.mark.parametrize('change', ['wrong_action', 'missing_hash', 'missing_path', 'stale_hash'])
+def test_validation_input_rejects_bad_contract_before_job_creation(jobs, change):
+    manager, request, spec = jobs
+    request.update(action='optimize', variables=str(spec), variables_sha256=digest(spec),
+                   validation_spec=str(spec), validation_spec_sha256=digest(spec))
+    if change == 'wrong_action':
+        request['action'] = 'audit'
+        del request['variables'], request['variables_sha256']
+    elif change == 'missing_hash':
+        del request['validation_spec_sha256']
+    elif change == 'missing_path':
+        del request['validation_spec']
+    else:
+        request['validation_spec_sha256'] = '0'*64
+    with pytest.raises(ValueError):
+        manager.start(**request)
+    assert not list(manager.workspace.iterdir())
 
 
 @pytest.mark.parametrize('field,value', [('action', 'shell'), ('backend', 'exec'),
