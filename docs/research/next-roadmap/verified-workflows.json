@@ -1,0 +1,166 @@
+{
+  "schema_version": 1,
+  "optimization": {
+    "native": {
+      "report_sha256": "ec869291607581633aad219a64f151b6bf0a636770775893525d376396fe2c9c",
+      "evaluations": 81,
+      "parameters_before_mm": [
+        50.0,
+        60.0
+      ],
+      "parameters_after_mm": [
+        51.462890625,
+        47.5042724609375
+      ],
+      "rms_spot_before_um": 1019.4358098139644,
+      "rms_spot_after_um": 15.58766469887371
+    },
+    "portable": {
+      "report_sha256": "6df52c933729f29009df4030ff4710e899c003cc7b0eb998fe630587f95193af",
+      "evaluations": 81,
+      "parameters_before_mm": [
+        50.0,
+        60.0
+      ],
+      "parameters_after_mm": [
+        51.39990234375,
+        47.50341796875
+      ],
+      "rms_spot_before_um": 989.5399128857971,
+      "rms_spot_after_um": 14.627913932013913
+    }
+  },
+  "compensation": {
+    "native": {
+      "report_sha256": "949b584a24a42b9add8de86eff1bcccca364dc083d936c7c90516fc727dd1bce",
+      "paired_yield": {
+        "uncompensated": {
+          "requested": 8,
+          "attempted": 8,
+          "not_run": 0,
+          "passes": 1,
+          "failures": 7,
+          "analysis_failures": 0,
+          "fraction": 0.125,
+          "wilson_95": [
+            0.02241749145005667,
+            0.4708881822128535
+          ],
+          "interval_scope": "conditional on the declared independent perturbation model, engine and bounded adjustment rule; attempted paired Monte Carlo draws; analysis failures count as failures; incomplete runs may have informative stopping; not manufacturing yield"
+        },
+        "compensated": {
+          "requested": 8,
+          "attempted": 8,
+          "not_run": 0,
+          "passes": 8,
+          "failures": 0,
+          "analysis_failures": 0,
+          "fraction": 1.0,
+          "wilson_95": [
+            0.6755924351161198,
+            1.0
+          ],
+          "interval_scope": "conditional on the declared independent perturbation model, engine and bounded adjustment rule; attempted paired Monte Carlo draws; analysis failures count as failures; incomplete runs may have informative stopping; not manufacturing yield"
+        },
+        "recovered": 7,
+        "lost": 0,
+        "both_pass": 1,
+        "both_fail": 0
+      },
+      "evaluations": 300
+    },
+    "portable": {
+      "report_sha256": "91e00564025b7d7e030bfb4f1eee81a86fb6dcd5d92cdec17d0329e3533931b4",
+      "paired_yield": {
+        "uncompensated": {
+          "requested": 8,
+          "attempted": 8,
+          "not_run": 0,
+          "passes": 2,
+          "failures": 6,
+          "analysis_failures": 0,
+          "fraction": 0.25,
+          "wilson_95": [
+            0.071479212752109,
+            0.5907245696898311
+          ],
+          "interval_scope": "conditional on the declared independent perturbation model, engine and bounded adjustment rule; attempted paired Monte Carlo draws; analysis failures count as failures; incomplete runs may have informative stopping; not manufacturing yield"
+        },
+        "compensated": {
+          "requested": 8,
+          "attempted": 8,
+          "not_run": 0,
+          "passes": 8,
+          "failures": 0,
+          "analysis_failures": 0,
+          "fraction": 1.0,
+          "wilson_95": [
+            0.6755924351161198,
+            1.0
+          ],
+          "interval_scope": "conditional on the declared independent perturbation model, engine and bounded adjustment rule; attempted paired Monte Carlo draws; analysis failures count as failures; incomplete runs may have informative stopping; not manufacturing yield"
+        },
+        "recovered": 6,
+        "lost": 0,
+        "both_pass": 2,
+        "both_fail": 0
+      },
+      "evaluations": 300
+    }
+  },
+  "mcp": {
+    "mcp-native-inherited-client": {
+      "client_sha256": "1c6cbeec4b28bfac6ce8e8243c327e16b935851068e6ea5ff920bd2d7694f38e",
+      "job_id": "a077b7b6c7b244109dc0f0c6b816a0d5",
+      "backend": "zos",
+      "accepted": true
+    },
+    "mcp-portable-client": {
+      "client_sha256": "2602bf3a4714f65ce769a1ac57d5e54544502122ea90fd9e97110da406c34fe7",
+      "job_id": "a43bbaabc7944a92b9fe63e5237f655b",
+      "backend": "optiland",
+      "accepted": true
+    }
+  },
+  "physical_acceptance": false,
+  "checks": [
+    "identical seeded perturbation draws across engines"
+  ],
+  "native_cancellation": {
+    "sha256": "a9da5f943660b10ee57c5f094aa9e591cc2f9a4c0aee7ed2ce9aa03d00655c66",
+    "verified": true
+  },
+  "implementation_sha256": {
+    "skills\\optical-design\\scripts\\_lib\\__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "skills\\optical-design\\scripts\\_lib\\backends.py": "f656e70a42f4f53de98f225ca2af988dcb5f9eb33ef60fd5f6d8b4aee177a455",
+    "skills\\optical-design\\scripts\\_lib\\catalog.py": "151ec4495a20eeb96118e790e710077f2312b953f937757aa5175321140e3fe9",
+    "skills\\optical-design\\scripts\\_lib\\cli.py": "721b16b85574a4530f2f354782af42d46a2395ede2cd6e687834245aa519beea",
+    "skills\\optical-design\\scripts\\_lib\\comparison.py": "10e2d8a59e075f0b14aa13b7e0e2b1e5ac3672b1a8c8a5d3ceff49a77e17fa6c",
+    "skills\\optical-design\\scripts\\_lib\\compensation.py": "5f7e14e6f6ef7199b8e09752833e22e859bea05b2d747ee4267db7922ee5899f",
+    "skills\\optical-design\\scripts\\_lib\\design_contract.py": "6007b73cae0c680eba3b84ef0fe80e041faad741cc10c84dc5395988bec4223a",
+    "skills\\optical-design\\scripts\\_lib\\design_jobs.py": "25384c96b2222d95237c861c699bd8cf9cbed5c6aea29d546030f58f76607458",
+    "skills\\optical-design\\scripts\\_lib\\fourier.py": "7e7a2a6e24d50232eae97fc3b66fb7141785c23a83ab5afca61baf9991153dce",
+    "skills\\optical-design\\scripts\\_lib\\native_profiles.py": "311618cd834f5b00ef5c4f8ed0f8e98c36059fffb43d178e89706c65e08c1ce3",
+    "skills\\optical-design\\scripts\\_lib\\native_worker.py": "c6dd9488b780cca63466c725d9d60739889d5f5f65e229cf92712924a13d88b4",
+    "skills\\optical-design\\scripts\\_lib\\optics.py": "9b5adbec9d1a4c8fc027f740757440da2169cbd01f4e8b0ad035e6597ff3e553",
+    "skills\\optical-design\\scripts\\_lib\\optiland_backend.py": "5383694db012622444a67bbba09387617f05489793baf7bd467245d7fd2889fe",
+    "skills\\optical-design\\scripts\\_lib\\optimization.py": "fd94bebb0b16b6fd8ac715ec927bd6ff5204bb8048374c8a513ee0c680ce2495",
+    "skills\\optical-design\\scripts\\_lib\\profile_benchmark.py": "f153856c5f3b2e4d22d111738df26b91a1b83dcb7b1010a98fb4de71e8ea2943",
+    "skills\\optical-design\\scripts\\_lib\\profiles.py": "07b85c38a63df9574cfcd2ef5ce5918706fe691966eba897d37395690f53b07e",
+    "skills\\optical-design\\scripts\\_lib\\tolerancing.py": "14b9ede67e619a37bdc9792330509e2ed5b1e5bd369772a333508d2e60509a82",
+    "skills\\optical-design\\scripts\\_lib\\tool_jobs.py": "58fe89ac20c65c56a20755a0127d7b3dce1af70dcccc82ba6c95055f43592076",
+    "skills\\optical-design\\scripts\\_lib\\wfmap.py": "b929428b036415d1e75ad1eddefa7170dd6d85d71805c77b5640d6fa4b4cbe83",
+    "skills\\optical-design\\scripts\\_lib\\zernike.py": "762b66d328d7b18c3315c03c88c05aceae826a4ae618c1c3c8445394f165a486",
+    "skills\\optical-design\\scripts\\_lib\\zos_backend.py": "b4f901e4836352be686e03ab86e71098a0ac8cb02e3ed19675442d542f30123d",
+    "skills\\optical-design\\scripts\\benchmark.py": "cfc595c00b46a0fbdb95e357a0018be515d4e50c162d2485339307811306cb47",
+    "skills\\optical-design\\scripts\\catalog.py": "9715631c3aabba9a649c8d1c38de27eae5cc15dc930663038cb1a31bc2296f2a",
+    "skills\\optical-design\\scripts\\compare.py": "943d68bbb51d6902a030763a0fe3dc20d6ee5444314f4ea9643b859a67021ccb",
+    "skills\\optical-design\\scripts\\design.py": "15ee204d11e64d0e1aaa1f027e400e642fe4e21c245bae823316b38a647dd567",
+    "skills\\optical-design\\scripts\\interfero.py": "cff7996af8844db24469ceb457e5e4953ddedc25da74bd0398dbf5fb7629b0c3",
+    "skills\\optical-design\\scripts\\resolve.py": "8c6053753569e206fd44d55fe7745e8934522b99ab14ec37e3150ec04e649a82",
+    "skills\\optical-design\\scripts\\server.py": "f729d9bbfb7d8cf6959156e15f5f9791ce9bdf42550381b9d33f1d4b4227c4da",
+    "skills\\optical-design\\scripts\\wavefront.py": "f594f4bc907ca3040311ec6d3067592ad172325e91450c5f3cc28e938bd619bc",
+    "skills\\optical-design\\scripts\\zernike.py": "b5f9f0f30baaa42e340be677bfd688d22f574c4595bafd75bbd430fb11354f38",
+    "skills\\optical-design\\scripts\\zos.py": "da9a6245cc64d90e69ced009cfb7bea6c431bb0a84254cf7ae6e291d94ade4b6"
+  }
+}

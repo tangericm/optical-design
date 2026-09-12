@@ -1,0 +1,60 @@
+{
+  "tools": [
+    "capabilities",
+    "start",
+    "status",
+    "cancel",
+    "results"
+  ],
+  "capabilities": {
+    "actions": [
+      "audit",
+      "optimize",
+      "refocus",
+      "tolerance"
+    ],
+    "backends": [
+      "optiland",
+      "zos"
+    ],
+    "workspace": "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-next\\docs\\research\\next-roadmap\\mcp-native-hostenv",
+    "input_roots": [
+      "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-next"
+    ],
+    "max_active_jobs": 1,
+    "transport": "stdio",
+    "dependency_versions": {
+      "mcp": "2.2.0",
+      "numpy": "2.4.6",
+      "optiland": null,
+      "zospy": "2.1.5",
+      "pythonnet": "3.1.0"
+    },
+    "engine_policy": "same interpreter; install pinned optional engine at server launch",
+    "acceptance_policy": "complete matching CLI receipt, exit, source and artifact hashes"
+  },
+  "request": {
+    "action": "audit",
+    "backend": "zos",
+    "model": "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-next\\docs\\research\\next-roadmap\\optimize-native\\candidate-model.zmx",
+    "model_sha256": "14a5247775762153d89339de1a99b6f676e134a069d9a7ff1a318760c416cdb2",
+    "spec": "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-next\\skills\\optical-design\\assets\\optimization-spec.json",
+    "spec_sha256": "4962917400c71087b2317e56c6de6fe5e3107af6ddc1e14a917ba8863b273b34"
+  },
+  "outcome": {
+    "job_id": "3ccab72c504c4065862f4599bfade16e",
+    "state": "failed",
+    "action": "audit",
+    "backend": "zos",
+    "output": "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-next\\docs\\research\\next-roadmap\\mcp-native-hostenv\\3ccab72c504c4065862f4599bfade16e\\output",
+    "logs": {
+      "stdout": "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-next\\docs\\research\\next-roadmap\\mcp-native-hostenv\\3ccab72c504c4065862f4599bfade16e\\stdout.log",
+      "stderr": "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-next\\docs\\research\\next-roadmap\\mcp-native-hostenv\\3ccab72c504c4065862f4599bfade16e\\stderr.log"
+    },
+    "optical_accepted": false,
+    "returncode": 4,
+    "error": "failure receipt exists; partial result rejected",
+    "report": null
+  },
+  "elapsed_s": 11.681329011917114
+}

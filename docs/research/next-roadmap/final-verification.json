@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "date": "2026-09-12",
+  "release": "0.1.0-dev.3",
+  "base_commit": "dfb510a",
+  "python": {
+    "passed": 585,
+    "skipped": 1,
+    "skip_reason": "Windows symbolic-link creation unavailable",
+    "live_native_enabled": true,
+    "command": "uv run --with mcp==2.2.0 --with optiland==0.6.2 --with zospy==2.1.5 --with pythonnet==3.1.0 pytest -q",
+    "log_sha256": "0c4b874e4811bbd115e2b062d7b0cbb9c4e2f26ab8a53f204d58efbd73700a2d"
+  },
+  "npm_tests": 7,
+  "ruff": "passed",
+  "skill_lint": "passed",
+  "package_install": "passed",
+  "external_optical_preservation_tests": 6,
+  "external_optical_git_head": "9dd93a9f155a94aa049e9165295455c485a1554a",
+  "external_optical_git_clean": true,
+  "workflow_verification_sha256": "4e372cee6478f0a270b9c2f94e0fe3f4f077f151fd7115e8db00add811f31d2b",
+  "optical_control_summary_sha256": "87a2173deb0c3139470f3ec71bd3d8c680960fae79d3a4dbd6d7aa57a1357283",
+  "independent_reviews": [
+    "optimization clean",
+    "compensation clean",
+    "transport clean under declared threat model",
+    "scientific reducer identity checks hardened and passed"
+  ],
+  "remaining_boundaries": [
+    "centered spherical prescription edits",
+    "local bounded optimization is not global optimum proof",
+    "conditional small-sample tolerance results",
+    "native MCP host environment prerequisite not narrowed to one variable",
+    "Stock Huygens/POP physical discrepancy unresolved",
+    "no remote publication"
+  ],
+  "implementation_commit": "e11b2bc"
+}

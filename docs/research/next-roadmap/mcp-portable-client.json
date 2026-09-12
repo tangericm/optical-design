@@ -1,0 +1,667 @@
+{
+  "tools": [
+    "capabilities",
+    "start",
+    "status",
+    "cancel",
+    "results"
+  ],
+  "capabilities": {
+    "actions": [
+      "audit",
+      "optimize",
+      "refocus",
+      "tolerance"
+    ],
+    "backends": [
+      "optiland",
+      "zos"
+    ],
+    "workspace": "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-next\\docs\\research\\next-roadmap\\mcp-portable",
+    "input_roots": [
+      "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-next"
+    ],
+    "max_active_jobs": 1,
+    "transport": "stdio",
+    "dependency_versions": {
+      "mcp": "2.2.0",
+      "numpy": "2.4.6",
+      "optiland": "0.6.2",
+      "zospy": null,
+      "pythonnet": null
+    },
+    "engine_policy": "same interpreter; install pinned optional engine at server launch",
+    "acceptance_policy": "complete matching CLI receipt, exit, source and artifact hashes"
+  },
+  "request": {
+    "action": "audit",
+    "backend": "optiland",
+    "model": "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-next\\docs\\research\\next-roadmap\\optimize-portable\\candidate-model.json",
+    "model_sha256": "cc07602b7fd9bafcaf1312af12c8a935ccedcd45df751dc5723089f758889f48",
+    "spec": "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-next\\skills\\optical-design\\assets\\optimization-spec.json",
+    "spec_sha256": "4962917400c71087b2317e56c6de6fe5e3107af6ddc1e14a917ba8863b273b34"
+  },
+  "outcome": {
+    "job_id": "a43bbaabc7944a92b9fe63e5237f655b",
+    "state": "completed",
+    "action": "audit",
+    "backend": "optiland",
+    "output": "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-next\\docs\\research\\next-roadmap\\mcp-portable\\a43bbaabc7944a92b9fe63e5237f655b\\output",
+    "logs": {
+      "stdout": "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-next\\docs\\research\\next-roadmap\\mcp-portable\\a43bbaabc7944a92b9fe63e5237f655b\\stdout.log",
+      "stderr": "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-next\\docs\\research\\next-roadmap\\mcp-portable\\a43bbaabc7944a92b9fe63e5237f655b\\stderr.log"
+    },
+    "optical_accepted": true,
+    "returncode": 0,
+    "error": null,
+    "report": {
+      "schema": "1",
+      "action": "audit",
+      "status": "requirements_met",
+      "source": {
+        "path": "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-next\\docs\\research\\next-roadmap\\mcp-portable\\a43bbaabc7944a92b9fe63e5237f655b\\inputs\\model.json",
+        "sha256": "cc07602b7fd9bafcaf1312af12c8a935ccedcd45df751dc5723089f758889f48"
+      },
+      "spec": {
+        "schema": "1",
+        "name": "Synthetic two-variable singlet optimization",
+        "fields": [
+          1
+        ],
+        "wavelengths": [
+          1
+        ],
+        "frequencies_cyc_per_mm": [
+          20
+        ],
+        "requirements": [
+          {
+            "id": "focal-length",
+            "metric": "efl_mm",
+            "unit": "mm",
+            "min": 48,
+            "max": 51
+          },
+          {
+            "id": "track",
+            "metric": "total_track_mm",
+            "unit": "mm",
+            "max": 65
+          },
+          {
+            "id": "contrast",
+            "metric": "mtf",
+            "field": 1,
+            "wavelength": 1,
+            "frequency": 20,
+            "axis": "tangential",
+            "unit": "1",
+            "min": 0.3
+          },
+          {
+            "id": "spot",
+            "metric": "rms_spot_um",
+            "field": 1,
+            "wavelength": 1,
+            "unit": "um",
+            "max": 30
+          }
+        ],
+        "objective": {
+          "metric": "rms_spot_um",
+          "field": 1,
+          "wavelength": 1,
+          "direction": "minimize"
+        },
+        "budget": {
+          "max_evaluations": 81,
+          "timeout_s": 600
+        },
+        "analysis": {
+          "sampling": 64,
+          "use_polarization": false
+        },
+        "minimum_gain": 0.001
+      },
+      "python_version": "3.11.15",
+      "baseline": {
+        "inspection": {
+          "engine": {
+            "name": "Optiland",
+            "version": "0.6.2"
+          },
+          "focus_mm": 47.50341796875,
+          "invariants": {
+            "version": 1.0,
+            "name": "Synthetic N-BK7 singlet matching defocused-singlet.zmx prescription",
+            "aperture": {
+              "type": "EPD",
+              "value": 10
+            },
+            "fields": {
+              "fields": [
+                {
+                  "x": 0.0,
+                  "y": 0,
+                  "vx": 0.0,
+                  "vy": 0.0,
+                  "weight": 1.0
+                }
+              ],
+              "telecentric": false,
+              "field_definition": {
+                "field_type": "AngleField"
+              }
+            },
+            "wavelengths": {
+              "wavelengths": [
+                {
+                  "value": 0.55,
+                  "is_primary": true,
+                  "unit": "um",
+                  "weight": 1.0
+                }
+              ],
+              "polarization": "ignore"
+            },
+            "apodization": null,
+            "pickups": [],
+            "solves": {
+              "solves": []
+            },
+            "surface_group": {
+              "surfaces": [
+                {
+                  "type": "ObjectSurface",
+                  "geometry": {
+                    "type": "Plane",
+                    "cs": {
+                      "x": 0.0,
+                      "y": 0.0,
+                      "z": "-Infinity",
+                      "rx": 0.0,
+                      "ry": 0.0,
+                      "rz": 0.0,
+                      "reference_cs": null
+                    },
+                    "radius": "Infinity"
+                  },
+                  "material_post": {
+                    "type": "IdealMaterial",
+                    "propagation_model": {
+                      "class": "HomogeneousPropagation"
+                    },
+                    "index": 1.0,
+                    "absorp": 0.0
+                  },
+                  "comment": ""
+                },
+                {
+                  "type": "Surface",
+                  "thickness": 5,
+                  "geometry": {
+                    "type": "StandardGeometry",
+                    "cs": {
+                      "x": 0.0,
+                      "y": 0.0,
+                      "z": 0.0,
+                      "rx": 0.0,
+                      "ry": 0.0,
+                      "rz": 0.0,
+                      "reference_cs": null
+                    },
+                    "radius": 51.39990234375,
+                    "conic": 0.0
+                  },
+                  "material_post": {
+                    "type": "Material",
+                    "propagation_model": {
+                      "class": "HomogeneousPropagation"
+                    },
+                    "filename": "C:\\Users\\erict\\AppData\\Local\\uv\\cache\\archive-v0\\_nUcPGZ-wb9xmXRa\\Lib\\site-packages\\optiland\\database\\data-nk\\glass\\schott\\N-BK7.yml",
+                    "name": "N-BK7",
+                    "reference": null,
+                    "catalog": "schott",
+                    "match_policy": "strict",
+                    "robust_search": null,
+                    "min_wavelength": null,
+                    "max_wavelength": null
+                  },
+                  "is_stop": true,
+                  "aperture": null,
+                  "comment": "",
+                  "interaction_model": {
+                    "type": "RefractiveReflectiveModel",
+                    "is_reflective": false,
+                    "coating": null,
+                    "bsdf": null
+                  }
+                },
+                {
+                  "type": "Surface",
+                  "geometry": {
+                    "type": "StandardGeometry",
+                    "cs": {
+                      "x": 0.0,
+                      "y": 0.0,
+                      "z": 5.0,
+                      "rx": 0.0,
+                      "ry": 0.0,
+                      "rz": 0.0,
+                      "reference_cs": null
+                    },
+                    "radius": -50.0,
+                    "conic": 0.0
+                  },
+                  "material_post": {
+                    "type": "IdealMaterial",
+                    "propagation_model": {
+                      "class": "HomogeneousPropagation"
+                    },
+                    "index": 1.0,
+                    "absorp": 0.0
+                  },
+                  "is_stop": false,
+                  "aperture": null,
+                  "comment": "",
+                  "interaction_model": {
+                    "type": "RefractiveReflectiveModel",
+                    "is_reflective": false,
+                    "coating": null,
+                    "bsdf": null
+                  }
+                },
+                {
+                  "type": "Surface",
+                  "thickness": 0.0,
+                  "geometry": {
+                    "type": "Plane",
+                    "cs": {
+                      "x": 0.0,
+                      "y": 0.0,
+                      "rx": 0.0,
+                      "ry": 0.0,
+                      "rz": 0.0,
+                      "reference_cs": null
+                    },
+                    "radius": "Infinity"
+                  },
+                  "material_post": {
+                    "type": "IdealMaterial",
+                    "propagation_model": {
+                      "class": "HomogeneousPropagation"
+                    },
+                    "index": 1.0,
+                    "absorp": 0.0
+                  },
+                  "is_stop": false,
+                  "aperture": null,
+                  "comment": "",
+                  "interaction_model": {
+                    "type": "RefractiveReflectiveModel",
+                    "is_reflective": false,
+                    "coating": null,
+                    "bsdf": null
+                  }
+                }
+              ]
+            },
+            "ray_tracer": {
+              "ray_aiming_config": {
+                "mode": "paraxial",
+                "max_iter": 10,
+                "tol": 1e-06
+              }
+            }
+          },
+          "prescription": [
+            {
+              "index": 0,
+              "is_image": false,
+              "radius_mm": "Infinity",
+              "thickness_mm": null
+            },
+            {
+              "index": 1,
+              "is_image": false,
+              "radius_mm": 51.39990234375,
+              "thickness_mm": 5
+            },
+            {
+              "index": 2,
+              "is_image": false,
+              "radius_mm": -50.0,
+              "thickness_mm": 47.50341796875
+            },
+            {
+              "index": 3,
+              "is_image": true,
+              "radius_mm": "Infinity",
+              "thickness_mm": 0.0
+            }
+          ],
+          "surfaces": [
+            {
+              "index": 0,
+              "is_image": false,
+              "radius_mm": "Infinity",
+              "thickness_mm": null
+            },
+            {
+              "index": 1,
+              "is_image": false,
+              "radius_mm": 51.39990234375,
+              "thickness_mm": 5
+            },
+            {
+              "index": 2,
+              "is_image": false,
+              "radius_mm": -50.0,
+              "thickness_mm": 47.50341796875
+            },
+            {
+              "index": 3,
+              "is_image": true,
+              "radius_mm": "Infinity",
+              "thickness_mm": 0.0
+            }
+          ],
+          "axial_positions_mm": [
+            "-Infinity",
+            0.0,
+            5.0,
+            52.50341796875
+          ],
+          "image_surface": 3,
+          "import_restrictions": {
+            "format": "Optiland native JSON",
+            "restrictions": "Centered spherical/plane refractive surfaces in air; EPD; meridional angle fields; millimetres; scalar analysis; no solves, pickups, configurations, coatings, scattering, apodization or unsupported directives. Catalog glass requires an explicit catalog and exact material lookup. Native JSON export only."
+          }
+        },
+        "measurements": [
+          {
+            "metric": "efl_mm",
+            "value": 49.71666222210036,
+            "unit": "mm",
+            "analysis": {
+              "sampling": 64,
+              "use_polarization": false,
+              "wavelength": 1,
+              "wavelength_um": 0.55
+            }
+          },
+          {
+            "metric": "total_track_mm",
+            "value": 52.50341796875,
+            "unit": "mm",
+            "analysis": {
+              "sampling": 64,
+              "use_polarization": false
+            }
+          },
+          {
+            "metric": "mtf",
+            "field": 1,
+            "wavelength": 1,
+            "frequency": 20,
+            "axis": "tangential",
+            "value": 0.4741982751455727,
+            "unit": "1",
+            "analysis": {
+              "sampling": 64,
+              "use_polarization": false,
+              "field_xy_deg": [
+                0.0,
+                0.0
+              ],
+              "wavelength_um": 0.55,
+              "scalar": true,
+              "method": "scalar FFT MTF",
+              "interpolation": "linear, no extrapolation",
+              "frequency_range_cyc_per_mm": [
+                0.0,
+                528.7158937293287
+              ]
+            }
+          },
+          {
+            "metric": "rms_spot_um",
+            "field": 1,
+            "wavelength": 1,
+            "value": 14.627913932013913,
+            "unit": "um",
+            "analysis": {
+              "sampling": 64,
+              "use_polarization": false,
+              "field_xy_deg": [
+                0.0,
+                0.0
+              ],
+              "wavelength_um": 0.55,
+              "scalar": true,
+              "sampled_rays": 817,
+              "transmitted_rays": 817,
+              "method": "geometric RMS radius about centroid",
+              "distribution": "hexapolar",
+              "num_rings": 16
+            }
+          }
+        ],
+        "assessment": {
+          "passes": true,
+          "requirements": [
+            {
+              "id": "focal-length",
+              "key": "efl_mm",
+              "requirement": {
+                "id": "focal-length",
+                "metric": "efl_mm",
+                "unit": "mm",
+                "min": 48,
+                "max": 51
+              },
+              "status": "pass",
+              "value": 49.71666222210036,
+              "unit": "mm"
+            },
+            {
+              "id": "track",
+              "key": "total_track_mm",
+              "requirement": {
+                "id": "track",
+                "metric": "total_track_mm",
+                "unit": "mm",
+                "max": 65
+              },
+              "status": "pass",
+              "value": 52.50341796875,
+              "unit": "mm"
+            },
+            {
+              "id": "contrast",
+              "key": "mtf|f=1|w=1|nu=20|axis=tangential",
+              "requirement": {
+                "id": "contrast",
+                "metric": "mtf",
+                "field": 1,
+                "wavelength": 1,
+                "frequency": 20,
+                "axis": "tangential",
+                "unit": "1",
+                "min": 0.3
+              },
+              "status": "pass",
+              "value": 0.4741982751455727,
+              "unit": "1"
+            },
+            {
+              "id": "spot",
+              "key": "rms_spot_um|f=1|w=1",
+              "requirement": {
+                "id": "spot",
+                "metric": "rms_spot_um",
+                "field": 1,
+                "wavelength": 1,
+                "unit": "um",
+                "max": 30
+              },
+              "status": "pass",
+              "value": 14.627913932013913,
+              "unit": "um"
+            }
+          ]
+        }
+      },
+      "candidate": null,
+      "history": [
+        {
+          "focus_mm": 47.50341796875,
+          "assessment": {
+            "passes": true,
+            "requirements": [
+              {
+                "id": "focal-length",
+                "key": "efl_mm",
+                "requirement": {
+                  "id": "focal-length",
+                  "metric": "efl_mm",
+                  "unit": "mm",
+                  "min": 48,
+                  "max": 51
+                },
+                "status": "pass",
+                "value": 49.71666222210036,
+                "unit": "mm"
+              },
+              {
+                "id": "track",
+                "key": "total_track_mm",
+                "requirement": {
+                  "id": "track",
+                  "metric": "total_track_mm",
+                  "unit": "mm",
+                  "max": 65
+                },
+                "status": "pass",
+                "value": 52.50341796875,
+                "unit": "mm"
+              },
+              {
+                "id": "contrast",
+                "key": "mtf|f=1|w=1|nu=20|axis=tangential",
+                "requirement": {
+                  "id": "contrast",
+                  "metric": "mtf",
+                  "field": 1,
+                  "wavelength": 1,
+                  "frequency": 20,
+                  "axis": "tangential",
+                  "unit": "1",
+                  "min": 0.3
+                },
+                "status": "pass",
+                "value": 0.4741982751455727,
+                "unit": "1"
+              },
+              {
+                "id": "spot",
+                "key": "rms_spot_um|f=1|w=1",
+                "requirement": {
+                  "id": "spot",
+                  "metric": "rms_spot_um",
+                  "field": 1,
+                  "wavelength": 1,
+                  "unit": "um",
+                  "max": 30
+                },
+                "status": "pass",
+                "value": 14.627913932013913,
+                "unit": "um"
+              }
+            ]
+          },
+          "measurements": [
+            {
+              "metric": "efl_mm",
+              "value": 49.71666222210036,
+              "unit": "mm",
+              "analysis": {
+                "sampling": 64,
+                "use_polarization": false,
+                "wavelength": 1,
+                "wavelength_um": 0.55
+              }
+            },
+            {
+              "metric": "total_track_mm",
+              "value": 52.50341796875,
+              "unit": "mm",
+              "analysis": {
+                "sampling": 64,
+                "use_polarization": false
+              }
+            },
+            {
+              "metric": "mtf",
+              "field": 1,
+              "wavelength": 1,
+              "frequency": 20,
+              "axis": "tangential",
+              "value": 0.4741982751455727,
+              "unit": "1",
+              "analysis": {
+                "sampling": 64,
+                "use_polarization": false,
+                "field_xy_deg": [
+                  0.0,
+                  0.0
+                ],
+                "wavelength_um": 0.55,
+                "scalar": true,
+                "method": "scalar FFT MTF",
+                "interpolation": "linear, no extrapolation",
+                "frequency_range_cyc_per_mm": [
+                  0.0,
+                  528.7158937293287
+                ]
+              }
+            },
+            {
+              "metric": "rms_spot_um",
+              "field": 1,
+              "wavelength": 1,
+              "value": 14.627913932013913,
+              "unit": "um",
+              "analysis": {
+                "sampling": 64,
+                "use_polarization": false,
+                "field_xy_deg": [
+                  0.0,
+                  0.0
+                ],
+                "wavelength_um": 0.55,
+                "scalar": true,
+                "sampled_rays": 817,
+                "transmitted_rays": 817,
+                "method": "geometric RMS radius about centroid",
+                "distribution": "hexapolar",
+                "num_rings": 16
+              }
+            }
+          ]
+        }
+      ],
+      "evaluations": 1,
+      "source_unchanged": true,
+      "saved_candidate_verified": false,
+      "artifacts": {
+        "baseline_model": "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-next\\docs\\research\\next-roadmap\\mcp-portable\\a43bbaabc7944a92b9fe63e5237f655b\\output\\baseline-model.json",
+        "baseline_sha256": "cfd4c5e3a70340a33ea016ab89729f2e9a3c47743f08fe89e60cee38799f1d4e"
+      },
+      "baseline_restored": true,
+      "spec_sha256": "42055f8cd63d9d746a3e58bb651825bf1d10621ffbe5b6f229d9a70aee3c0288",
+      "time_budget_policy": "cooperative_between_native_calls"
+    }
+  },
+  "elapsed_s": 6.985043525695801
+}
