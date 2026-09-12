@@ -14,17 +14,22 @@ import numpy as np
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from _lib import cli, fourier, optics  # noqa: E402, RUF100
 from _lib import zernike as Z  # noqa: E402, RUF100
-from zernike import coefficients_to_map, load_map, rms_from_coeffs  # noqa: E402, RUF100
+from zernike import coefficients_to_map, fit_map, load_map, rms_from_coeffs  # noqa: E402, RUF100
 
 TOOL = "wavefront"
 
 
 def _wavefront(parser, args, npix: int):
     if args.map:
-        wmap = load_map(args.map)
-        _, _, mask = Z.unit_disk(wmap.shape[0])
-        mask &= np.isfinite(wmap)
-        rms = float(np.sqrt(np.nanmean((wmap[mask] - np.nanmean(wmap[mask])) ** 2)))
+        wmap_raw = load_map(args.map)
+        if wmap_raw.shape[0] != wmap_raw.shape[1]:
+            parser.error("map must be square")
+        _, _, mask = Z.unit_disk(wmap_raw.shape[0])
+        mask &= np.isfinite(wmap_raw)
+        low_order_coeffs, _ = fit_map(wmap_raw, "fringe", 3, mask=mask)
+        low_order, _ = coefficients_to_map("fringe", low_order_coeffs, npix=wmap_raw.shape[0])
+        wmap = np.where(mask, wmap_raw - low_order, np.nan)
+        rms = float(np.sqrt(np.nanmean(wmap[mask] ** 2)))
         return wmap, mask, rms, {"map": args.map}
     if args.coeffs is None or args.scheme is None:
         parser.error("give --scheme with --coeffs, or --map")
@@ -57,9 +62,11 @@ def cmd_psf(parser, args):
     if args.out:
         np.save(args.out, res["psf"])
         results["psf_file"] = args.out
+    method = "Fraunhofer PSF = |FFT(P·exp(2πiW))|², Strehl = peak / unaberrated peak, zero-padded ×pad (Goodman, Fourier Optics ch. 6)"
+    if args.map:
+        method += "; piston and tilt removed from map input"
     return cli.Envelope(TOOL, "psf", 0, inputs={**inputs, "npix": args.npix, "pad": args.pad, "wavelength_um": args.wavelength_um, "fnum": args.fnum},
-                        results=results, units=units, warnings=warnings,
-                        method="Fraunhofer PSF = |FFT(P·exp(2πiW))|², Strehl = peak / unaberrated peak, zero-padded ×pad (Goodman, Fourier Optics ch. 6)")
+                        results=results, units=units, warnings=warnings, method=method)
 
 
 def cmd_mtf(parser, args):
@@ -89,9 +96,11 @@ def cmd_mtf(parser, args):
     results["curve_nu_over_cutoff"] = nu[::max(1, len(nu) // 50)].tolist()
     results["curve_mtf_x"] = mx[::max(1, len(nu) // 50)].tolist()
     results["curve_mtf_y"] = my[::max(1, len(nu) // 50)].tolist()
+    method = "MTF = |FFT(PSF)| normalized; diffraction limit (2/π)(acos x − x√(1−x²)), x = ν λ F# (Smith ch. 11)"
+    if args.map:
+        method += "; piston and tilt removed from map input"
     return cli.Envelope(TOOL, "mtf", 0, inputs={**inputs, "wavelength_um": args.wavelength_um, "fnum": args.fnum, "pixel_um": args.pixel_um, "freqs": args.freqs},
-                        results=results, units=units, warnings=warnings,
-                        method="MTF = |FFT(PSF)| normalized; diffraction limit (2/π)(acos x − x√(1−x²)), x = ν λ F# (Smith ch. 11)")
+                        results=results, units=units, warnings=warnings, method=method)
 
 
 def cmd_sample_check(parser, args):

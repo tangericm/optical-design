@@ -52,3 +52,22 @@ def test_sample_check(run_json):
     assert out["warnings"] == []
     under = run_json(wavefront.main, ["sample-check", "--wavelength-um", "0.5", "--fnum", "4", "--pixel-um", "5.0"])
     assert under["results"]["q"] == pytest.approx(0.4) and any("aliases" in w for w in under["warnings"])
+
+
+def test_map_input_matches_coefficient_input(run_json, tmp_path):
+    from zernike import coefficients_to_map
+    coeffs = [0, 0.05, -0.02, 0.125]          # piston 0, tilt x/y, balanced defocus (fringe)
+    wmap, _ = coefficients_to_map("fringe", coeffs, npix=128)
+    path = tmp_path / "map.npy"
+    np.save(path, wmap)
+    by_map = run_json(wavefront.main, ["psf", "--map", str(path)])
+    by_coeffs = run_json(wavefront.main, ["psf", "--scheme", "fringe", "--coeffs", "0,0,0,0.125"])
+    assert by_map["results"]["rms_waves"] == pytest.approx(by_coeffs["results"]["rms_waves"], abs=2e-3)
+    assert by_map["results"]["strehl"] == pytest.approx(by_coeffs["results"]["strehl"], abs=0.02)
+
+
+def test_map_input_rejects_non_square(run, tmp_path):
+    path = tmp_path / "bad.npy"
+    np.save(path, np.zeros((64, 32)))
+    code, _, err = run(wavefront.main, ["psf", "--map", str(path)])
+    assert code == 2 and "square" in err
