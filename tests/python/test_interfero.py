@@ -57,6 +57,23 @@ def test_fringe_to_wfe_double_pass_and_zernike(run_json, tmp_path):
     assert r["passes"] == 2
 
 
+def test_fringe_to_wfe_full_square_matches_nan_masked_pupil(run_json, tmp_path):
+    # Interferograms often arrive as a full square with zeros (not NaN) outside the pupil.
+    # PV and map RMS must come from the pupil circle either way, not from the whole canvas.
+    truth = [0, 0, 0, 0.1, 0, 0, 0, 0, 0.05]
+    wmap, _mask = coefficients_to_map("fringe", truth, npix=96)
+    phase = 2 * np.pi * 2 * wmap
+    nan_path, zero_path = tmp_path / "nan.npy", tmp_path / "zero.npy"
+    np.save(nan_path, phase)
+    np.save(zero_path, np.nan_to_num(phase, nan=0.0))
+    argv = ["fringe-to-wfe", "--passes", "2", "--scheme", "fringe", "--nterms", "9", "--phase"]
+    masked = run_json(interfero.main, [*argv, str(nan_path)])["results"]
+    square = run_json(interfero.main, [*argv, str(zero_path)])["results"]
+    assert square["rms_map_waves"] == pytest.approx(masked["rms_map_waves"], abs=2e-3)
+    assert square["pv_waves"] == pytest.approx(masked["pv_waves"], abs=2e-3)
+    np.testing.assert_allclose(square["coefficients"], masked["coefficients"], atol=2e-3)
+
+
 def test_cavity(run_json):
     out = run_json(interfero.main, ["cavity", "--gap-mm", "5", "--wavelength-um", "0.6328", "--tilt-arcsec", "10", "--linewidth-nm", "0.001"])
     r = out["results"]
