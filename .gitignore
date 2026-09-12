@@ -15,3 +15,8 @@ tests/python/_out/
 # Real-design inputs stay in the user's optical project, outside distribution/history.
 docs/research/real-benchmark/**/models/
 docs/research/real-benchmark/probe/working.zmx
+
+# Copied real OCT prescriptions remain local; reports retain their hashes.
+docs/research/next-roadmap/**/models/
+# Native licensing scratch is machine-local and is not research evidence.
+docs/research/next-roadmap/**/temp/

@@ -88,6 +88,17 @@ def test_focus_improves_spot_and_preserves_invariants_source_and_reload(singlet,
 
 
 @pytest.mark.tier1
+def test_inspection_retains_image_axial_position_independently_of_focus_gap(singlet):
+    with _adapter()(singlet) as backend:
+        before = backend.inspect()
+        assert before['axial_positions_mm'][1:] == pytest.approx([0, 5, 54.152542372881356])
+        backend.lens.surfaces[-1].geometry.cs.z += .125
+        after = backend.inspect()
+        assert after['focus_mm'] == before['focus_mm']
+        assert after['axial_positions_mm'][-1] == pytest.approx(before['axial_positions_mm'][-1] + .125)
+
+
+@pytest.mark.tier1
 def test_fft_mtf_near_diffraction_limit_and_declares_interpolation(singlet):
     requirements = [{"id": axis, "metric": "mtf", "unit": "1", "min": 0,
                      "field": 1, "wavelength": 1, "frequency": 10, "axis": axis}

@@ -1,4 +1,4 @@
-"""Seeded, uncompensated tolerance trials on disposable native model copies."""
+"""Seeded tolerance trials with optional explicit bounded focus compensation."""
 from __future__ import annotations
 
 import copy
@@ -9,6 +9,7 @@ import shutil
 import time
 from pathlib import Path
 
+from _lib.compensation import compensate, validate_compensator
 from _lib.design_contract import DesignSpec, assess, finite
 from _lib.design_jobs import sha256, write_json
 
@@ -16,9 +17,9 @@ from _lib.design_jobs import sha256, write_json
 def _validate(raw: dict, spec: DesignSpec) -> dict:
     if not isinstance(raw, dict) or raw.get("schema") != "1":
         raise ValueError("tolerance specification requires schema '1'")
-    allowed = {"schema", "perturbations", "samples", "seed", "sensitivity_steps", "timeout_s"}
+    allowed = {"schema", "perturbations", "samples", "seed", "sensitivity_steps", "timeout_s", "compensator"}
     if set(raw) - allowed:
-        raise ValueError(f"unsupported tolerance keys (compensation is not supported): {sorted(set(raw) - allowed)}")
+        raise ValueError(f"unsupported tolerance keys: {sorted(set(raw) - allowed)}")
     config = copy.deepcopy(raw)
     if type(config.get("samples")) is not int or not 1 <= config["samples"] <= 1000:
         raise ValueError("samples must be an integer from 1 through 1000")
@@ -53,6 +54,8 @@ def _validate(raw: dict, spec: DesignSpec) -> dict:
         if identity in seen:
             raise ValueError("duplicate perturbed surface/parameter")
         seen.add(identity)
+    if "compensator" in config:
+        validate_compensator(config["compensator"], spec, seen)
     return config
 
 
@@ -86,6 +89,21 @@ def _failure_evidence(value):
     return value
 
 
+def _paired_yield(trials, requested):
+    before = _yield(trials, requested)
+    after = _yield([r["compensated"] for r in trials], requested)
+    for outcome in (before, after):
+        outcome["interval_scope"] = (
+            "conditional on the declared independent perturbation model, engine and bounded adjustment rule; "
+            "attempted paired Monte Carlo draws; analysis failures count as failures; "
+            "incomplete runs may have informative stopping; not manufacturing yield")
+    return {"uncompensated": before, "compensated": after,
+            "recovered": sum(r["status"] != "pass" and r["compensated"]["status"] == "pass" for r in trials),
+            "lost": sum(r["status"] == "pass" and r["compensated"]["status"] != "pass" for r in trials),
+            "both_pass": sum(r["status"] == r["compensated"]["status"] == "pass" for r in trials),
+            "both_fail": sum(r["status"] != "pass" and r["compensated"]["status"] != "pass" for r in trials)}
+
+
 def run_tolerance_job(model, spec: DesignSpec, out, factory, tolerance: dict) -> dict:
     """Restore the native baseline before every sensitivity/Monte Carlo evaluation.
 
@@ -111,6 +129,7 @@ def run_tolerance_job(model, spec: DesignSpec, out, factory, tolerance: dict) ->
     nominal, initial = None, None
     restored, cleanup_error = False, None
     evaluations = 0
+    active_trial = None
 
     def check_time():
         if time.monotonic() >= deadline:
@@ -133,6 +152,13 @@ def run_tolerance_job(model, spec: DesignSpec, out, factory, tolerance: dict) ->
             active_error = None
             try:
                 initial = copy.deepcopy(call(backend.inspect))
+                compensator = config.get("compensator")
+                if compensator:
+                    if compensator["surface"] != initial.get("image_surface", -1) - 1:
+                        raise ValueError("compensator must identify the final air gap before the image surface")
+                    finite(initial.get("focus_mm"), "baseline focus")
+                    if "invariants" not in initial:
+                        raise ValueError("compensation requires backend focus invariants")
                 call(backend.save, baseline_path)
                 recovery = baseline_path
                 base_parameters = []
@@ -146,7 +172,7 @@ def run_tolerance_job(model, spec: DesignSpec, out, factory, tolerance: dict) ->
                     base_parameters.append({**p, "baseline_mm": value})
 
                 def trial(kind, index, deltas):
-                    nonlocal evaluations
+                    nonlocal evaluations, active_trial
                     # Restoration failure is fatal: subsequent trials cannot be trusted.
                     call(backend.load, baseline_path)
                     if call(backend.inspect) != initial:
@@ -154,6 +180,7 @@ def run_tolerance_job(model, spec: DesignSpec, out, factory, tolerance: dict) ->
                     entry = {"kind": kind, "index": index, "perturbations": [],
                              "baseline_verified": True,
                              "measurements": [], "assessment": {"passes": False, "requirements": []}}
+                    active_trial = entry
                     for parameter_index, delta in deltas:
                         p = base_parameters[parameter_index]
                         entry["perturbations"].append({"surface": p["surface"], "parameter": p["parameter"],
@@ -176,8 +203,12 @@ def run_tolerance_job(model, spec: DesignSpec, out, factory, tolerance: dict) ->
                                 mismatches.append(f"surface {p['surface']} {p['parameter']}")
                         if mismatches:
                             raise RuntimeError(f"edited parameters did not reproduce at readback: {', '.join(mismatches)}")
+                        if compensator:
+                            before_analysis = copy.deepcopy(call(backend.inspect))
                         evaluations += 1
                         entry["measurements"] = call(backend.evaluate, spec)
+                        if compensator and call(backend.inspect) != before_analysis:
+                            raise RuntimeError("uncompensated analysis changed the perturbed baseline")
                         entry["assessment"] = assess(spec, entry["measurements"])
                         entry["status"] = "pass" if entry["assessment"]["passes"] else "fail"
                     except (TimeoutError, InterruptedError):
@@ -185,6 +216,24 @@ def run_tolerance_job(model, spec: DesignSpec, out, factory, tolerance: dict) ->
                     except Exception as exc:  # noqa: BLE001 -- native failures are preserved as failed trial evidence.
                         entry.update(status="analysis_failed", error=str(exc), error_type=type(exc).__name__)
                         entry = _failure_evidence(entry)
+                        active_trial = entry
+                    if compensator:
+                        def reset():
+                            call(backend.load, baseline_path)
+                            if call(backend.inspect) != initial:
+                                raise RuntimeError("native baseline did not reproduce before compensation")
+                            for p in entry["perturbations"]:
+                                call(backend.set_parameter, p["surface"], p["parameter"], p["value_mm"])
+
+                        def evaluate():
+                            nonlocal evaluations
+                            check_time()
+                            evaluations += 1
+                            return call(backend.evaluate, spec)
+
+                        entry["compensated"] = _failure_evidence(compensate(
+                            backend, spec, compensator, entry, reset, call, evaluate))
+                    active_trial = None
                     return entry
 
                 nominal = trial("nominal", 0, [])
@@ -233,12 +282,19 @@ def run_tolerance_job(model, spec: DesignSpec, out, factory, tolerance: dict) ->
                   "time_budget_policy": "cooperative_between_native_calls",
                   "artifacts": {"baseline_model": str(baseline_path), "baseline_sha256": sha256(baseline_path),
                                 "source_snapshot_sha256": sha256(original_copy)}}
+        if config.get("compensator"):
+            report["compensation"] = config["compensator"]
+            report["paired_yield"] = _paired_yield(monte_carlo, config["samples"])
         write_json(out / "report.json", report)
         return report
     except BaseException as exc:
-        write_json(out / "failure.json", {"schema": "1", "action": "tolerance", "status": "failed",
+        failure = {"schema": "1", "action": "tolerance", "status": "failed",
                    "error": str(exc), "error_type": type(exc).__name__, "cleanup_error": cleanup_error,
                    "baseline_restored": restored, "source_unchanged": model.is_file() and sha256(model) == original_hash,
                    "nominal": nominal, "sensitivity": sensitivity, "monte_carlo": monte_carlo,
-                   "evaluations": evaluations, "yield": _yield(monte_carlo, config["samples"])})
+                   "evaluations": evaluations, "yield": _yield(monte_carlo, config["samples"])}
+        if config.get("compensator"):
+            failure["paired_yield"] = _paired_yield(monte_carlo, config["samples"])
+            failure["active_trial"] = _failure_evidence(active_trial)
+        write_json(out / "failure.json", failure)
         raise

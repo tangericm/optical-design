@@ -289,6 +289,7 @@ class OptilandBackend:
         return {"engine": {"name": "Optiland", "version": VERSION},
                 "focus_mm": float(lens.surfaces[-2].thickness), "invariants": invariant,
                 "prescription": prescription, "surfaces": prescription,
+                "axial_positions_mm": [s['geometry']['cs']['z'] for s in data['surface_group']['surfaces']],
                 "image_surface": len(lens.surfaces) - 1,
                 "import_restrictions": self.import_restrictions}
 

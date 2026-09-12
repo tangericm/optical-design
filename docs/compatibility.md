@@ -5,10 +5,10 @@ Development evidence recorded September 12, 2026.
 | Surface | Evidence | Boundary |
 |---|---|---|
 | Windows, Python 3.11 | Full pytest suite, CLI examples, npm package checks | Other configured CI platforms were not rerun locally |
-| OpticStudio 2024 R1, API 24.1.0, Premium | Fresh standalone connection; real audit/refocus/tolerance; saved-model reload and source hashes | No live GUI attachment or broad prescription coverage |
+| OpticStudio 2024 R1, API 24.1.0, Premium | Fresh standalone connection; real audit/refocus/optimize/compensated tolerance; saved-model reload and source hashes | No live GUI attachment or broad prescription coverage |
 | ZOSPy 2.1.5 / pythonnet 3.1.0 | Installed API calls exercised | Different suite/API versions need validation |
 | Native profile benchmark | 75 Huygens/POP cases across three real OCT models; 135 profiles; two final-CLI smoke cases | Same-method reproduction, not independent physical acceptance or unrestricted model coverage |
-| Optiland 0.6.2 | Native JSON, restricted ZMX regression fixtures, real audit/refocus/tolerance | Full OpticStudio exports can be rejected; import is deliberately narrow |
+| Optiland 0.6.2 | Native JSON, restricted ZMX regression fixtures, real audit/refocus/optimize/compensated tolerance | Full OpticStudio exports can be rejected; import is deliberately narrow |
 | Agent skill entrypoint | Independent before/after behavioral scenarios for defocus, annular MTF, refocus and yield | Not an autonomous-design benchmark |
 | npm tarball | Local pack/install verification | No registry publication in this development change |
 
@@ -28,3 +28,19 @@ widths. The benchmark preserves that discrepancy. It does not relax the original
 optimization adapter or declare the design physically validated. The final software check
 record is 451 Python tests passed (34 optional tests skipped), seven package tests passed,
 and successful lint/package-install checks.
+
+The 0.1.0-dev.3 workflows add explicit bounded radius/thickness optimization and
+focus-compensated tolerancing on both engines. Two variables changed in each synthetic
+81-evaluation optimization; all hard requirements and saved/reloaded candidates passed.
+Eight identical seeded draws gave uncompensated/compensated passes of 1/8→8/8 native and
+2/8→8/8 portable. These are small conditional demonstrations, not yield estimates for a
+production optical assembly. Five additional Stock 840 nm controls leave the approximately
+22% method discrepancy unresolved. See `docs/research/next-roadmap/` for receipts and limits.
+
+The official MCP Python SDK 2.2.0 stdio client/server and process-boundary tests ran on
+Windows. Both portable and native optical acceptance were exercised through actual tool calls.
+Native startup required the trusted host environment to be passed by the MCP client;
+restricted-client failures remain preserved as rejected evidence.
+The final suite with Optiland/MCP dependencies and native live checks enabled reports
+585 passed and one Windows symbolic-link capability skip. Actual native MCP cancellation
+removed the owned engine, preserved an unrelated process and rejected partial results.

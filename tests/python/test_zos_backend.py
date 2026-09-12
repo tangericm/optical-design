@@ -11,6 +11,32 @@ sys.path.insert(0, str(Path(__file__).parents[2] / 'skills/optical-design/script
 from _lib.zos_backend import interpolate_mtf, validate_surface
 
 
+@pytest.mark.parametrize('native_file', ['', 'previous-model.zmx'])
+def test_native_load_rejects_silent_wrong_file(tmp_path, native_file):
+    from types import SimpleNamespace
+
+    from _lib.zos_backend import ZOSBackend
+    path = tmp_path / 'requested.zmx'
+    backend = ZOSBackend(path)
+    backend.s = SimpleNamespace(SystemFile=native_file, _OpenFile=str(path),
+                                load=lambda *args, **kwargs: None)
+    with pytest.raises(RuntimeError, match='identity'):
+        backend.load(path)
+
+
+def test_native_load_confirms_actual_file_without_saving(tmp_path):
+    from types import SimpleNamespace
+
+    from _lib.zos_backend import ZOSBackend
+    path = tmp_path / 'requested.zmx'
+    backend = ZOSBackend(path)
+    calls = []
+    backend.s = SimpleNamespace(SystemFile=str(path),
+                                load=lambda *args, **kwargs: calls.append((args, kwargs)))
+    backend.load(path)
+    assert calls == [((str(path.resolve()),), {'saveifneeded': False})]
+
+
 @pytest.mark.parametrize('changes', [{'thickness_mm': -2}, {'tilts': [0, 10]}, {'aperture': 'CircularObscuration'}])
 def test_nonphysical_or_unsupported_surface_rejected(changes):
     row = {'thickness_mm': 5, 'material': 'N-BK7', 'tilts': [0] * 10, 'aperture': 'None'}

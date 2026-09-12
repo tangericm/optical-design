@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### 0.1.0-dev.3
+
+- Add explicit bounded multivariable radius/thickness optimization with candidate reload verification.
+- Add optional bounded focus compensation with paired tolerance outcomes and evaluation evidence.
+- Add local MCP stdio job tools with confined paths, owned execution and cancellation.
+- Retain controlled 840 nm Huygens/POP sampling experiments and live two-engine workflow evidence.
+
 ### 0.1.0-dev.2
 
 - Add strict, source-preserving Huygens/POP profile benchmarks with native settings

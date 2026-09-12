@@ -2,7 +2,7 @@
 # requires-python = ">=3.11"
 # dependencies = ["numpy>=1.26"]
 # ///
-"""Audit, refocus, or tolerance a copied sequential optical model against explicit requirements.
+"""Audit, refocus, optimize, or tolerance a copied sequential model against explicit requirements.
 
 Install a pinned optional engine using uv --with: optiland==0.6.2, or
 zospy==2.1.5 and pythonnet==3.1.0 on licensed Windows. See references/design-workflow.md.
@@ -22,16 +22,19 @@ from _lib.native_worker import emit_report, in_worker, run_worker
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__, epilog='Example: uv run --with optiland==0.6.2 design.py audit --backend optiland --model lens.json --spec spec.json --out audit --json')
-    parser.add_argument('action', choices=['audit', 'refocus', 'tolerance'])
+    parser.add_argument('action', choices=['audit', 'refocus', 'optimize', 'tolerance'])
     parser.add_argument('--model', required=True)
     parser.add_argument('--spec', required=True)
     parser.add_argument('--out', required=True, help='new or empty output directory')
     parser.add_argument('--backend', choices=['zos', 'optiland'], required=True)
     parser.add_argument('--tolerances', help='tolerance JSON; required for tolerance action')
+    parser.add_argument('--variables', help='bounded variable JSON; required for optimize action')
     parser.add_argument('--json', action='store_true')
     args = parser.parse_args(argv)
     if (args.action == 'tolerance') != (args.tolerances is not None):
         parser.error('--tolerances is required only with tolerance action')
+    if (args.action == 'optimize') != (args.variables is not None):
+        parser.error('--variables is required only with optimize action')
     if args.backend == 'zos' and not in_worker():
         return run_worker(Path(__file__).resolve(), sys.argv[1:] if argv is None else argv)
     try:
@@ -46,6 +49,10 @@ def main(argv=None):
             from _lib.tolerancing import run_tolerance_job
             tolerance = json.loads(Path(args.tolerances).read_text(encoding='utf-8-sig'))
             report = run_tolerance_job(args.model, spec, args.out, factory, tolerance)
+        elif args.action == 'optimize':
+            from _lib.optimization import run_optimization_job
+            variables = json.loads(Path(args.variables).read_text(encoding='utf-8-sig'))
+            report = run_optimization_job(args.model, spec, args.out, factory, variables)
         else:
             report = run_job(args.model, spec, args.out, factory, action=args.action)
         emit_report(report, as_json=args.json,

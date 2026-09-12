@@ -31,6 +31,11 @@ try {
     "skills/optical-design/scripts/benchmark.py", "skills/optical-design/scripts/_lib/profile_benchmark.py",
     "skills/optical-design/scripts/_lib/native_profiles.py", "skills/optical-design/scripts/_lib/profiles.py",
     "skills/optical-design/references/profile-benchmark.md",
+    "skills/optical-design/scripts/_lib/optimization.py", "skills/optical-design/scripts/_lib/compensation.py", "skills/optical-design/scripts/_lib/tool_jobs.py",
+    "skills/optical-design/scripts/server.py", "skills/optical-design/references/interactive.md",
+    "skills/optical-design/references/optimization.md",
+    "skills/optical-design/assets/compensation-spec.json", "skills/optical-design/assets/compensated-tolerances-example.json",
+    "skills/optical-design/assets/optimization-spec.json", "skills/optical-design/assets/variables-example.json",
     "skills/optical-design/assets/refocus-spec.json", "skills/optical-design/assets/portable-singlet.json",
     "docs/tiers.md", "docs/install.md", "LICENSE", "README.md", "SECURITY.md"]) {
     assert.ok(files.includes(required), `Missing package file: ${required}`);

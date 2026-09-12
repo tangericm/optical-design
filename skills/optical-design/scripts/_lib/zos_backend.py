@@ -163,7 +163,11 @@ class ZOSBackend:
         self.s.save_as(str(Path(path).resolve()))
 
     def load(self, path):
-        self.s.load(str(Path(path).resolve()), saveifneeded=False)
+        requested = Path(path).resolve()
+        self.s.load(str(requested), saveifneeded=False)
+        actual = str(self.s.SystemFile)
+        if not actual or Path(actual).resolve() != requested:
+            raise RuntimeError('native model load did not reproduce requested SystemFile identity')
 
     def inspect(self):
         s = self.s

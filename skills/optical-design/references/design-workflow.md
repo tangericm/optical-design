@@ -30,7 +30,7 @@ they do not attach to an open editor. Native tool calls can block past a coopera
 | `fields`, `wavelengths` | Unique positive 1-based indices in the loaded engine model |
 | `frequencies_cyc_per_mm` | Positive unique image-space frequencies, required for MTF requests |
 | `requirements` | Nonempty list; unique `id`, supported `metric`, exact `unit`, `min` and/or `max` |
-| `objective` | One metric identity plus `direction: minimize` or `maximize`; required for refocus |
+| `objective` | One metric identity plus `direction: minimize` or `maximize`; required for refocus, optimize and compensation |
 | `focus` | `min_mm`, `max_mm`, strictly positive ordered final air-gap bounds |
 | `budget` | `max_evaluations` 7–201; positive `timeout_s`; counts include verification |
 | `analysis` | `sampling` 32/64/128/256; scalar `use_polarization: false` |
@@ -43,7 +43,7 @@ and F-number use the primary wavelength. F-number is nominal paraxial, not worki
 `total_track_mm` excludes object distance. RMS is geometric spot **radius about the centroid**.
 MTF is scalar FFT MTF with linear frequency interpolation and no extrapolation.
 
-The current optimizer coarsely samples the declared interval, then refines near the best
+The refocus workflow coarsely samples the declared interval, then refines near the best
 coarse objective. It is a bounded local search and can miss another optimum or narrow
 feasible interval. All evaluated candidates are in history. A candidate must improve the
 objective and satisfy every requirement; baseline feasibility is reported separately.
@@ -68,7 +68,12 @@ constructed from the same synthetic N-BK7 prescription, not imported interchange
 Native and portable pupil sampling differ. Shared first-order/spot agreement is useful
 cross-validation; FFT MTF agreement is not assumed. Repeat with higher sampling when it
 changes acceptance. Polarization, aspheres, multi-configuration models, ghost/stray-light,
-material/temperature tolerances, decenter/tilt tolerances and compensators are unsupported.
+material/temperature tolerances and decenter/tilt tolerances are unsupported. Optional bounded
+final-gap compensation is available; see [tolerancing](tolerancing.md).
+
+For multiple explicit radius/thickness variables, see [optimization](optimization.md).
+Its normalized bounded search retains the best feasible candidate and verifies all edits,
+fixed geometry and saved-model reload. For local interactive jobs, use the [MCP server](interactive.md).
 
 ## Comparison
 

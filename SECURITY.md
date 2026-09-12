@@ -5,13 +5,17 @@ model into a new/empty output directory, open the copy, and save baseline/candid
 They never overwrite the named source model or attach to an open OpticStudio editor session.
 
 The native adapter owns one standalone ZOS-API session and closes it after the job. Refocus
-changes only the final air gap. Tolerance jobs change explicitly declared radius/thickness
-parameters on the copy, read them back and restore the baseline between trials. No arbitrary
+changes only the final air gap. Optimization changes only explicit bounded radius/thickness
+variables and verifies the remaining geometry. Tolerance jobs change explicitly declared radius/thickness
+parameters on the copy, read them back and restore the baseline between trials. Optional
+focus compensation repeats the identical perturbations for each bounded focus candidate. No arbitrary
 generated Python, macros, shell commands, purchases or external messages are executed by the
 design specification.
 
-Native calls are synchronous. Budgets/cancellation are checked between calls and cannot
-forcibly interrupt a blocked engine call. Failure reports record restoration evidence.
+Native calls are synchronous. In-process CLI budgets and cooperative cancellation are
+checked between calls and cannot interrupt a blocked engine call. MCP force-cancellation
+terminates the owned process tree; it cannot claim the interrupted copy was restored.
+Failure reports record available restoration evidence.
 A candidate file left by a failed run is not an accepted candidate.
 
 The skill scripts do not upload prescriptions or send telemetry. uv downloads dependencies;
@@ -20,3 +24,8 @@ loaders are trusted dependencies, not a sandbox for hostile files. Open only mod
 to process. Logs/reports retain local paths, design data, vendor identities and hashes.
 
 Report vulnerabilities through GitHub security advisories on this repository.
+
+The optional MCP stdio server exposes typed job operations. It confines outputs to its
+declared workspace and input reads to declared roots, verifies supplied hashes, and runs
+allowlisted CLI argument lists. It owns job processes and cancellation. Transport completion
+is separate from optical acceptance; partial or mismatched receipts cannot accept a model.

@@ -13,3 +13,6 @@ Prerequisite for the scripts: Python 3.11+ and [uv](https://docs.astral.sh/uv/).
 | npm | `npm install optical-design`; skill lives at `node_modules/optical-design/skills/optical-design` |
 
 Verify: `uv run <skill-dir>/scripts/resolve.py airy --wavelength-um 0.55 --fnum 4`
+
+Optional interactive transport: follow [the local MCP setup](../skills/optical-design/references/interactive.md).
+Declare a workspace and the input roots before starting the server.

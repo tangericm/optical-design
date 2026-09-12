@@ -6,3 +6,7 @@ skills/optical-design/assets/portable-singlet.json -text whitespace=cr-at-eol
 docs/research/copilot-live/*/*.json -text whitespace=cr-at-eol
 docs/research/real-benchmark/**/*.json -text whitespace=cr-at-eol
 docs/research/real-benchmark/*.json -text whitespace=cr-at-eol
+docs/research/next-roadmap/**/*.json -text whitespace=cr-at-eol
+docs/research/next-roadmap/*.json -text whitespace=cr-at-eol
+docs/research/next-roadmap/**/*.log -text whitespace=cr-at-eol
+docs/research/next-roadmap/*.log -text whitespace=cr-at-eol
