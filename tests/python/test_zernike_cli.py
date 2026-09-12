@@ -3,6 +3,7 @@ import math
 import numpy as np
 import pytest
 import zernike
+from _lib.wfmap import coefficients_to_map
 
 
 def test_convert_fringe_defocus_to_noll(run_json):
@@ -82,7 +83,7 @@ def test_seidel_requires_nine_fringe_terms(run):
 
 def test_fit_recovers_known_coefficients(run_json, tmp_path):
     truth = [0, 0, 0, 0.2, 0.05, -0.03, 0, 0, 0.1]
-    wmap, _ = zernike.coefficients_to_map("fringe", truth, npix=128)
+    wmap, _ = coefficients_to_map("fringe", truth, npix=128)
     path = tmp_path / "map.npy"
     np.save(path, wmap)
     out = run_json(zernike.main, ["fit", "--map", str(path), "--scheme", "fringe", "--nterms", "9"])
@@ -92,7 +93,7 @@ def test_fit_recovers_known_coefficients(run_json, tmp_path):
 
 def test_fit_accepts_csv_with_nan_outside_pupil(run_json, tmp_path):
     truth = [0, 0, 0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.1]
-    wmap, _ = zernike.coefficients_to_map("noll", truth + [0, 0], npix=64)
+    wmap, _ = coefficients_to_map("noll", truth + [0, 0], npix=64)
     path = tmp_path / "map.csv"
     np.savetxt(path, wmap, delimiter=",")
     out = run_json(zernike.main, ["fit", "--map", str(path), "--scheme", "noll", "--nterms", "11"])

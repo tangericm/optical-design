@@ -55,7 +55,7 @@ def test_sample_check(run_json):
 
 
 def test_map_input_matches_coefficient_input(run_json, tmp_path):
-    from zernike import coefficients_to_map
+    from _lib.wfmap import coefficients_to_map
     coeffs = [0, 0.05, -0.02, 0.125]          # piston 0, tilt x/y, balanced defocus (fringe)
     wmap, _ = coefficients_to_map("fringe", coeffs, npix=128)
     path = tmp_path / "map.npy"

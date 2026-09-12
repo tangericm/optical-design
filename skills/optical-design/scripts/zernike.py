@@ -13,34 +13,19 @@ from pathlib import Path
 import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import _lib.zernike as Z  # noqa: E402, RUF100
 from _lib import cli  # noqa: E402, RUF100
-from _lib import zernike as Z  # noqa: E402, RUF100
+from _lib.wfmap import (  # noqa: E402, RUF100
+    LOW_ORDER,
+    coefficients_to_map,
+    fit_map,
+    load_map,
+    rms_from_coeffs,
+    strehl_pair,
+    terms,
+)
 
 TOOL = "zernike"
-LOW_ORDER = {(0, 0), (1, 1), (1, -1)}
-
-
-def coefficients_to_map(scheme: str, coeffs: list[float], npix: int = 256):
-    rho, theta, mask = Z.unit_disk(npix)
-    B = Z.basis(scheme, len(coeffs), rho, theta)
-    wmap = np.tensordot(np.asarray(coeffs, float), B, axes=1)
-    wmap[~mask] = np.nan
-    return wmap, mask
-
-
-def rms_from_coeffs(scheme: str, coeffs: list[float], exclude_low_order: bool = True) -> float:
-    total = 0.0
-    for c, (n, m) in zip(coeffs, Z.indices(scheme, len(coeffs))):
-        if exclude_low_order and (n, m) in LOW_ORDER:
-            continue
-        total += (c / Z.norm("noll", n, m)) ** 2 if scheme == "fringe" else c * c
-    return math.sqrt(total)
-
-
-def _terms(scheme: str, coeffs: list[float]):
-    j0 = Z.first_index(scheme)
-    return [{"j": j0 + i, "n": n, "m": m, "name": Z.name(n, m), "value": c}
-            for i, (c, (n, m)) in enumerate(zip(coeffs, Z.indices(scheme, len(coeffs))))]
 
 
 def _default_nterms(dst: str, coeffs: list[float], src_idx: list[tuple[int, int]]) -> int:
@@ -79,7 +64,7 @@ def cmd_convert(parser, args):
             warnings.append(f"dropped {Z.name(*nm)} {nm}: not within {nterms} terms of {dst}")
     return cli.Envelope(TOOL, "convert", 0,
                         inputs={"from": src, "to": dst, "coefficients": coeffs, "nterms": nterms},
-                        results={"coefficients": out, "terms": _terms(dst, out), "scheme": dst},
+                        results={"coefficients": out, "terms": terms(dst, out), "scheme": dst},
                         units={"coefficients": "waves (same unit as input)"},
                         method="Same wavefront in both schemes: c_dst = c_src · N_src/N_dst, matched by (n, m); "
                                "Fringe N=1, Noll/ANSI N=√(n+1) (m=0) or √(2(n+1)) (Wyant & Creath 1992; Noll 1976; ANSI Z80.28)",
@@ -101,35 +86,6 @@ def cmd_rms(parser, args):
                         results={"rms_waves": rms, "pv_waves": pv, "per_term_rms": contributions},
                         units={"rms_waves": "waves", "pv_waves": "waves"},
                         method="RMS = √Σ(c_j/N_j)² over the unit disk (orthogonality); piston and tilt excluded unless --include-low-order; PV sampled on 256² grid (Noll 1976; Wyant & Creath 1992)")
-
-
-def load_map(path: str) -> np.ndarray:
-    p = Path(path)
-    if p.suffix.lower() == ".npy":
-        return np.load(p).astype(float)
-    return np.loadtxt(p, delimiter=",").astype(float)
-
-
-def fit_map(wmap: np.ndarray, scheme: str, nterms: int, mask: np.ndarray | None = None):
-    """Least-squares Zernike fit on the inscribed unit disk; NaN samples are ignored."""
-    npix = wmap.shape[0]
-    if wmap.shape[0] != wmap.shape[1]:
-        raise ValueError("map must be square (pupil inscribed)")
-    rho, theta, disk = Z.unit_disk(npix)
-    valid = disk & np.isfinite(wmap)
-    if mask is not None:
-        valid &= mask.astype(bool)
-    B = Z.basis(scheme, nterms, rho, theta)
-    A = B[:, valid].T
-    y = wmap[valid]
-    coeffs, *_ = np.linalg.lstsq(A, y, rcond=None)
-    residual = y - A @ coeffs
-    return [float(c) for c in coeffs], float(np.sqrt(np.mean(residual**2)))
-
-
-def strehl_pair(rms_waves: float) -> tuple[float, float]:
-    phase = 2 * math.pi * rms_waves
-    return 1.0 - phase**2, math.exp(-(phase**2))
 
 
 def cmd_strehl(parser, args):
@@ -180,7 +136,7 @@ def cmd_fit(parser, args):
     coeffs, resid = fit_map(wmap, args.scheme, args.nterms)
     return cli.Envelope(TOOL, "fit", 0,
                         inputs={"map": args.map, "scheme": args.scheme, "nterms": args.nterms, "shape": list(wmap.shape)},
-                        results={"coefficients": coeffs, "terms": _terms(args.scheme, coeffs), "residual_rms_waves": resid,
+                        results={"coefficients": coeffs, "terms": terms(args.scheme, coeffs), "residual_rms_waves": resid,
                                  "rms_waves": rms_from_coeffs(args.scheme, coeffs)},
                         units={"coefficients": "map units", "residual_rms_waves": "map units", "rms_waves": "map units"},
                         method="Linear least squares on the inscribed unit disk; NaN samples excluded; RMS excludes piston/tilt")

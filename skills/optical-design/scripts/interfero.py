@@ -13,9 +13,9 @@ from pathlib import Path
 import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import _lib.zernike as Z  # noqa: E402, RUF100
 from _lib import cli  # noqa: E402, RUF100
-from _lib import zernike as Z  # noqa: E402, RUF100
-from zernike import _terms, fit_map, load_map, rms_from_coeffs  # noqa: E402, RUF100
+from _lib.wfmap import fit_map, load_map, rms_from_coeffs, terms  # noqa: E402, RUF100
 
 TOOL = "interfero"
 ALGORITHMS = ("3step", "4step", "5step")
@@ -79,7 +79,7 @@ def cmd_fringe_to_wfe(parser, args):
         low = [c if (n, m) in {(0, 0), (1, 1), (1, -1)} else 0.0 for c, (n, m) in zip(coeffs, Z.indices(args.scheme, len(coeffs)))]
         rho, theta, _mask = Z.unit_disk(wfe.shape[0])
         wfe = wfe - np.tensordot(np.asarray(low), Z.basis(args.scheme, len(low), rho, theta), axes=1)
-        results.update({"coefficients": coeffs, "terms": _terms(args.scheme, coeffs), "scheme": args.scheme,
+        results.update({"coefficients": coeffs, "terms": terms(args.scheme, coeffs), "scheme": args.scheme,
                         "rms_waves": rms_from_coeffs(args.scheme, coeffs), "fit_residual_rms_waves": resid})
         units.update({"rms_waves": "waves", "fit_residual_rms_waves": "waves"})
     valid = np.isfinite(wfe)

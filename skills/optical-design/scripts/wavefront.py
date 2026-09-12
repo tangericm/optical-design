@@ -12,9 +12,9 @@ from pathlib import Path
 import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import _lib.zernike as Z  # noqa: E402, RUF100
 from _lib import cli, fourier, optics  # noqa: E402, RUF100
-from _lib import zernike as Z  # noqa: E402, RUF100
-from zernike import coefficients_to_map, fit_map, load_map, rms_from_coeffs  # noqa: E402, RUF100
+from _lib.wfmap import coefficients_to_map, fit_map, load_map, rms_from_coeffs  # noqa: E402, RUF100
 
 TOOL = "wavefront"
 

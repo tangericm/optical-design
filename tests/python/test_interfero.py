@@ -2,7 +2,7 @@ import interfero
 import numpy as np
 import pytest
 from _lib import zernike as Z
-from zernike import coefficients_to_map
+from _lib.wfmap import coefficients_to_map
 
 
 def _frames(phase, steps):
