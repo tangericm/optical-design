@@ -112,19 +112,26 @@ def run(build_parser, argv: list[str] | None = None) -> int:
     """Parse argv, run the subcommand, emit the envelope; map failures to exit codes.
 
     ValueError (bad scheme, non-square map, wrong frame count) is a usage error (2);
-    unreadable or unparseable input files are an analysis failure (4).
+    unreadable or unparseable input files are an analysis failure (4). A ValueError raised
+    while emitting the result (json.dumps(allow_nan=False) rejecting a non-finite value) is
+    also an analysis failure (4), not a usage error — the arguments were fine, the computed
+    result wasn't — so that case is caught separately, inside the outer try but before it
+    can reach the generic ValueError -> usage-error handler below.
     """
     parser = build_parser()
     args = parser.parse_args(argv)
     try:
         env = args.func(args.sub, args)
+        try:
+            emit(env, as_json=args.json)
+        except ValueError as e:
+            fail(f"could not emit result: {e}", EXIT_ANALYSIS)
     except json.JSONDecodeError as e:                       # subclass of ValueError
         fail(f"could not parse JSON input: {e}", EXIT_ANALYSIS)
     except ValueError as e:
         parser.error(str(e))
     except OSError as e:
         fail(f"could not read input: {e}", EXIT_ANALYSIS)
-    emit(env, as_json=args.json)
     return EXIT_OK
 
 

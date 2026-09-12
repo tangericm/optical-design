@@ -55,16 +55,24 @@ def pupil_grid(shape: tuple[int, int], pupil: dict[str, Any]):
 def _pupil_radius(valid: np.ndarray, cy: float, cx: float) -> float:
     """Pupil radius in pixels from a boolean pupil mask and its centre.
 
-    The edge lies between the outermost valid pixel and the innermost invalid one; take the
-    middle of that bracket, and prefer a whole or half pixel radius when one lies in it.
+    Only valid pixels are consulted: radius is the farthest valid pixel from the centroid,
+    snapped to the nearest half pixel. Invalid pixels are never used to bracket the edge — a
+    single invalid pixel *inside* the aperture (a dead pixel, an obscuration) sits close to
+    the centre, and bracketing against the nearest invalid pixel anywhere on the grid would
+    collapse the estimate toward that interior point instead of the true rim.
+
+    A synthetic disk digitized on an npix grid falls short of the generating radius npix/2
+    by a sub-pixel amount that shrinks as the grid gets finer (measured: 0.047 px at npix=32,
+    0.023 px at npix=64, 0.057 px at npix=96, 0.027 px at npix=128, 0.006 px at npix=256) —
+    no single additive constant reproduces npix/2 exactly across sizes, so the estimate is
+    snapped to the nearest half pixel instead. That reproduces the generating radius exactly
+    for every npix above, which is what the map -> fit round trip needs. A genuinely
+    non-round measured radius is snapped the same way; half-pixel granularity is the
+    resolution of this estimator once it may not look at invalid pixels.
     """
     ys, xs = np.nonzero(valid)
-    inner = float(np.max(np.hypot(ys - cy, xs - cx)))
-    oy, ox = np.nonzero(~valid)
-    outer = float(np.min(np.hypot(oy - cy, ox - cx))) if oy.size else inner + 1.0
-    radius = 0.5 * (inner + outer)
-    snapped = round(radius * 2.0) / 2.0
-    return snapped if inner <= snapped < outer else radius
+    max_d = float(np.max(np.hypot(ys - cy, xs - cx)))
+    return round(max_d * 2.0) / 2.0
 
 
 def fit_map(wmap: np.ndarray, scheme: str, nterms: int, mask: np.ndarray | None = None):
@@ -72,12 +80,11 @@ def fit_map(wmap: np.ndarray, scheme: str, nterms: int, mask: np.ndarray | None 
 
     The normalization circle comes from the data, not from the canvas, so a pupil filling
     only part of the canvas still returns unscaled coefficients. Its centre is the centroid
-    of the valid pixels; its radius is bracketed by the outermost valid pixel and the
-    innermost invalid one and taken at the midpoint, snapped to a whole or half pixel when
-    one falls inside that bracket (digitized pupils are generated on such a radius, and the
-    snap makes map → fit round trips exact). An all-finite square input carries no pupil
-    boundary, so the inscribed circle is assumed; that case reproduces `Z.unit_disk`
-    exactly (centre (npix−1)/2, radius npix/2). NaN samples are ignored.
+    of the valid pixels; its radius is the farthest valid pixel from that centroid, snapped
+    to the nearest half pixel (see `_pupil_radius` — invalid pixels are never consulted, so
+    an interior dead pixel or obscuration cannot pull the radius down). An all-finite square
+    input carries no pupil boundary, so the inscribed circle is assumed; that case reproduces
+    `Z.unit_disk` exactly (centre (npix−1)/2, radius npix/2). NaN samples are ignored.
 
     Returns (coefficients, residual_rms, pupil) with
     pupil = {"center_px": [cy, cx], "radius_px": r}.

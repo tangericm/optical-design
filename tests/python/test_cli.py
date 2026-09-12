@@ -1,3 +1,4 @@
+import argparse
 import io
 import json
 
@@ -59,3 +60,27 @@ def test_emit_refuses_non_finite_numbers():
                        results={"r": float("inf")}, units={}, method="test")
     with pytest.raises(ValueError):
         cli.emit(env, as_json=True, out=io.StringIO())
+
+
+def test_run_maps_a_non_finite_result_to_exit_4_not_2(run):
+    """A ValueError from json.dumps(allow_nan=False) inside emit() is an analysis failure
+    (the arguments were fine, the computed result wasn't), not a usage error."""
+    def build_parser():
+        common = cli.common_parser()
+        parser = argparse.ArgumentParser(prog="demo")
+        subs = parser.add_subparsers(dest="subcommand", required=True)
+        sub = subs.add_parser("go", parents=[common])
+
+        def cmd(_sub, _args):
+            return cli.Envelope(tool="demo", subcommand="go", tier=0, inputs={},
+                                results={"r": float("inf")}, units={}, method="test")
+
+        sub.set_defaults(func=cmd, sub=sub)
+        return parser
+
+    def main(argv):
+        return cli.run(build_parser, argv)
+
+    code, _out, err = run(main, ["go", "--json"])
+    assert code == cli.EXIT_ANALYSIS
+    assert err.startswith("error:")

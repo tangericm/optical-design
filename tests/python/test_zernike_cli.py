@@ -120,6 +120,18 @@ def test_fit_accepts_csv_with_nan_outside_pupil(run_json, tmp_path):
     assert out["results"]["coefficients"][8] == pytest.approx(0.1, abs=1e-6)
 
 
+def test_fit_ignores_interior_dead_pixels(run_json, tmp_path):
+    from _lib.wfmap import coefficients_to_map
+    truth = [0, 0, 0, 0, 0, 0, 0, 0, 0.1]
+    wmap, _ = coefficients_to_map("fringe", truth, npix=128)
+    wmap[60:63, 64:66] = np.nan           # dead pixels near the center
+    path = tmp_path / "map.npy"
+    np.save(path, wmap)
+    out = run_json(zernike.main, ["fit", "--map", str(path), "--scheme", "fringe", "--nterms", "9"])
+    assert out["results"]["coefficients"][8] == pytest.approx(0.1, abs=1e-3)
+    assert out["results"]["normalization_radius_px"] == pytest.approx(64.0, abs=1.0)
+
+
 def test_strehl_without_scheme_is_a_usage_error(run):
     code, _, err = run(zernike.main, ["strehl", "--coeffs", "0,0,0,0.1"])
     assert code == 2 and "scheme" in err.lower()
