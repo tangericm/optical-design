@@ -47,7 +47,7 @@
 - [x] Cross-check shared first-order metrics and simple lens behavior between engines; document physical-analysis differences rather than force numerical equality.
 - [x] Update SKILL.md, README, tier/compatibility/security documentation, script help/examples, and packaging tests to advertise only shipped and verified behavior.
 - [x] Run full tests, lint, package verification, live demos, source-preservation checks, and an independent code/scientific review. Address actionable findings before integration.
-- [ ] Integrate verified changes into the original local checkout while preserving its untracked audit artifacts. No remote publication is part of this task.
+- [x] Integrate verified changes into the original local checkout while preserving its untracked audit artifacts. No remote publication is part of this task.
 
 ## Verification commands
 
@@ -77,3 +77,7 @@ Live backends use isolated pinned environments; their reports include exact vers
 
 Evidence: `docs/research/copilot-live/evidence-summary.md`; behavioral evaluation and review
 findings are recorded in `docs/research/copilot-live/implementation-review.md`.
+
+Local integration: implementation commit `8f10e23` was fast-forwarded into the original
+`optical-design` checkout on `main`. The merged default suite reports 336 passed / 34 optional
+skips; tarball install verification passes. The original untracked audit directory is preserved.
