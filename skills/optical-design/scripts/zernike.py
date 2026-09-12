@@ -86,6 +86,30 @@ def cmd_rms(parser, args):
                         method="RMS = √Σ(c_j/N_j)² over the unit disk (orthogonality); piston and tilt excluded unless --include-low-order; PV sampled on 256² grid")
 
 
+def load_map(path: str) -> np.ndarray:
+    p = Path(path)
+    if p.suffix.lower() == ".npy":
+        return np.load(p).astype(float)
+    return np.loadtxt(p, delimiter=",").astype(float)
+
+
+def fit_map(wmap: np.ndarray, scheme: str, nterms: int, mask: np.ndarray | None = None):
+    """Least-squares Zernike fit on the inscribed unit disk; NaN samples are ignored."""
+    npix = wmap.shape[0]
+    if wmap.shape[0] != wmap.shape[1]:
+        raise ValueError("map must be square (pupil inscribed)")
+    rho, theta, disk = Z.unit_disk(npix)
+    valid = disk & np.isfinite(wmap)
+    if mask is not None:
+        valid &= mask.astype(bool)
+    B = Z.basis(scheme, nterms, rho, theta)
+    A = B[:, valid].T
+    y = wmap[valid]
+    coeffs, *_ = np.linalg.lstsq(A, y, rcond=None)
+    residual = y - A @ coeffs
+    return [float(c) for c in coeffs], float(np.sqrt(np.mean(residual**2)))
+
+
 def strehl_pair(rms_waves: float) -> tuple[float, float]:
     phase = 2 * math.pi * rms_waves
     return 1.0 - phase**2, math.exp(-(phase**2))
@@ -106,6 +130,43 @@ def cmd_strehl(parser, args):
                         units={"rms_waves": "waves"},
                         method="Maréchal S ≈ 1 − (2πσ)²; extended S ≈ exp(−(2πσ)²); diffraction-limited when σ ≤ λ/14 (S ≥ 0.8) (Born & Wolf §9.3; Mahajan 1983)",
                         warnings=warnings)
+
+
+def cmd_seidel(parser, args):
+    z = cli.parse_floats(args.coeffs)
+    if len(z) < 9:
+        parser.error("seidel-from-zernike needs at least 9 Fringe coefficients (Z1..Z9)")
+    _Z1, Z2, Z3, Z4, Z5, Z6, Z7, Z8, Z9 = z[:9]
+    astig = 2 * math.hypot(Z5, Z6)
+    coma = 3 * math.hypot(Z7, Z8)
+    sph = 6 * Z9
+    return cli.Envelope(TOOL, "seidel-from-zernike", 0,
+                        inputs={"scheme": "fringe", "coefficients": z[:9]},
+                        results={
+                            "tilt_waves": math.hypot(Z2 - 2 * Z7, Z3 - 2 * Z8),
+                            "tilt_angle_deg": math.degrees(math.atan2(Z3 - 2 * Z8, Z2 - 2 * Z7)),
+                            "defocus_w020_waves": 2 * Z4 - 6 * Z9,
+                            "astigmatism_w222_waves": astig,
+                            "astigmatism_angle_deg": 0.5 * math.degrees(math.atan2(Z6, Z5)),
+                            "coma_w131_waves": coma,
+                            "coma_angle_deg": math.degrees(math.atan2(Z8, Z7)),
+                            "spherical_w040_waves": sph,
+                        },
+                        units={k: "waves" for k in ("tilt_waves", "defocus_w020_waves", "astigmatism_w222_waves", "coma_w131_waves", "spherical_w040_waves")},
+                        method="Wyant & Creath 1992, 'Basic Wavefront Aberration Theory for Optical Metrology', Table 3, "
+                               "Fringe (unnormalized) coefficients: W040=6Z9, W131=3√(Z7²+Z8²), W222=2√(Z5²+Z6²), "
+                               "W020=2Z4−6Z9 (add ±W222/2 to reach the sagittal/tangential foci), tilt=√((Z2−2Z7)²+(Z3−2Z8)²)")
+
+
+def cmd_fit(parser, args):
+    wmap = load_map(args.map)
+    coeffs, resid = fit_map(wmap, args.scheme, args.nterms)
+    return cli.Envelope(TOOL, "fit", 0,
+                        inputs={"map": args.map, "scheme": args.scheme, "nterms": args.nterms, "shape": list(wmap.shape)},
+                        results={"coefficients": coeffs, "terms": _terms(args.scheme, coeffs), "residual_rms_waves": resid,
+                                 "rms_waves": rms_from_coeffs(args.scheme, coeffs)},
+                        units={"coefficients": "map units", "residual_rms_waves": "map units", "rms_waves": "map units"},
+                        method="Linear least squares on the inscribed unit disk; NaN samples excluded; RMS excludes piston/tilt")
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -136,6 +197,16 @@ def build_parser() -> argparse.ArgumentParser:
         sub.add_argument("--scheme", choices=Z.SCHEMES)
         sub.add_argument("--coeffs")
     add("strehl", "Strehl ratio from RMS wavefront error or coefficients", "strehl --rms-waves 0.0714", cmd_strehl, strehl)
+
+    def seidel(sub):
+        sub.add_argument("--coeffs", required=True, help="Fringe coefficients Z1..Z9 (or more) in waves")
+    add("seidel-from-zernike", "Seidel-type aberration magnitudes from Fringe coefficients", "seidel-from-zernike --coeffs 0,0,0,0,0.05,0,0.1,0,0.2", cmd_seidel, seidel)
+
+    def fit(sub):
+        sub.add_argument("--map", required=True, help=".npy or .csv square wavefront map, NaN outside the pupil")
+        sub.add_argument("--scheme", choices=Z.SCHEMES, default="fringe")
+        sub.add_argument("--nterms", type=int, default=37)
+    add("fit", "Least-squares Zernike fit of a wavefront map", "fit --map wfe.npy --scheme fringe --nterms 37", cmd_fit, fit)
     return parser
 
 

@@ -1,5 +1,6 @@
 import math
 
+import numpy as np
 import pytest
 import zernike
 
@@ -52,3 +53,39 @@ def test_strehl_from_rms(run_json):
 def test_strehl_from_coeffs(run_json):
     out = run_json(zernike.main, ["strehl", "--scheme", "fringe", "--coeffs", "0,0,0,0.125"])
     assert out["results"]["strehl_marechal"] == pytest.approx(0.794, abs=0.01)
+
+
+def test_seidel_from_fringe_spherical_and_coma(run_json):
+    # Wyant & Creath 1992, Table 3 (0-based Z index there; 1-based here):
+    # spherical W040 = 6·Z9 ; coma W131 = 3·√(Z7²+Z8²) ; astig W222 = 2·√(Z5²+Z6²)
+    coeffs = [0, 0, 0, 0, 0.05, 0, 0.1, 0, 0.2]
+    out = run_json(zernike.main, ["seidel-from-zernike", "--coeffs", ",".join(map(str, coeffs))])
+    r = out["results"]
+    assert r["spherical_w040_waves"] == pytest.approx(1.2)
+    assert r["coma_w131_waves"] == pytest.approx(0.3)
+    assert r["coma_angle_deg"] == pytest.approx(0.0)
+    assert r["astigmatism_w222_waves"] == pytest.approx(0.1)
+
+
+def test_seidel_requires_nine_fringe_terms(run):
+    code, _, err = run(zernike.main, ["seidel-from-zernike", "--coeffs", "0,0,0,0.1"])
+    assert code == 2 and "9" in err
+
+
+def test_fit_recovers_known_coefficients(run_json, tmp_path):
+    truth = [0, 0, 0, 0.2, 0.05, -0.03, 0, 0, 0.1]
+    wmap, _ = zernike.coefficients_to_map("fringe", truth, npix=128)
+    path = tmp_path / "map.npy"
+    np.save(path, wmap)
+    out = run_json(zernike.main, ["fit", "--map", str(path), "--scheme", "fringe", "--nterms", "9"])
+    np.testing.assert_allclose(out["results"]["coefficients"], truth, atol=1e-6)
+    assert out["results"]["residual_rms_waves"] == pytest.approx(0.0, abs=1e-6)
+
+
+def test_fit_accepts_csv_with_nan_outside_pupil(run_json, tmp_path):
+    truth = [0, 0, 0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.1]
+    wmap, _ = zernike.coefficients_to_map("noll", truth + [0, 0], npix=64)
+    path = tmp_path / "map.csv"
+    np.savetxt(path, wmap, delimiter=",")
+    out = run_json(zernike.main, ["fit", "--map", str(path), "--scheme", "noll", "--nterms", "11"])
+    assert out["results"]["coefficients"][8] == pytest.approx(0.1, abs=1e-6)
