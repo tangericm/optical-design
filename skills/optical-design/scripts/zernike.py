@@ -79,13 +79,24 @@ def cmd_rms(parser, args):
         low = [c if (n, m) in LOW_ORDER else 0.0 for c, (n, m) in zip(coeffs, Z.indices(args.scheme, len(coeffs)))]
         wmap -= coefficients_to_map(args.scheme, low, npix=256)[0]
     pv = float(np.nanmax(wmap) - np.nanmin(wmap))
-    contributions = [{"name": Z.name(n, m), "rms": abs(c) / Z.norm("noll", n, m) if args.scheme == "fringe" else abs(c)}
-                     for c, (n, m) in zip(coeffs, Z.indices(args.scheme, len(coeffs))) if c != 0.0]
+    contributions = []
+    for c, (n, m) in zip(coeffs, Z.indices(args.scheme, len(coeffs))):
+        if c == 0.0:
+            continue
+        term_rms = abs(c) / Z.norm("noll", n, m) if args.scheme == "fringe" else abs(c)
+        contributions.append({
+            "name": Z.name(n, m),
+            "rms": 0.0 if (n, m) == (0, 0) else term_rms,   # piston is the mean, not an error
+            "excluded": not args.include_low_order and (n, m) in LOW_ORDER,
+        })
     return cli.Envelope(TOOL, "rms", 0,
                         inputs={"scheme": args.scheme, "coefficients": coeffs, "include_low_order": args.include_low_order},
                         results={"rms_waves": rms, "pv_waves": pv, "per_term_rms": contributions},
                         units={"rms_waves": "waves", "pv_waves": "waves"},
-                        method="RMS = √Σ(c_j/N_j)² over the unit disk (orthogonality); piston and tilt excluded unless --include-low-order; PV sampled on 256² grid (Noll 1976; Wyant & Creath 1992)")
+                        method="RMS = √Σ(c_j/N_j)² over the unit disk (orthogonality), i.e. the root sum square of the "
+                               "per_term_rms entries that are not excluded; tilt is excluded unless "
+                               "--include-low-order and piston never contributes (it is the mean); "
+                               "PV sampled on 256² grid (Noll 1976; Wyant & Creath 1992)")
 
 
 def cmd_strehl(parser, args):
@@ -98,12 +109,13 @@ def cmd_strehl(parser, args):
     warnings = []
     if rms > 0.1:
         warnings.append("RMS > 0.1 waves: Maréchal approximation not valid; compute the PSF (wavefront.py psf) instead")
+        marechal = None   # 1 − (2πσ)² is meaningless here and goes negative past σ ≈ 0.16
     return cli.Envelope(TOOL, "strehl", 0,
                         inputs={"rms_waves": rms, "scheme": args.scheme, "coefficients": args.coeffs},
                         results={"rms_waves": rms, "strehl_marechal": marechal, "strehl_extended": extended,
                                  "meets_marechal_criterion": rms <= 1 / 14},
                         units={"rms_waves": "waves"},
-                        method="Maréchal S ≈ 1 − (2πσ)²; extended S ≈ exp(−(2πσ)²); diffraction-limited when σ ≤ λ/14 (S ≥ 0.8) (Born & Wolf §9.3; Mahajan 1983)",
+                        method="Maréchal S ≈ 1 − (2πσ)² (null when σ > 0.1 waves, outside its validity); extended S ≈ exp(−(2πσ)²); diffraction-limited when σ ≤ λ/14 (S ≥ 0.8) (Born & Wolf §9.3; Mahajan 1983)",
                         warnings=warnings)
 
 

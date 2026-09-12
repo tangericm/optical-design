@@ -57,6 +57,9 @@ def test_strehl_from_rms(run_json):
     assert out["warnings"] == []
     big = run_json(zernike.main, ["strehl", "--rms-waves", "0.3"])
     assert any("valid" in w for w in big["warnings"])
+    # Maréchal goes negative past ~0.16 waves; report nothing rather than a wrong number
+    assert big["results"]["strehl_marechal"] is None
+    assert big["results"]["strehl_extended"] == pytest.approx(math.exp(-(2 * math.pi * 0.3) ** 2))
 
 
 def test_strehl_from_coeffs(run_json):
@@ -137,3 +140,20 @@ def test_fit_non_square_map_is_a_usage_error(run, tmp_path):
     np.save(path, np.zeros((64, 32)))
     code, _, err = run(zernike.main, ["fit", "--map", str(path)])
     assert code == 2 and "square" in err
+
+
+def test_per_term_rms_marks_excluded_terms_and_sums_to_rms(run_json):
+    coeffs = "0.4,0.2,-0.1,0.25,0,0,0,0,0.1"
+    out = run_json(zernike.main, ["rms", "--scheme", "fringe", "--coeffs", coeffs])
+    r = out["results"]
+    per = r["per_term_rms"]
+    assert [e["name"] for e in per if e["excluded"]] == ["piston", "tilt x", "tilt y"]
+    assert next(e for e in per if e["name"] == "piston")["rms"] == 0.0
+    rss = math.sqrt(sum(e["rms"] ** 2 for e in per if not e["excluded"]))
+    assert rss == pytest.approx(r["rms_waves"], rel=1e-6)
+
+    kept = run_json(zernike.main, ["rms", "--scheme", "fringe", "--coeffs", coeffs, "--include-low-order"])
+    per = kept["results"]["per_term_rms"]
+    assert not any(e["excluded"] for e in per)
+    rss = math.sqrt(sum(e["rms"] ** 2 for e in per))
+    assert rss == pytest.approx(kept["results"]["rms_waves"], rel=1e-6)

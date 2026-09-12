@@ -104,8 +104,11 @@ def fit_map(wmap: np.ndarray, scheme: str, nterms: int, mask: np.ndarray | None 
 
 
 def rms_from_coeffs(scheme: str, coeffs: list[float], exclude_low_order: bool = True) -> float:
+    """RMS over the pupil. Piston is the mean of the wavefront, so it never contributes."""
     total = 0.0
     for c, (n, m) in zip(coeffs, Z.indices(scheme, len(coeffs))):
+        if (n, m) == (0, 0):
+            continue
         if exclude_low_order and (n, m) in LOW_ORDER:
             continue
         total += (c / Z.norm("noll", n, m)) ** 2 if scheme == "fringe" else c * c
