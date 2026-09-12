@@ -52,3 +52,10 @@ def test_human_output_survives_cp1252_stream():
     out.flush()
     text = raw.getvalue().decode("cp1252")
     assert "method:" in text and "r" in text and "waves" in text
+
+
+def test_emit_refuses_non_finite_numbers():
+    env = cli.Envelope(tool="demo", subcommand="x", tier=0, inputs={},
+                       results={"r": float("inf")}, units={}, method="test")
+    with pytest.raises(ValueError):
+        cli.emit(env, as_json=True, out=io.StringIO())

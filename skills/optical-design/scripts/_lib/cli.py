@@ -57,9 +57,11 @@ def _write(out: Any, text: str) -> None:
 
 
 def emit(env: Envelope, as_json: bool, out=None) -> None:
+    """Write the envelope. JSON is strict: NaN and Infinity are rejected, not emitted."""
     out = out or sys.stdout
     if as_json:
-        out.write(json.dumps(env.to_dict(), indent=2, sort_keys=True, default=_json_default) + "\n")
+        out.write(json.dumps(env.to_dict(), indent=2, sort_keys=True, allow_nan=False,
+                             default=_json_default) + "\n")
         return
     _write(out, f"{env.tool} {env.subcommand} (tier {env.tier})\n")
     _write(out, f"  method: {env.method}\n")

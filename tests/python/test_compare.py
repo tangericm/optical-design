@@ -54,3 +54,16 @@ def test_invalid_json_exits_4(run, tmp_path):
     bad.write_text("{not json", encoding="utf-8")
     code, _, err = run(compare.main, [a, str(bad)])
     assert code == 4 and err.startswith("error:")
+
+
+def test_zero_reference_keeps_the_json_valid(run, tmp_path):
+    # |a| = 0 has no relative difference: report null, never Infinity, which no JSON parser
+    # is required to accept.
+    a = _write(tmp_path, "a.json", {"tilt": 0.0, "piston": 0.0})
+    b = _write(tmp_path, "b.json", {"tilt": 0.5, "piston": 0.0})
+    code, out, _ = run(compare.main, [a, b, "--json"])
+    assert code == 1
+    diffs = json.loads(out)["results"]["diffs"]
+    assert diffs["results.tilt"]["rel"] is None
+    assert diffs["results.piston"]["rel"] == 0.0
+    assert "Infinity" not in out and "NaN" not in out

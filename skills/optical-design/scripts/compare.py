@@ -60,7 +60,8 @@ def main(argv: list[str] | None = None) -> int:
     for k in shared:
         x, y = fa[k], fb[k]
         absd = abs(x - y)
-        rel = absd / abs(x) if x != 0 else (0.0 if absd == 0 else float("inf"))
+        # a = 0 has no relative difference; null keeps the envelope valid JSON
+        rel = absd / abs(x) if x != 0 else (0.0 if absd == 0 else None)
         ok = absd <= args.atol + args.rtol * abs(x)
         diffs[k] = {"a": x, "b": y, "abs": absd, "rel": rel, "ok": ok}
         if not ok:
@@ -69,7 +70,8 @@ def main(argv: list[str] | None = None) -> int:
                        inputs={"a": args.a, "b": args.b, "rtol": args.rtol, "atol": args.atol, "section": args.section},
                        results={"all_within_tolerance": not exceeded, "exceeded": exceeded, "diffs": diffs,
                                 "only_in_a": sorted(set(fa) - set(fb)), "only_in_b": sorted(set(fb) - set(fa))},
-                       units={}, method="|a−b| ≤ atol + rtol·|a| per shared numeric leaf",
+                       units={}, method="|a−b| ≤ atol + rtol·|a| per shared numeric leaf; "
+                                        "rel is null when a = 0 and b ≠ 0",
                        warnings=[f"{len(exceeded)} value(s) exceed tolerance"] if exceeded else [])
     cli.emit(env, as_json=args.json)
     return 0 if not exceeded else 1
