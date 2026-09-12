@@ -1,7 +1,7 @@
 {
   "name": "optical-design",
   "version": "0.1.0-dev.0",
-  "description": "Agent skill for optical design review, analysis and optimization, with Zemax OpticStudio interoperability.",
+  "description": "Agent skill for optical design analysis: resolution, PSF/MTF, Zernike and Seidel aberrations, Strehl, interferometry; OpticStudio interoperability planned.",
   "author": { "name": "Eric Tang" },
   "license": "MIT",
   "skills": "./skills/"

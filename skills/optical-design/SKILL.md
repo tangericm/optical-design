@@ -47,7 +47,9 @@ be computed.
 
 1. `uv --version`. If missing, tell the user to install uv; do not pip-install into their environment.
 2. Run scripts as `uv run <skill-dir>/scripts/<name>.py <subcommand> ... --json`. First run downloads dependencies.
-3. Exit code 2 = usage (read `--help`), 3 = missing tier dependency (report the hint verbatim), 4 = analysis failed.
+3. Exit codes: 0 = ok, 1 = `compare.py` found a value outside tolerance (a result, not an
+   error — report which values), 2 = usage (read `--help`), 3 = missing tier dependency
+   (report the hint verbatim), 4 = analysis failed (unreadable or unparseable input).
 
 ## Conventions
 

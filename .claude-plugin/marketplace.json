@@ -1,12 +1,12 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "optical-design",
-  "description": "Optical design review, analysis and optimization skill.",
+  "description": "Agent skill for optical design analysis: resolution, PSF/MTF, Zernike and Seidel aberrations, Strehl, interferometry; OpticStudio interoperability planned.",
   "owner": { "name": "Eric Tang" },
   "plugins": [
     {
       "name": "optical-design",
-      "description": "Optical design review, analysis and optimization skill.",
+      "description": "Agent skill for optical design analysis: resolution, PSF/MTF, Zernike and Seidel aberrations, Strehl, interferometry; OpticStudio interoperability planned.",
       "source": "./",
       "category": "engineering",
       "license": "MIT"
