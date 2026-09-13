@@ -2,89 +2,88 @@
 
 [Documentation](README.md) / Deployment
 
-**A GitHub release, an npm package, and a marketplace listing are separate distribution
-channels.** The optical tools can be shared across them, but publishing one does not
-automatically publish the others.
+**npm distributes the package; npx runs its command; a marketplace installs a plugin
+inside an agent.** These routes share the same optical skill.
 
-## npm and npx
+## Choose an installation route
 
-| Term | What it does | Example |
+| Route | What it does | Who it is for |
 |---|---|---|
-| npm registry | Hosts versioned packages | The published `skillcrit` package |
-| `npm install` | Installs a package into a project, or globally with `-g` | `npm install --save-dev skillcrit` |
-| `npx` | Runs a package's command, fetching it when necessary | `npx skillcrit --help` |
-| `npm publish` | Publishes a package version to the registry | A maintainer release action |
+| `npx optical-design install` | Copies the skill bundled with the npm package into a selected agent | Most users; one command across five supported agents |
+| Claude Code marketplace | Installs the repository's plugin through Claude's plugin manager | Users who prefer native plugin management |
+| Codex marketplace | Installs the repository's plugin through Codex | Users who prefer native plugin management |
+| `npx skills add tangericm/optical-design` | Uses the shared skills installer to download from GitHub | Other supported agents and existing skills-installer users |
+| Tagged repository checkout | Provides a fixed source revision and manual commands | Reproducible workflows and contributors |
 
-`npx` is convenient for a tool you want to run without managing a global installation.
-It is not another registry or a separate publication target. See the
-[npm npx documentation](https://docs.npmjs.com/cli/v11/commands/npx/).
+See [Install](install.md) for exact commands. Choose one route per agent to avoid
+duplicate copies; update and remove using the same tool that installed it.
 
-Our current command has three parts:
+## npm versus npx
+
+`npm install` installs a package into a project, or globally with `-g`.
+`npx` executes a package's command and downloads it when necessary. They use the
+same registry; there is no separate “npx publication.” See the
+[npm documentation](https://docs.npmjs.com/cli/v11/commands/npx/).
 
 ```text
-npx skills add tangericm/optical-design
-│   │          └─ GitHub repository containing the optical skill
-│   └─ npm package whose installer command is being run
-└─ run that command
+npx optical-design install --agent codex
+    └─ npm package       └─ install its bundled skill into Codex
 ```
 
-The [skills installer](https://github.com/vercel-labs/skills) places the skill where
-your selected agent can discover it. It does not publish optical-design to npm or
-register it in a native plugin marketplace.
+With `npx optical-design@1.1.0`, the installer and installed skill come from that
+specific release. `npx optical-design@latest update --agent codex` uses the current
+npm release. The command does not independently fetch a newer skill from GitHub.
 
-## Skill, plugin, and MCP server
+By contrast, `npx skills add tangericm/optical-design` runs the separate `skills`
+npm package and installs the skill from the GitHub repository. Its version and update
+behavior are controlled by that installer. [Skills installer](https://github.com/vercel-labs/skills).
 
-| Component | What the user gets |
+## What is installed
+
+| Component | Purpose |
 |---|---|
-| Skill | `SKILL.md`, optical scripts, reference guides, and example models/specifications |
-| Plugin | A client-recognized package that can bundle skills and other integrations |
-| Marketplace | A catalog through which a client discovers and installs plugins |
-| MCP server | An optional running process that exposes interactive job tools to a client |
+| Skill | Instructions, scripts, references, and example models that an AI agent can use |
+| npm command | Installation management, prerequisite checks, and a portable demonstration |
+| Plugin manifest | Client-specific identity, skill discovery, and presentation metadata |
+| Marketplace catalog | An installable source a client can add and browse |
+| Optional MCP server | A local process exposing interactive optical job tools |
 
-Installing this skill makes its workflow available to the agent. Running calculations
-still needs Python/uv, and native analysis still needs a licensed OpticStudio installation.
-The [MCP server](../skills/optical-design/references/interactive.md) requires explicit
-workspace/input-root configuration; it is not started automatically by skill installation.
+Installing the skill does not install or license OpticStudio. Calculations need Python
+and uv; the portable demo loads the pinned Optiland dependency. Native analysis needs
+a compatible Windows OpticStudio installation and API license.
 
-## Current distribution status
+MCP setup is optional and explicit. Define a workspace and allowed input roots before
+starting the [MCP server](../skills/optical-design/references/interactive.md). A plugin
+installation does not silently configure or launch it.
 
-Verified for the v1.0.0 release on September 13, 2026:
+## Repository marketplaces and public catalogs
 
-| Channel | Status | Installation path |
-|---|---|---|
-| GitHub release | Published | [v1.0.0](https://github.com/tangericm/optical-design/releases/tag/v1.0.0) |
-| Cross-agent skill | Available from GitHub | `npx skills add tangericm/optical-design` |
-| Claude Code repository marketplace | Manifests shipped | Add this repository's marketplace, then install its plugin |
-| Cursor Agent Plugins format | Root `plugin.json` shipped | Direct skill installation is the documented quick path; a public listing is not established |
-| Codex | Direct skill installation available | A Codex-specific plugin manifest and marketplace distribution still need work |
-| npm `optical-design` | Not published | No `npx optical-design` executable yet |
+Claude Code and Codex support repository marketplaces. Adding this repository makes
+its plugin installable through that source. It does not mean the plugin has been
+accepted into Anthropic's or OpenAI's public curated catalog.
+[Claude marketplace guide](https://code.claude.com/docs/en/discover-plugins) ·
+[OpenAI plugin guide](https://developers.openai.com/plugins/build/plugins).
 
-The repository has `package.json` and tarball checks, but it has no `bin` command entry.
-Simply publishing that package would place files in npm without creating a dedicated
-cross-agent installer. A successful package test is not proof of registry publication.
+The repository includes both Agent Plugins and Cursor plugin manifests. The npm skill
+installer is the direct Cursor route. A public Cursor Marketplace listing requires
+separate submission and review; no accepted public listing is claimed here.
+[Cursor plugin guide](https://cursor.com/docs/reference/plugins).
 
-## Recommended distribution path
+For Windows Git-based plugin installation errors involving long paths, use a shorter
+client configuration path or the npm skill installer. The npm package excludes the
+repository's historical research trees.
 
-Keep one shared optical skill and offer several ways to get it:
+## Release history and verification
 
-1. **Keep the current cross-agent installer.** It already provides a short command
-   for Claude Code, Codex, Cursor, and other supported clients.
-2. **Complete native plugin distribution.** Validate each target client's plugin
-   packaging and install/update/remove flow, then document its marketplace route.
-3. **Add a dedicated npm command if desired.** Implement and test a small installer
-   with client/scope selection, version reporting, and setup diagnostics; publish a
-   versioned npm package after testing it from a clean environment.
-4. **Submit public marketplace listings separately.** Packaging compatibility and
-   catalog approval are different milestones. Claim availability only after a listing
-   is actually accepted and installable.
+v1.0.0 was released on GitHub with a shared-skill installation route. It did not publish
+an `optical-design` npm command. Version 1.1.0 introduces that executable and native
+plugin metadata, alongside the public documentation and visual identity.
 
-A command such as `npx optical-design install` would be a possible future interface,
-not a command supported by v1.0.0.
+Package verification installs the actual tarball into a clean consumer, executes the
+npm command, checks install/update/uninstall for every supported agent, and can run
+the portable demo. Cross-platform CI checks Windows, macOS, and Linux.
+[Compatibility evidence](compatibility.md) records the verified results and limits.
 
-Claude Code supports repository-hosted marketplaces; adding one registers its catalog
-before you install a plugin. [Claude Code installation guide](https://code.claude.com/docs/en/discover-plugins).
-Codex has marketplace sources and a plugin browser. [OpenAI plugin documentation](https://learn.chatgpt.com/docs/plugins).
-Cursor accepts the Agent Plugins format, while its public marketplace uses a review
-process. [Cursor plugin documentation](https://cursor.com/docs/plugins).
-
-For working installation commands today, return to [Install](install.md).
+The live [npm package page](https://www.npmjs.com/package/optical-design) and
+[GitHub releases](https://github.com/tangericm/optical-design/releases) are the publication
+record. A successful local tarball test alone is not proof of registry publication.

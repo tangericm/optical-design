@@ -1,5 +1,24 @@
 # Compatibility
 
+## 1.1.0 distribution verification
+
+The distribution release preserves the 1.0.0 optical algorithms. On the Windows release
+host, 42 Node tests passed with one Darwin-only test skipped. The packed npm artifact
+passed clean install, update, and uninstall checks for all five installer targets, and
+ran the portable demo through saved-candidate acceptance and HTML review generation.
+The Codex manifest validator and skill lint passed.
+
+Claude Code 2.1.260 installed and removed the local 1.1.0 plugin in a temporary
+configuration. Codex 0.140.0 exercised the repository marketplace lifecycle; the final
+published source must be checked separately. Cursor's manifest is checked structurally;
+this is not a verified Cursor UI installation or an accepted public catalog listing.
+
+See the [CI history](https://github.com/tangericm/optical-design/actions/workflows/ci.yml)
+for Windows, macOS, and Linux release checks, and [releases](https://github.com/tangericm/optical-design/releases)
+for publication receipts. Local test results do not imply those external milestones passed.
+
+## 1.0.0 optical workflow evidence
+
 Stable workflow evidence recorded September 13, 2026. Historical development records follow.
 
 The 1.0.0 release adds inspect/edit, composite merit, local sensitivity and review packages
@@ -16,7 +35,7 @@ skill lint and tarball install checks passed. Isolated project-scoped `npx skill
 exercise the shipped workflow and compare every installed file hash with the release source.
 These are scripted installed-workflow checks, not autonomous external-client benchmarks.
 
-See [full-release receipts and limitations](research/full-release/README.md), including
+See [full-release receipts and limitations](https://github.com/tangericm/optical-design/blob/v1.0.0/docs/research/full-release/README.md), including
 two-engine composite searches, actual MCP actions, failures retained as rejections and
 source/artifact integrity checks. HTML has structural/escaping tests; browser visual review
 was unavailable because local-file navigation was blocked by the browser policy.

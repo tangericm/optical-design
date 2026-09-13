@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="280" viewBox="0 0 1200 280" fill="none" role="img" aria-labelledby="title desc">
+  <title id="title">optical-design</title>
+  <desc id="desc">Inspectable tools for practical optical engineering, illustrated by a lens focusing three rays.</desc>
+  <defs>
+    <clipPath id="frame"><rect width="1200" height="280" rx="32"/></clipPath>
+    <linearGradient id="lens-fill" x1="882" y1="54" x2="1010" y2="226" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#35BEAD" stop-opacity=".24"/>
+      <stop offset="1" stop-color="#35BEAD" stop-opacity=".03"/>
+    </linearGradient>
+  </defs>
+  <g clip-path="url(#frame)">
+    <rect width="1200" height="280" fill="#102A3A"/>
+    <path d="M708 140H1180" stroke="#F4F8F7" stroke-width="2" stroke-linecap="round" opacity=".12"/>
+    <path d="M708 70H855C876 70 895 86 925 110L1088 140" stroke="#F4F8F7" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M708 140H1088" stroke="#F4F8F7" stroke-width="6" stroke-linecap="round"/>
+    <path d="M708 210H855C876 210 895 194 925 170L1088 140" stroke="#F4F8F7" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M899 37C853 92 853 188 899 243C945 188 945 92 899 37Z" fill="url(#lens-fill)"/>
+    <path d="M899 37C853 92 853 188 899 243" stroke="#35BEAD" stroke-width="11" stroke-linecap="round"/>
+    <path d="M899 37C945 92 945 188 899 243" stroke="#35BEAD" stroke-width="11" stroke-linecap="round"/>
+    <circle cx="1088" cy="140" r="14" fill="#35BEAD"/>
+    <circle cx="1088" cy="140" r="5" fill="#102A3A"/>
+    <text x="64" y="126" fill="#F4F8F7" font-family="ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="60" font-weight="650" letter-spacing="-2.2" font-variant-ligatures="none">optical-design</text>
+    <text x="66" y="174" fill="#B8C9CD" font-family="ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="21" font-weight="450" letter-spacing=".1">Inspectable tools for practical optical engineering.</text>
+    <rect x="66" y="204" width="44" height="5" rx="2.5" fill="#35BEAD"/>
+  </g>
+</svg>

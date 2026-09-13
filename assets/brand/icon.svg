@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none" role="img" aria-labelledby="title desc">
+  <title id="title">optical-design app icon</title>
+  <desc id="desc">A teal lens focuses three light rays on a deep navy field.</desc>
+  <rect x="16" y="16" width="480" height="480" rx="112" fill="#102A3A"/>
+  <path d="M84 256H432" stroke="#F4F8F7" stroke-width="7" stroke-linecap="round" opacity=".16"/>
+  <path d="M84 166H176C198 166 218 183 246 207L406 256" stroke="#F4F8F7" stroke-width="17" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M84 256H406" stroke="#F4F8F7" stroke-width="17" stroke-linecap="round"/>
+  <path d="M84 346H176C198 346 218 329 246 305L406 256" stroke="#F4F8F7" stroke-width="17" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M214 94C158 164 158 348 214 418" stroke="#35BEAD" stroke-width="25" stroke-linecap="round"/>
+  <path d="M214 94C270 164 270 348 214 418" stroke="#35BEAD" stroke-width="25" stroke-linecap="round"/>
+  <circle cx="406" cy="256" r="23" fill="#35BEAD"/>
+  <circle cx="406" cy="256" r="8" fill="#102A3A"/>
+</svg>

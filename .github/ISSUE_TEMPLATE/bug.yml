@@ -1,0 +1,29 @@
+name: Report a bug
+description: An installation, command, or optical result did not behave as expected.
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What happened?
+      description: Include what you expected and what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: How can we reproduce it?
+      description: Include the exact command or agent prompt and a minimal synthetic example. Do not upload confidential prescriptions or credentials.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Operating system, agent/version, optical-design version, Node/uv, and optical backend/version if relevant.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Error or evidence
+      description: Paste the error, relevant report fields, and units. For numerical differences, state the metric, field, wavelength, and analysis settings.

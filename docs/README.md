@@ -5,6 +5,10 @@
 **New here?** [Install the skill](install.md), then [run your first optical workflow](quickstart.md).
 Start with the portable example before connecting an OpticStudio installation.
 
+**New to the project?** [Start with an example](first-lens.md) and look up unfamiliar
+terms in the [glossary](glossary.md).
+**Already have a prescription?** Go to the [professional workflow](professional-workflow.md).
+
 ## Set up
 
 | Guide | Use it to |
@@ -13,6 +17,7 @@ Start with the portable example before connecting an OpticStudio installation.
 | [Quickstart](quickstart.md) | Calculate, refocus, and create a review with bundled examples |
 | [Compute tiers](tiers.md) | Choose numerical, portable, or licensed native execution |
 | [Deployment explained](deployment.md) | Understand npm, npx, skills, plugins, and marketplaces |
+| [Command reference](cli.md) | Install, diagnose, run the demo, update, or uninstall |
 | [Capabilities and limits](capabilities.md) | Check whether your model and intended analysis are supported |
 
 ## Work on a lens

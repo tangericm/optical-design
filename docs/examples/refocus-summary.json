@@ -1,0 +1,119 @@
+{
+  "example": "Bundled synthetic singlet; final air-gap refocus",
+  "engine": {
+    "name": "Optiland",
+    "version": "0.6.2"
+  },
+  "receipt_sha256": "4b2638ee3f0291e65365fd14dc0f0f9614bbf8b41f66b7d517200d10cf6b984a",
+  "source": {
+    "sha256": "73d813dea1ad75db10d87d5023b3608740c652a6ccc38b999eec38599aa803ca"
+  },
+  "settings": {
+    "sampling": 128,
+    "use_polarization": false
+  },
+  "saved_candidate_verified": true,
+  "source_unchanged": true,
+  "measurements": {
+    "baseline": [
+      {
+        "metric": "mtf",
+        "field": 1,
+        "wavelength": 1,
+        "frequency": 20,
+        "axis": "tangential",
+        "value": 0.002489848452484078,
+        "unit": "1",
+        "analysis": {
+          "sampling": 128,
+          "use_polarization": false,
+          "field_xy_deg": [
+            0.0,
+            0.0
+          ],
+          "wavelength_um": 0.55,
+          "scalar": true,
+          "method": "scalar FFT MTF",
+          "interpolation": "linear, no extrapolation",
+          "frequency_range_cyc_per_mm": [
+            0.0,
+            754.5920352882184
+          ]
+        }
+      },
+      {
+        "metric": "rms_spot_um",
+        "field": 1,
+        "wavelength": 1,
+        "value": 973.842027568571,
+        "unit": "um",
+        "analysis": {
+          "sampling": 128,
+          "use_polarization": false,
+          "field_xy_deg": [
+            0.0,
+            0.0
+          ],
+          "wavelength_um": 0.55,
+          "scalar": true,
+          "sampled_rays": 3169,
+          "transmitted_rays": 3169,
+          "method": "geometric RMS radius about centroid",
+          "distribution": "hexapolar",
+          "num_rings": 32
+        }
+      }
+    ],
+    "candidate": [
+      {
+        "metric": "mtf",
+        "field": 1,
+        "wavelength": 1,
+        "frequency": 20,
+        "axis": "tangential",
+        "value": 0.4706893577206028,
+        "unit": "1",
+        "analysis": {
+          "sampling": 128,
+          "use_polarization": false,
+          "field_xy_deg": [
+            0.0,
+            0.0
+          ],
+          "wavelength_um": 0.55,
+          "scalar": true,
+          "method": "scalar FFT MTF",
+          "interpolation": "linear, no extrapolation",
+          "frequency_range_cyc_per_mm": [
+            0.0,
+            754.5920352882184
+          ]
+        }
+      },
+      {
+        "metric": "rms_spot_um",
+        "field": 1,
+        "wavelength": 1,
+        "value": 14.271818695450222,
+        "unit": "um",
+        "analysis": {
+          "sampling": 128,
+          "use_polarization": false,
+          "field_xy_deg": [
+            0.0,
+            0.0
+          ],
+          "wavelength_um": 0.55,
+          "scalar": true,
+          "sampled_rays": 3169,
+          "transmitted_rays": 3169,
+          "method": "geometric RMS radius about centroid",
+          "distribution": "hexapolar",
+          "num_rings": 32
+        }
+      }
+    ]
+  },
+  "baseline_focus_mm": 60.0,
+  "candidate_focus_mm": 46.8191425091652
+}

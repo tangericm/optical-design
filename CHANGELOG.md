@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.1.0
+
+- Add the `optical-design` npm command: managed install/update/uninstall, prerequisite
+  checks, and a portable demo for Claude Code, Codex, Cursor, OpenCode, and Hermes.
+- Preserve changed and unmanaged installations; retain an update backup and report
+  recovery paths. Normalize verified macOS system aliases while rejecting user symlinks.
+- Add Codex and Cursor plugin metadata, a Codex repository marketplace, and original
+  light/dark logo assets. Keep the same shared optical skill across distribution routes.
+- Reorganize the README around installation, example output, and task-based references.
+  Add concise setup, terminology, command, and prescription-workflow guides.
+- Verify the packed command and portable demo in Windows, macOS, and Linux CI.
+- Preserve the v1.0.0 optical algorithms and supported-model boundaries.
+
 ## Unreleased
 
 ## 1.0.0 — 2026-09-13

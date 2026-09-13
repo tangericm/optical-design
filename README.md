@@ -1,21 +1,33 @@
+<p align="center">
+  <img src="assets/brand/header.svg" alt="Optical Design: a lens-and-focus mark with the project wordmark" width="800">
+</p>
+
 # optical-design
 
-**Give your AI assistant an optical-design workflow you can inspect.**
+**From your first lens to an engineering review.**
 
-Calculate optical performance, work on saved sequential lens models, and turn results
-into a review package. Includes numerical tools, a portable Optiland backend, and a
-licensed OpticStudio backend.
+An optical-design skill and local toolset for **Claude Code, Codex, Cursor, and other
+AI agents**. Calculate optical performance, improve supported saved lens models,
+and turn results into a review package. Uses Optiland or licensed OpticStudio for
+prescription analysis.
+
+[![CI](https://github.com/tangericm/optical-design/actions/workflows/ci.yml/badge.svg)](https://github.com/tangericm/optical-design/actions/workflows/ci.yml)
+[![npm](https://img.shields.io/npm/v/optical-design?color=087F8C)](https://www.npmjs.com/package/optical-design)
+[![License: MIT](https://img.shields.io/badge/license-MIT-087F8C)](LICENSE)
 
 [Get started](docs/quickstart.md) · [Documentation](docs/README.md) · [Releases](https://github.com/tangericm/optical-design/releases) · [Report an issue](https://github.com/tangericm/optical-design/issues)
 
 ## Install
 
-For **Claude Code, Codex, Cursor, and other supported agents**, run this in a terminal
-and choose your agent and installation scope:
+For **Claude Code, Codex, Cursor, OpenCode, or Hermes**, run this in your project
+terminal and choose your agent:
 
 ```sh
-npx skills add tangericm/optical-design
+npx optical-design install
 ```
+
+Or choose explicitly: `npx optical-design install --agent codex`.
+Add `--global` to install for all your projects. Requires Node.js 22+.
 
 Prefer **Claude Code's plugin manager**? Run these inside Claude Code:
 
@@ -29,6 +41,22 @@ can use. Running the scripts needs **Python 3.11+ and [uv](https://docs.astral.s
 Start with the portable example; **OpticStudio is optional**.
 
 [Installation by client, updates, and troubleshooting →](docs/install.md)
+
+## Choose your starting point
+
+**Try the bundled model:** [Start with an example](docs/first-lens.md). Run a portable
+lens workflow and see the outputs. No OpticStudio license needed.
+
+```sh
+npx optical-design doctor
+npx optical-design demo --out my-first-lens
+```
+
+The demo prints paths to a JSON report and an HTML review, and saves the verified
+candidate lens in the output folder. Its first run may download Python and Optiland.
+
+**Use an existing prescription:** [Follow the design workflow](docs/professional-workflow.md).
+Inspect the model, set explicit requirements, optimize within bounds, and review the evidence.
 
 ## Try it
 
@@ -45,6 +73,15 @@ Then try a complete workflow on the included synthetic lens:
 
 Want to run the commands yourself? [Follow the quickstart](docs/quickstart.md).
 It takes you from a calculator result to a saved lens and readable report.
+
+## Example output
+
+![Computed before-and-after RMS spot radius and MTF for the bundled synthetic singlet](docs/examples/refocus-comparison.png)
+
+The portable demo changes only the final air gap, from 60.00 mm to 46.82 mm. Its
+on-axis, 550 nm result passes the example requirements and is verified after saving
+and reloading. These are computed results for a synthetic model.
+[Exact values and settings](docs/examples/refocus-summary.json) · [Reproduce the example](docs/first-lens.md)
 
 ## From a model to a decision
 
@@ -76,16 +113,19 @@ numerical report is evidence for its stated conditions, not manufacturing certif
 
 ## How it is distributed
 
-**v1.0.0 is released on GitHub.** The command above runs the npm-hosted `skills`
-installer, which downloads this repository. An `optical-design` npm package and
-`npx optical-design` command have not been published. Native marketplace listings
-are separate from a GitHub release or npm publication.
+The npm installer copies the skill bundled with its package version. Claude Code and
+Codex can use this repository's plugin marketplaces; Cursor can use the direct skill
+installer. Native plugin metadata is included for all three clients. Public curated
+catalog listings have a separate submission and review process.
+
+The shared ecosystem installer remains available: `npx skills add tangericm/optical-design`.
 
 [Understand skills, plugins, npm, and marketplaces →](docs/deployment.md)
 
 ## Contribute or get help
 
-[Report a bug or request a feature](https://github.com/tangericm/optical-design/issues).
+[Report a bug](https://github.com/tangericm/optical-design/issues/new?template=bug.yml) or
+[request a feature](https://github.com/tangericm/optical-design/issues/new?template=feature.yml).
 Include your agent, operating system, command, engine version, and error. Use a
 synthetic example when reporting a problem with a private prescription.
 

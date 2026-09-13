@@ -1,5 +1,19 @@
 # Security
 
+## Installation and prerequisites
+
+The npm command copies the bundled skill only to an explicitly selected agent and
+scope. It does not modify agent credentials, install optical engines in the background,
+or enable an MCP server. It records file hashes for managed installations and refuses
+to overwrite unmanaged or changed files. An explicit update retains the previous
+installation as a sibling backup; review that backup before removing it manually.
+
+The demo starts uv with fixed arguments for the bundled synthetic model. uv may download
+Python and pinned optical dependencies. The installer and demo are local tools, not
+an isolation boundary against other processes that can modify the same directories.
+
+## Optical execution
+
 Tier 0 and catalog scripts read named files and emit results. Design jobs copy a named optical
 model into a new/empty output directory, open the copy, and save baseline/candidate artifacts.
 They never overwrite the named source model or attach to an open OpticStudio editor session.

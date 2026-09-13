@@ -12,7 +12,7 @@ const npmCli = process.env.npm_execpath;
 assert.ok(npmCli && fs.existsSync(npmCli), "Run with: npm run verify:package");
 const root = fs.mkdtempSync(path.join(os.tmpdir(), "optical-design-package-"));
 function run(cwd, args) {
-  const r = spawnSync(process.execPath, args, { cwd, encoding: "utf8", timeout: 120_000 });
+  const r = spawnSync(process.execPath, args, { cwd, encoding: "utf8", timeout: 240_000 });
   assert.ifError(r.error);
   assert.equal(r.status, 0, r.stderr || r.stdout);
   return r.stdout;
@@ -20,7 +20,11 @@ function run(cwd, args) {
 try {
   const [pack] = JSON.parse(run(source, [npmCli, "pack", "--json", "--ignore-scripts", "--pack-destination", root]));
   const files = pack.files.map(f => f.path);
-  for (const required of ["skills/optical-design/SKILL.md", "skills/optical-design/LICENSE",
+  for (const required of ["bin/optical-design.mjs", "lib/cli.mjs", "lib/installer.mjs", "lib/filesystem.mjs", "lib/workflows.mjs",
+    ".codex-plugin/plugin.json", ".claude-plugin/plugin.json", ".agents/plugins/marketplace.json", ".cursor-plugin/plugin.json", "plugin.json",
+    "assets/icon.png", "assets/logo.png", "assets/logo-dark.png", "assets/brand/header.svg",
+    "docs/README.md", "docs/cli.md", "docs/first-lens.md", "docs/glossary.md", "docs/professional-workflow.md",
+    "skills/optical-design/SKILL.md", "skills/optical-design/LICENSE",
     "skills/optical-design/scripts/_lib/cli.py", "skills/optical-design/scripts/resolve.py",
     "skills/optical-design/scripts/zernike.py", "skills/optical-design/scripts/wavefront.py",
     "skills/optical-design/scripts/interfero.py", "skills/optical-design/scripts/compare.py",
@@ -62,6 +66,27 @@ try {
   run(consumer, [npmCli, "install", "--ignore-scripts", "--no-audit", "--no-fund", path.join(root, pack.filename)]);
   const skill = path.join(consumer, "node_modules", "optical-design", "skills", "optical-design", "SKILL.md");
   assert.ok(fs.readFileSync(skill, "utf8").startsWith("---\nname: optical-design"));
+  const version = JSON.parse(fs.readFileSync(path.join(source, "package.json"), "utf8")).version;
+  const bin = path.join(consumer, "node_modules", "optical-design", "bin", "optical-design.mjs");
+  assert.equal(run(consumer, [npmCli, "exec", "--offline", "--", "optical-design", "--version"]).trim(), version);
+  for (const agent of ["claude-code", "codex", "cursor", "opencode", "hermes"]) {
+    const project = path.join(root, `project-${agent}`);
+    fs.mkdirSync(project);
+    const installed = JSON.parse(run(project, [bin, "install", "--agent", agent, "--json"]));
+    assert.equal(installed.version, version);
+    assert.equal(fs.readFileSync(path.join(installed.destination, "SKILL.md"), "utf8"), fs.readFileSync(skill, "utf8"));
+    const updated = JSON.parse(run(project, [bin, "update", "--agent", agent, "--json"]));
+    assert.ok(fs.existsSync(path.join(updated.backup, "SKILL.md")), "Update backup missing");
+    run(project, [bin, "uninstall", "--agent", agent, "--json"]);
+    assert.ok(!fs.existsSync(installed.destination), "Uninstall did not remove managed installation");
+  }
+  if (process.argv.includes("--demo")) {
+    const demo = JSON.parse(run(consumer, [bin, "demo", "--out", path.join(root, "demo"), "--json"]));
+    assert.equal(demo.status, "improved");
+    assert.equal(demo.saved_candidate_verified, true);
+    assert.ok(fs.existsSync(demo.review));
+    console.log("verify-package: packed portable demo passed");
+  }
   console.log("verify-package: ok");
 } finally {
   fs.rmSync(root, { recursive: true, force: true });

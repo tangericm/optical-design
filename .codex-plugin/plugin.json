@@ -1,0 +1,29 @@
+{
+  "name": "optical-design",
+  "version": "1.1.0",
+  "description": "Optical calculations, sequential lens workflows, and engineering review.",
+  "author": { "name": "Eric Tang", "url": "https://github.com/tangericm" },
+  "homepage": "https://github.com/tangericm/optical-design#readme",
+  "repository": "https://github.com/tangericm/optical-design",
+  "license": "MIT",
+  "keywords": ["optics", "optical-design", "opticstudio", "optiland", "agent-skills"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Optical Design",
+    "shortDescription": "From a first lens to an engineering review",
+    "longDescription": "Calculate optical limits, inspect and improve supported sequential lens models, validate explicit requirements, and create review packages. Portable examples work without an OpticStudio license. Python and uv are needed for computation; native analysis needs licensed OpticStudio on Windows.",
+    "developerName": "Eric Tang",
+    "category": "Productivity",
+    "capabilities": ["Read", "Write"],
+    "websiteURL": "https://github.com/tangericm/optical-design",
+    "defaultPrompt": [
+      "Walk me through the bundled portable lens example.",
+      "Inspect my saved lens and help define requirements.",
+      "Review my optical results and explain their limits."
+    ],
+    "brandColor": "#087F8C",
+    "composerIcon": "./assets/icon.png",
+    "logo": "./assets/logo.png",
+    "logoDark": "./assets/logo-dark.png"
+  }
+}

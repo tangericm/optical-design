@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="256" viewBox="0 0 1024 256" fill="none" role="img" aria-labelledby="title desc">
+  <title id="title">optical-design</title>
+  <desc id="desc">The optical-design wordmark with a lens and focal point.</desc>
+  <g transform="translate(8 16) scale(.875)">
+    <path d="M28 128H222" stroke="#102A3A" stroke-width="4" stroke-linecap="round" opacity=".18"/>
+    <path d="M28 76H83C97 76 109 87 127 102L212 128" stroke="#102A3A" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M28 128H212" stroke="#102A3A" stroke-width="8" stroke-linecap="round"/>
+    <path d="M28 180H83C97 180 109 169 127 154L212 128" stroke="#102A3A" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M104 38C72 82 72 174 104 218" stroke="#087F8C" stroke-width="11" stroke-linecap="round"/>
+    <path d="M104 38C137 82 137 174 104 218" stroke="#087F8C" stroke-width="11" stroke-linecap="round"/>
+    <circle cx="212" cy="128" r="11" fill="#087F8C"/>
+    <circle cx="212" cy="128" r="4" fill="#F4F8F7"/>
+  </g>
+  <text x="262" y="154" fill="#102A3A" font-family="ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="76" font-weight="650" letter-spacing="-2.4" font-variant-ligatures="none">optical-design</text>
+</svg>

@@ -17,7 +17,7 @@ directory, the one containing `SKILL.md`, `scripts/`, and `assets/`.
 Alternatively, use a standalone checkout in a new directory:
 
 ```sh
-git clone --branch v1.0.0 --depth 1 https://github.com/tangericm/optical-design.git
+git clone --branch v1.1.0 --depth 1 https://github.com/tangericm/optical-design.git
 cd optical-design/skills/optical-design
 ```
 

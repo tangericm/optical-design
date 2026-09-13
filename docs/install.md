@@ -7,25 +7,30 @@ scripts and references whether installed directly or through the Claude Code plu
 
 ## Claude Code, Codex, Cursor, and other agents
 
-With Node.js 22.20+ and npm available (the current installer's requirement), run this
+With Node.js 22+ and npm available, run this
 in your project directory:
 
 ```sh
-npx skills add tangericm/optical-design
+npx optical-design install
 ```
 
-The installer guides you through agent selection and installation options. To target
+The installer asks you to select an agent. To target
 an agent explicitly, use one of these commands:
 
 ```sh
-npx skills add tangericm/optical-design --agent claude-code
-npx skills add tangericm/optical-design --agent codex
-npx skills add tangericm/optical-design --agent cursor
+npx optical-design install --agent claude-code
+npx optical-design install --agent codex
+npx optical-design install --agent cursor
 ```
 
 Project scope is the default. Add `--global` to make the skill available across your
-projects. Add `--copy` if your environment cannot create symlinks. See the
-[skills installer documentation](https://github.com/vercel-labs/skills) for supported agents and options.
+projects. Installation copies this npm package's bundled version, records its hashes,
+and preserves any existing installation by refusing to overwrite it. See the
+[command reference](cli.md) for supported options and recovery behavior.
+
+Prefer the shared ecosystem installer? `npx skills add tangericm/optical-design` remains
+available for a wider range of agents. It downloads the skill from GitHub and has its
+own update/remove commands. Choose one installer per agent to avoid duplicate copies.
 
 Start a new agent conversation after installing. Ask it to use `optical-design` and
 locate the installed `SKILL.md` before running its bundled scripts.
@@ -49,6 +54,27 @@ claude plugin install optical-design@optical-design
 This adds this repository's own marketplace and installs its plugin. It does not
 mean the plugin is listed in Anthropic's official catalog. See
 [Claude Code's marketplace guide](https://code.claude.com/docs/en/discover-plugins).
+
+## Codex marketplace
+
+With a current Codex CLI, run:
+
+```sh
+codex plugin marketplace add tangericm/optical-design
+codex plugin add optical-design@optical-design
+```
+
+Start a new Codex task after installing. The repository marketplace is separate from
+OpenAI's public curated directory. For skill-only installation, use the npm command
+with `--agent codex` instead.
+
+## Cursor plugin or direct skill
+
+The npm command with `--agent cursor` is the direct installation route. The repository
+also includes Agent Plugins and Cursor plugin manifests plus a logo. Public Cursor
+Marketplace availability requires a separate submission and review; no public listing
+is claimed here. Teams using a repository marketplace can follow
+[Cursor's marketplace guide](https://cursor.com/docs/plugins).
 
 ## Running the optical tools
 
@@ -80,7 +106,7 @@ approximately **5.368**, with the method and units in the output. For the next s
 If you prefer a fixed release, clone the tag:
 
 ```sh
-git clone --branch v1.0.0 --depth 1 https://github.com/tangericm/optical-design.git
+git clone --branch v1.1.0 --depth 1 https://github.com/tangericm/optical-design.git
 ```
 
 Copy the **whole** `skills/optical-design` directory into your client's skill directory.
@@ -99,25 +125,33 @@ paths for you. Manual copies stay at the copied version until you replace them.
 
 ## Update or remove
 
-For installations managed by `skills`:
+For installations managed by the optical-design npm command, use the same agent and
+scope as the original installation. For example:
 
 ```sh
-npx skills list
-npx skills update optical-design
-npx skills remove optical-design
+npx optical-design --version
+npx optical-design@latest update --agent codex
+npx optical-design uninstall --agent codex
 ```
 
-Use `--global` with list/remove for a global installation. Updates follow the tracked
-source and can move beyond v1.0.0; use a tagged manual copy when you need a fixed revision.
+Add `--global` to update/uninstall a global installation. Updates preserve a backup
+and refuse edited installations. A fixed version can be installed with
+`npx optical-design@1.1.0 install --agent codex`.
+
+For installations made with the shared `skills` installer, use its own commands:
+`npx skills update optical-design` or `npx skills remove optical-design`.
 
 For Claude Code plugin installations, use `/plugin` to manage the installed plugin.
 Refresh this repository's catalog with `/plugin marketplace update optical-design`.
+For Codex plugins, use `codex plugin marketplace upgrade optical-design` to refresh
+the source, then `codex plugin add optical-design@optical-design` to install the current
+snapshot. Remove with `codex plugin remove optical-design@optical-design`.
 
 ## Troubleshooting
 
 | Symptom | Next action |
 |---|---|
-| `npx optical-design` fails | Use `npx skills add tangericm/optical-design`. This project has no published npm executable yet. |
+| Installation already exists or was edited | Preserve it and follow [managed installation recovery](cli.md#files-and-recovery); do not delete your edits to silence the error. |
 | The agent cannot find the skill | Check the selected agent and installation scope, then start a new conversation. |
 | A script path is missing | Run from the installed skill directory, or use an absolute script path. Confirm the whole skill was copied. |
 | `uv` is not found | Install uv, then reopen the terminal so the updated PATH is loaded. |

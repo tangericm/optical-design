@@ -9,7 +9,7 @@ compatibility: Python 3.11+ and uv. Portable prescription jobs require Optiland 
 metadata:
   author: Eric Tang
   repo: https://github.com/tangericm/optical-design
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # optical-design

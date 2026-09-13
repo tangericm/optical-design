@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+message: "If you use this software in your work, cite the release version used and the underlying optical engine and methods."
+title: "optical-design"
+type: software
+authors:
+  - family-names: Tang
+    given-names: Eric
+version: 1.1.0
+repository-code: "https://github.com/tangericm/optical-design"
+url: "https://github.com/tangericm/optical-design"
+license: MIT
+abstract: "Optical calculations, bounded sequential imaging workflows, and verifiable review packages for AI agents."

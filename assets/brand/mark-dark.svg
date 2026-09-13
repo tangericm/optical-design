@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" fill="none" role="img" aria-labelledby="title desc">
+  <title id="title">optical-design focus mark for dark backgrounds</title>
+  <desc id="desc">Three rays pass through a lens and meet at one focal point.</desc>
+  <path d="M28 128H222" stroke="#F4F8F7" stroke-width="4" stroke-linecap="round" opacity=".16"/>
+  <path d="M28 76H83C97 76 109 87 127 102L212 128" stroke="#F4F8F7" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M28 128H212" stroke="#F4F8F7" stroke-width="8" stroke-linecap="round"/>
+  <path d="M28 180H83C97 180 109 169 127 154L212 128" stroke="#F4F8F7" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M104 38C72 82 72 174 104 218" stroke="#35BEAD" stroke-width="11" stroke-linecap="round"/>
+  <path d="M104 38C137 82 137 174 104 218" stroke="#35BEAD" stroke-width="11" stroke-linecap="round"/>
+  <circle cx="212" cy="128" r="11" fill="#35BEAD"/>
+  <circle cx="212" cy="128" r="4" fill="#102A3A"/>
+</svg>

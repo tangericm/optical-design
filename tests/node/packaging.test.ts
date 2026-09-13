@@ -12,7 +12,7 @@ describe("distribution manifests", () => {
     expect(pkg.name).toBe("optical-design");
     expect(pkg.license).toBe("MIT");
     expect(pkg.engines.node).toBe(">=22");
-    expect(pkg.bin).toBeUndefined();
+    expect(pkg.bin).toEqual({ "optical-design": "bin/optical-design.mjs" });
     expect(pkg.files).toContain("skills");
   });
   it("plugin manifests agree with package.json", () => {
@@ -26,6 +26,26 @@ describe("distribution manifests", () => {
     expect(claudePlugin.skills).toBe("./skills/");
     expect(marketplace.plugins[0].name).toBe("optical-design");
     expect(marketplace.plugins[0].source).toBe("./");
+  });
+  it("native plugins share the released skill and real local artwork", () => {
+    const pkg = read("package.json");
+    for (const file of [".codex-plugin/plugin.json", ".cursor-plugin/plugin.json"]) {
+      const plugin = read(file);
+      expect(plugin.name).toBe(pkg.name);
+      expect(plugin.version).toBe(pkg.version);
+      expect(plugin.skills).toBe("./skills/");
+      expect(plugin.mcpServers).toBeUndefined();
+    }
+    const codex = read(".codex-plugin/plugin.json");
+    for (const key of ["composerIcon", "logo", "logoDark"]) {
+      const image = codex.interface[key];
+      expect(image).toMatch(/^\.\/assets\/.+\.png$/u);
+      expect(fs.readFileSync(path.join(root, image)).subarray(0, 8))
+        .toEqual(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]));
+    }
+    const marketplace = read(".agents/plugins/marketplace.json");
+    expect(marketplace.plugins[0].source).toEqual({ source: "url", url: "https://github.com/tangericm/optical-design.git" });
+    expect(marketplace.plugins[0].policy.installation).toBe("AVAILABLE");
   });
   it("npm pack ships the skill and nothing local", () => {
     const result = spawnSync("npm", ["pack", "--dry-run", "--json", "--ignore-scripts"], {

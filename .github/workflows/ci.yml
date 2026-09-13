@@ -49,16 +49,23 @@ jobs:
       - run: uv run --with optiland==0.6.2 --with mcp==2.2.0 pytest -m "not zos" -q
 
   node:
-    name: node packaging and skill lint
-    runs-on: ubuntu-latest
+    name: node installer and packaging (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
         with:
           node-version: "22"
           cache: npm
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.11"
       - run: npm ci
       - run: npm test
-      - run: npm run verify:package
+      - run: npm run verify:package -- --demo
       - run: npx skillcrit lint . --fail-on error

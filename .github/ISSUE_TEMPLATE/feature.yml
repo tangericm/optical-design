@@ -1,0 +1,17 @@
+name: Suggest an improvement
+description: Describe a learning, design, analysis, or workflow need.
+body:
+  - type: textarea
+    id: task
+    attributes:
+      label: What are you trying to do?
+      description: Describe your optical task and where the current workflow falls short.
+    validations:
+      required: true
+  - type: textarea
+    id: success
+    attributes:
+      label: What would a useful result look like?
+      description: Include a concrete example, supported platform needs, and any acceptance criteria.
+    validations:
+      required: true
