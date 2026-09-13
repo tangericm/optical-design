@@ -1,0 +1,302 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'"><title>Optical design review</title><style>body{max-width:1100px;margin:40px auto;padding:0 24px;color:#172b3a;background:#f7f8fa;font:16px/1.55 system-ui,sans-serif}h1{font-size:2.3rem}h2{border-top:1px solid #ccd5dd;padding-top:28px;margin-top:40px}h3{margin-top:28px}p,td{overflow-wrap:anywhere}table{border-collapse:collapse;width:100%;background:white;font-size:14px}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:13px/1.5 ui-monospace,monospace;background:white;padding:16px}summary{cursor:pointer;color:#155e75}td,th{border:1px solid #d4dce2;padding:10px;text-align:left;vertical-align:top}th{background:#e8eef2}.table-scroll{overflow-x:auto}svg{display:block;width:100%;max-height:330px;background:white;margin:16px 0;font:13px system-ui}.legend{font-size:14px} @media print{body{margin:0;background:white}h2{break-after:avoid}tr,svg{break-inside:avoid}}</style></head><body><h1>Optical design review</h1>
+<p>Action: inspect. Outcome: inspected.</p>
+<p>Local receipt consistency and recorded artifact hashes verified.</p>
+<p>No accepted candidate. Rejected or partial results remain diagnostic evidence.</p>
+<p>This review runs no optical analyses. The source file was not reopened; source preservation and model readbacks are recorded job claims. Artifact hashes verify local bytes, not optical performance.</p>
+<h2>Provenance</h2>
+<div class="table-scroll"><table><thead><tr><th>Item</th><th>Recorded value</th></tr></thead><tbody>
+<tr><td>source</td><td>{&quot;path&quot;: &quot;C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-v1\\docs\\research\\full-release\\mcp-jobs\\96ddf9a33d064e65a092a43a16b670ef\\inputs\\model.json&quot;, &quot;sha256&quot;: &quot;73d813dea1ad75db10d87d5023b3608740c652a6ccc38b999eec38599aa803ca&quot;}</td></tr>
+<tr><td>source_unchanged</td><td>True</td></tr>
+<tr><td>baseline_restored</td><td>True</td></tr>
+<tr><td>saved_candidate_verified</td><td>False</td></tr>
+<tr><td>evaluations</td><td>0</td></tr>
+<tr><td>python_version</td><td>3.11.15</td></tr>
+<tr><td>error</td><td>unavailable</td></tr>
+</tbody></table></div>
+<p>Independent validation: not recorded</p>
+<h2>Engine and model inspection</h2>
+<details><summary>Show recorded structured evidence</summary><pre>{
+  &quot;name&quot;: &quot;Optiland&quot;,
+  &quot;version&quot;: &quot;0.6.2&quot;
+}</pre></details>
+<h2>Requirements and measurements</h2>
+<p>Requirements: not supplied. No requirement pass is inferred.</p>
+<h3>Baseline requirements</h3>
+<p>Data unavailable.</p>
+<h3>Metric comparison</h3>
+<p>Data unavailable.</p>
+<h2>Physical fields and wavelengths</h2>
+<p>Indices are 1-based engine selections. Physical field coordinates and wavelength values are shown only when recorded; unavailable coordinates are not inferred from indices.</p>
+<p>Data unavailable.</p>
+<h2>Declared analysis coverage</h2>
+<p>Data unavailable.</p>
+<h2>Recorded MTF and spot samples</h2>
+<p>Charts show only recorded samples. No fitted curve, inferred ray intercepts, or unmeasured frequency coverage is supplied. Exact values and full identities appear above.</p>
+<h2>Prescription changes</h2>
+<p>Data unavailable.</p>
+<p>No change table does not certify unchanged geometry when inspection data are missing.</p>
+<h2>Axial schematic</h2>
+<p>Axial schematic only — surface vertices along the optical axis. No traced rays, lens sag, clear apertures, or imaging performance are depicted.</p>
+<p>Recorded axial coordinates (mm).</p>
+<svg viewBox="0 0 760 180" role="img" aria-label="Axial surface vertex schematic"><path d="M30 80H730" stroke="#64748b"/><path d="M40.000 45V115" stroke="#155e75"/><text x="40.000" y="155" text-anchor="middle">S1</text><path d="M92.308 45V115" stroke="#155e75"/><text x="92.308" y="135" text-anchor="middle">S2</text><path d="M720.000 45V115" stroke="#155e75"/><text x="720.000" y="155" text-anchor="middle">S3</text></svg>
+<div class="table-scroll"><table><thead><tr><th>Surface index</th><th>Axial vertex (mm)</th></tr></thead><tbody>
+<tr><td>1</td><td>0.0</td></tr>
+<tr><td>2</td><td>5.0</td></tr>
+<tr><td>3</td><td>65.0</td></tr>
+</tbody></table></div>
+<h2>Baseline physical model inventory</h2>
+<details><summary>Show recorded structured evidence</summary><pre>{
+  &quot;axial_positions_mm&quot;: [
+    &quot;-Infinity&quot;,
+    0.0,
+    5.0,
+    65.0
+  ],
+  &quot;engine&quot;: {
+    &quot;name&quot;: &quot;Optiland&quot;,
+    &quot;version&quot;: &quot;0.6.2&quot;
+  },
+  &quot;focus_mm&quot;: 60.0,
+  &quot;image_surface&quot;: 3,
+  &quot;import_restrictions&quot;: {
+    &quot;format&quot;: &quot;Optiland native JSON&quot;,
+    &quot;restrictions&quot;: &quot;Centered spherical/plane refractive surfaces in air; EPD; meridional angle fields; millimetres; scalar analysis; no solves, pickups, configurations, coatings, scattering, apodization or unsupported directives. Catalog glass requires an explicit catalog and exact material lookup. Native JSON export only.&quot;
+  },
+  &quot;invariants&quot;: {
+    &quot;aperture&quot;: {
+      &quot;type&quot;: &quot;EPD&quot;,
+      &quot;value&quot;: 10
+    },
+    &quot;apodization&quot;: null,
+    &quot;fields&quot;: {
+      &quot;field_definition&quot;: {
+        &quot;field_type&quot;: &quot;AngleField&quot;
+      },
+      &quot;fields&quot;: [
+        {
+          &quot;vx&quot;: 0.0,
+          &quot;vy&quot;: 0.0,
+          &quot;weight&quot;: 1.0,
+          &quot;x&quot;: 0.0,
+          &quot;y&quot;: 0
+        }
+      ],
+      &quot;telecentric&quot;: false
+    },
+    &quot;name&quot;: &quot;Synthetic N-BK7 singlet matching defocused-singlet.zmx prescription&quot;,
+    &quot;pickups&quot;: [],
+    &quot;ray_tracer&quot;: {
+      &quot;ray_aiming_config&quot;: {
+        &quot;max_iter&quot;: 10,
+        &quot;mode&quot;: &quot;paraxial&quot;,
+        &quot;tol&quot;: 1e-06
+      }
+    },
+    &quot;solves&quot;: {
+      &quot;solves&quot;: []
+    },
+    &quot;surface_group&quot;: {
+      &quot;surfaces&quot;: [
+        {
+          &quot;comment&quot;: &quot;&quot;,
+          &quot;geometry&quot;: {
+            &quot;cs&quot;: {
+              &quot;reference_cs&quot;: null,
+              &quot;rx&quot;: 0.0,
+              &quot;ry&quot;: 0.0,
+              &quot;rz&quot;: 0.0,
+              &quot;x&quot;: 0.0,
+              &quot;y&quot;: 0.0,
+              &quot;z&quot;: &quot;-Infinity&quot;
+            },
+            &quot;radius&quot;: &quot;Infinity&quot;,
+            &quot;type&quot;: &quot;Plane&quot;
+          },
+          &quot;material_post&quot;: {
+            &quot;absorp&quot;: 0.0,
+            &quot;index&quot;: 1.0,
+            &quot;propagation_model&quot;: {
+              &quot;class&quot;: &quot;HomogeneousPropagation&quot;
+            },
+            &quot;type&quot;: &quot;IdealMaterial&quot;
+          },
+          &quot;type&quot;: &quot;ObjectSurface&quot;
+        },
+        {
+          &quot;aperture&quot;: null,
+          &quot;comment&quot;: &quot;&quot;,
+          &quot;geometry&quot;: {
+            &quot;conic&quot;: 0.0,
+            &quot;cs&quot;: {
+              &quot;reference_cs&quot;: null,
+              &quot;rx&quot;: 0.0,
+              &quot;ry&quot;: 0.0,
+              &quot;rz&quot;: 0.0,
+              &quot;x&quot;: 0.0,
+              &quot;y&quot;: 0.0,
+              &quot;z&quot;: 0.0
+            },
+            &quot;radius&quot;: 50.0,
+            &quot;type&quot;: &quot;StandardGeometry&quot;
+          },
+          &quot;interaction_model&quot;: {
+            &quot;bsdf&quot;: null,
+            &quot;coating&quot;: null,
+            &quot;is_reflective&quot;: false,
+            &quot;type&quot;: &quot;RefractiveReflectiveModel&quot;
+          },
+          &quot;is_stop&quot;: true,
+          &quot;material_post&quot;: {
+            &quot;catalog&quot;: &quot;schott&quot;,
+            &quot;filename&quot;: &quot;C:\\Users\\erict\\AppData\\Local\\uv\\cache\\archive-v0\\1oTiDYYjy2XEHm8e\\Lib\\site-packages\\optiland\\database\\data-nk\\glass\\schott\\N-BK7.yml&quot;,
+            &quot;match_policy&quot;: &quot;strict&quot;,
+            &quot;max_wavelength&quot;: null,
+            &quot;min_wavelength&quot;: null,
+            &quot;name&quot;: &quot;N-BK7&quot;,
+            &quot;propagation_model&quot;: {
+              &quot;class&quot;: &quot;HomogeneousPropagation&quot;
+            },
+            &quot;reference&quot;: null,
+            &quot;robust_search&quot;: null,
+            &quot;type&quot;: &quot;Material&quot;
+          },
+          &quot;thickness&quot;: 5,
+          &quot;type&quot;: &quot;Surface&quot;
+        },
+        {
+          &quot;aperture&quot;: null,
+          &quot;comment&quot;: &quot;&quot;,
+          &quot;geometry&quot;: {
+            &quot;conic&quot;: 0.0,
+            &quot;cs&quot;: {
+              &quot;reference_cs&quot;: null,
+              &quot;rx&quot;: 0.0,
+              &quot;ry&quot;: 0.0,
+              &quot;rz&quot;: 0.0,
+              &quot;x&quot;: 0.0,
+              &quot;y&quot;: 0.0,
+              &quot;z&quot;: 5.0
+            },
+            &quot;radius&quot;: -50.0,
+            &quot;type&quot;: &quot;StandardGeometry&quot;
+          },
+          &quot;interaction_model&quot;: {
+            &quot;bsdf&quot;: null,
+            &quot;coating&quot;: null,
+            &quot;is_reflective&quot;: false,
+            &quot;type&quot;: &quot;RefractiveReflectiveModel&quot;
+          },
+          &quot;is_stop&quot;: false,
+          &quot;material_post&quot;: {
+            &quot;absorp&quot;: 0.0,
+            &quot;index&quot;: 1.0,
+            &quot;propagation_model&quot;: {
+              &quot;class&quot;: &quot;HomogeneousPropagation&quot;
+            },
+            &quot;type&quot;: &quot;IdealMaterial&quot;
+          },
+          &quot;type&quot;: &quot;Surface&quot;
+        },
+        {
+          &quot;aperture&quot;: null,
+          &quot;comment&quot;: &quot;&quot;,
+          &quot;geometry&quot;: {
+            &quot;cs&quot;: {
+              &quot;reference_cs&quot;: null,
+              &quot;rx&quot;: 0.0,
+              &quot;ry&quot;: 0.0,
+              &quot;rz&quot;: 0.0,
+              &quot;x&quot;: 0.0,
+              &quot;y&quot;: 0.0
+            },
+            &quot;radius&quot;: &quot;Infinity&quot;,
+            &quot;type&quot;: &quot;Plane&quot;
+          },
+          &quot;interaction_model&quot;: {
+            &quot;bsdf&quot;: null,
+            &quot;coating&quot;: null,
+            &quot;is_reflective&quot;: false,
+            &quot;type&quot;: &quot;RefractiveReflectiveModel&quot;
+          },
+          &quot;is_stop&quot;: false,
+          &quot;material_post&quot;: {
+            &quot;absorp&quot;: 0.0,
+            &quot;index&quot;: 1.0,
+            &quot;propagation_model&quot;: {
+              &quot;class&quot;: &quot;HomogeneousPropagation&quot;
+            },
+            &quot;type&quot;: &quot;IdealMaterial&quot;
+          },
+          &quot;thickness&quot;: 0.0,
+          &quot;type&quot;: &quot;Surface&quot;
+        }
+      ]
+    },
+    &quot;version&quot;: 1.0,
+    &quot;wavelengths&quot;: {
+      &quot;polarization&quot;: &quot;ignore&quot;,
+      &quot;wavelengths&quot;: [
+        {
+          &quot;is_primary&quot;: true,
+          &quot;unit&quot;: &quot;um&quot;,
+          &quot;value&quot;: 0.55,
+          &quot;weight&quot;: 1.0
+        }
+      ]
+    }
+  },
+  &quot;prescription&quot;: [
+    {
+      &quot;index&quot;: 0,
+      &quot;is_image&quot;: false,
+      &quot;radius_mm&quot;: &quot;Infinity&quot;,
+      &quot;thickness_mm&quot;: null
+    },
+    {
+      &quot;index&quot;: 1,
+      &quot;is_image&quot;: false,
+      &quot;radius_mm&quot;: 50.0,
+      &quot;thickness_mm&quot;: 5
+    },
+    {
+      &quot;index&quot;: 2,
+      &quot;is_image&quot;: false,
+      &quot;radius_mm&quot;: -50.0,
+      &quot;thickness_mm&quot;: 60
+    },
+    {
+      &quot;index&quot;: 3,
+      &quot;is_image&quot;: true,
+      &quot;radius_mm&quot;: &quot;Infinity&quot;,
+      &quot;thickness_mm&quot;: 0.0
+    }
+  ],
+  &quot;surfaces&quot;: [
+    {
+      &quot;index&quot;: 0,
+      &quot;is_image&quot;: false,
+      &quot;radius_mm&quot;: &quot;Infinity&quot;,
+      &quot;thickness_mm&quot;: null
+    },
+    {
+      &quot;index&quot;: 1,
+      &quot;is_image&quot;: false,
+      &quot;radius_mm&quot;: 50.0,
+      &quot;thickness_mm&quot;: 5
+    },
+    {
+      &quot;index&quot;: 2,
+      &quot;is_image&quot;: false,
+      &quot;radius_mm&quot;: -50.0,
+      &quot;thickness_mm&quot;: 60
+    },
+    {
+      &quot;index&quot;: 3,
+      &quot;is_image&quot;: true,
+      &quot;radius_mm&quot;: &quot;Infinity&quot;,
+      &quot;thickness_mm&quot;: 0.0
+    }
+  ]
+}</pre></details>
+<h2>Evidence boundary</h2>
+<p>Missing data remain unavailable. A failed requirement remains failed. Sensitivity describes local finite steps; it is not a manufacturing yield estimate. Optimizer results do not prove a global optimum. Separate validation is reported only when present.</p></body></html>

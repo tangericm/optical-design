@@ -44,6 +44,26 @@ def _surface_geometry(row):
             'semi_diameter_solve': str(row.SemiDiameterCell.GetSolveData().Type)}
 
 
+def surface_shape(row, columns):
+    """Read every fixed shape term for verified centered native surface types."""
+    kind = str(row.Type)
+    if kind not in {'Standard', 'EvenAspheric'}:
+        raise ValueError(f'unsupported native surface type: {kind}')
+    if str(row.ConicCell.GetSolveData().Type) != 'Fixed':
+        raise ValueError('conic solve must be fixed')
+    result = {'conic': finite(float(row.Conic), 'conic'), 'asphere_coefficients': []}
+    if kind == 'EvenAspheric':
+        for index in range(1, 9):
+            cell = row.GetSurfaceCell(getattr(columns, f'Par{index}'))
+            if str(cell.GetSolveData().Type) != 'Fixed':
+                raise ValueError('asphere coefficient solves must be fixed')
+            order = 2*index
+            result['asphere_coefficients'].append({'order': order,
+                'value': finite(float(cell.DoubleValue), f'asphere coefficient {order}'),
+                'unit': f'mm^{1-order}'})
+    return result
+
+
 def capability_check():
     import zospy as zp
     z = zp.ZOS()
@@ -60,7 +80,7 @@ def capability_check():
 
 
 class ZOSBackend:
-    """v1: mm, sequential, centered spherical refractive models, angle fields, EPD."""
+    """mm, sequential, centered conic/even-aspheric refractive models, angle fields, EPD."""
 
     model_suffix = '.zmx'
 
@@ -108,10 +128,11 @@ class ZOSBackend:
                 raise ValueError('ignored or vignetted/tilted fields are outside the v1 contract')
         for i in range(s.LDE.NumberOfSurfaces):
             row = s.LDE.GetSurfaceAt(i)
-            if str(row.Type) != 'Standard' or row.Conic != 0:
-                raise ValueError('v1 supports centered spherical/plane Standard surfaces only')
+            surface_shape(row, self.zp.constants.Editors.LDE.SurfaceColumn)
             if str(row.Material).upper() == 'MIRROR':
                 raise ValueError('reflective systems are outside the v1 contract')
+            if str(row.Coating):
+                raise ValueError('coated surfaces are outside the scalar native contract')
             if any(str(cell.GetSolveData().Type) != 'Fixed' for cell in (row.RadiusCell, row.ThicknessCell)):
                 raise ValueError('radius/thickness solves must be fixed before running this workflow')
             geometry = _surface_geometry(row)
@@ -179,6 +200,7 @@ class ZOSBackend:
                     'thickness_mm': _number(row.Thickness), 'material': str(row.Material),
                     'conic': float(row.Conic), 'coating': str(row.Coating)}
             item.update(_surface_geometry(row))
+            item.update(surface_shape(row, self.zp.constants.Editors.LDE.SurfaceColumn))
             if item['semi_diameter_solve'] == 'Fixed':
                 item['semi_diameter_mm'] = float(row.SemiDiameter)
             surfaces.append(item)
@@ -203,7 +225,7 @@ class ZOSBackend:
                            'license': str(self.z.Application.LicenseStatus)},
                 'focus_mm': self.focus_position(), 'image_surface': self.image_surface,
                 'surfaces': surfaces, 'invariants': invariants,
-                'limits': ['Sequential centered spherical refractive systems; angle fields; mm; EPD.',
+                'limits': ['Sequential centered Standard conic/EvenAspheric refractive systems; fixed shape coefficients; angle fields; mm; EPD.',
                            'Geometric centroid RMS spot and scalar FFT MTF are distinct metrics.',
                            'A sparse pupil ray check detects gross failures; it is not a full vignetting analysis.']}
 

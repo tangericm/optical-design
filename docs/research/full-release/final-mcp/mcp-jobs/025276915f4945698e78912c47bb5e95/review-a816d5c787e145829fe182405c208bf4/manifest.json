@@ -1,0 +1,27 @@
+{
+  "accepted_candidate": true,
+  "action": "optimize",
+  "files": {
+    "report.html": {
+      "bytes": 71902,
+      "sha256": "f2caaeefa807011c82df7a2aa5de49051ad9e72e8591f4e9698cc37d76236365"
+    },
+    "report.md": {
+      "bytes": 50182,
+      "sha256": "dbd5884d3632ca555a3b9ec08ca5c430fede4213b6a9a4e259d9201a37a16449"
+    }
+  },
+  "receipt_sha256": "ecc92d43109e7af0640a7bada0f15e79ec29bbccdc4f9d9fa45d939c74994fb3",
+  "schema": "1",
+  "status": "improved",
+  "tool": "optical-design-review",
+  "verification": "offline receipt consistency and local hashes; no optical engine or source reopen",
+  "verified_local_artifacts": {
+    "baseline-model.zmx": "4fe32615eac8c57b2d80c6745c99f0e3235f7586a2917e62dffe0aba2b9f7cf8",
+    "candidate-model.zmx": "3fc172e560f1e7b32cb985c699286af5657a59530e69135b85a95979eade8e8d",
+    "source_snapshot.zmx": "4fe32615eac8c57b2d80c6745c99f0e3235f7586a2917e62dffe0aba2b9f7cf8",
+    "spec.json": "13421999188c70b83377c2716ecc65e91e8d0f11510b0c944d4534774af153b9",
+    "validation-spec.json": "2d48a04a9f2c1efd5de2f763918c02236cae293e227cc568c3432645d65b9916",
+    "variables.json": "db85aef954a4501a3ad8233a76ec2426ef5d7b0075dc2eb611eecdea4340d2cf"
+  }
+}

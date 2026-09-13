@@ -16,12 +16,16 @@ from pydantic import BaseModel, ConfigDict
 
 class StartRequest(BaseModel):
     model_config = ConfigDict(extra='forbid', strict=True)
-    action: Literal['audit', 'refocus', 'tolerance', 'optimize']
+    action: Literal['inspect', 'edit', 'audit', 'refocus', 'tolerance', 'optimize', 'sensitivity']
     backend: Literal['optiland', 'zos']
     model: str
     model_sha256: str
-    spec: str
-    spec_sha256: str
+    spec: str | None = None
+    spec_sha256: str | None = None
+    changes: str | None = None
+    changes_sha256: str | None = None
+    perturbations: str | None = None
+    perturbations_sha256: str | None = None
     tolerances: str | None = None
     tolerances_sha256: str | None = None
     variables: str | None = None
@@ -65,6 +69,11 @@ def create_server(manager):
     def results(job_id: str) -> dict[str, Any]:
         """Return only a fully validated receipt; always retain owned diagnostic log paths."""
         return manager.results(job_id)
+
+    @server.tool()
+    def review(job_id: str) -> dict[str, Any]:
+        """Render a verified owned job receipt as a local HTML and Markdown review package."""
+        return manager.review(job_id)
 
     return server
 

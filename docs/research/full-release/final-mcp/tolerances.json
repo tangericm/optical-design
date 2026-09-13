@@ -1,0 +1,1 @@
+{"schema": "1", "samples": 4, "seed": 20260913, "timeout_s": 300, "perturbations": [{"surface": 1, "parameter": "radius_mm", "distribution": "uniform", "half_width_mm": 0.01}]}

@@ -92,9 +92,28 @@ class DesignSpec:
             if req.get("min", -math.inf) > req.get("max", math.inf):
                 raise ValueError("requirement min exceeds max")
         if "objective" in data:
-            validate_metric(data["objective"], {'direction'})
-            if data["objective"].get("direction") not in {"minimize", "maximize"}:
-                raise ValueError("objective direction must be minimize or maximize")
+            objective = data['objective']
+            if isinstance(objective, dict) and ('terms' in objective or 'aggregation' in objective):
+                if (set(objective) != {'direction', 'aggregation', 'terms'} or
+                        objective.get('direction') != 'minimize' or
+                        objective.get('aggregation') != 'weighted_rms'):
+                    raise ValueError('composite objective requires direction minimize, aggregation weighted_rms and terms')
+                terms = objective['terms']
+                if not isinstance(terms, list) or not terms:
+                    raise ValueError('composite objective requires a nonempty terms list')
+                for term in terms:
+                    validate_metric(term, {'unit', 'target', 'scale', 'weight'})
+                    if term.get('unit') != UNITS[term['metric']]:
+                        raise ValueError(f"{term['metric']} requires unit {UNITS[term['metric']]}")
+                    finite(term.get('target'), 'objective target')
+                    if finite(term.get('scale'), 'objective scale') <= 0:
+                        raise ValueError('objective scale must be positive in metric units')
+                    if finite(term.get('weight'), 'objective weight') <= 0:
+                        raise ValueError('objective weight must be positive')
+            else:
+                validate_metric(objective, {'direction'})
+                if objective.get("direction") not in {"minimize", "maximize"}:
+                    raise ValueError("objective direction must be minimize or maximize")
         if "focus" in data:
             focus = data["focus"]
             if not isinstance(focus, dict) or set(focus) != {"min_mm", "max_mm"}:
@@ -129,6 +148,13 @@ class DesignSpec:
     def objective(self):
         return self.data.get("objective")
 
+    @property
+    def objective_metrics(self) -> list[dict]:
+        """Metric requests for both scalar and composite objectives, in term order."""
+        if self.objective is None:
+            return []
+        return self.objective.get('terms', [self.objective])
+
 
 def assess(spec: DesignSpec, measurements: list[dict]) -> dict:
     rows = {}
@@ -153,11 +179,47 @@ def assess(spec: DesignSpec, measurements: list[dict]) -> dict:
     return {"passes": bool(results) and all(r["status"] == "pass" for r in results), "requirements": results}
 
 
-def objective_value(spec: DesignSpec, measurements: list[dict]) -> float:
+def objective_breakdown(spec: DesignSpec, measurements: list[dict]) -> dict:
+    """Evaluate merit and retain measured term evidence; never soften hard requirements."""
     if spec.objective is None:
         raise ValueError("refocus needs an explicit objective")
-    key = metric_key(spec.objective)
-    rows = [r for r in measurements if metric_key(r) == key]
-    if len(rows) != 1 or rows[0].get("unit") != UNITS[spec.objective["metric"]]:
-        raise ValueError(f"objective unavailable or incomparable: {key}")
-    return finite(rows[0].get("value"), "objective value")
+    rows = {}
+    for row in measurements:
+        key = metric_key(row)
+        if key in rows:
+            raise ValueError(f'duplicate measurement: {key}')
+        rows[key] = row
+    terms = []
+    composite = spec.objective.get('aggregation') == 'weighted_rms'
+    for request in spec.objective_metrics:
+        key = metric_key(request)
+        row = rows.get(key)
+        unit = UNITS[request['metric']]
+        if row is None or row.get('unit') != unit:
+            raise ValueError(f'objective unavailable or incomparable: {key}')
+        value = finite(row.get('value'), 'objective value')
+        term = {k: request[k] for k in ('metric', 'field', 'wavelength', 'frequency', 'axis') if k in request}
+        term.update(key=key, unit=unit, value=value)
+        if composite:
+            term.update(target=request['target'], scale=request['scale'], weight=request['weight'])
+            residual = finite(value - request['target'], 'objective residual')
+            term['normalized_residual'] = finite(residual / request['scale'], 'normalized objective residual')
+        terms.append(term)
+    if composite:
+        # Taking square roots before ratios preserves even subnormal positive weights.
+        # hypot avoids overflow from squaring otherwise representable residuals.
+        root_max = math.sqrt(max(t['weight'] for t in terms))
+        factors = [math.sqrt(t['weight']) / root_max for t in terms]
+        denominator = math.hypot(*factors)
+        for term, factor in zip(terms, factors):
+            term['weighted_residual'] = factor / denominator * term['normalized_residual']
+        value = finite(math.hypot(*(t['weighted_residual'] for t in terms)), 'objective value')
+    else:
+        value = terms[0]['value']
+    return {'aggregation': 'weighted_rms' if composite else 'scalar',
+            'direction': spec.objective['direction'], 'value': value,
+            'unit': '1' if composite else terms[0]['unit'], 'terms': terms}
+
+
+def objective_value(spec: DesignSpec, measurements: list[dict]) -> float:
+    return objective_breakdown(spec, measurements)['value']

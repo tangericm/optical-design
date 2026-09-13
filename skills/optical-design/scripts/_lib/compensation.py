@@ -4,7 +4,7 @@ from __future__ import annotations
 import copy
 import math
 
-from _lib.design_contract import assess, finite, objective_value
+from _lib.design_contract import assess, finite, objective_breakdown
 
 
 def validate_compensator(config, spec, perturbations):
@@ -76,10 +76,14 @@ def compensate(backend, spec, config, original, reset, call, evaluate):
     if original['assessment']['passes'] and lo <= reference['focus_mm'] <= hi:
         try:
             verify(reference['focus_mm'])
-            best_score = sign * objective_value(spec, original['measurements'])
+            original['objective_breakdown'] = objective_breakdown(spec, original['measurements'])
+            original['objective_value'] = original['objective_breakdown']['value']
+            best_score = sign * original['objective_value']
             best = {'focus_mm': reference['focus_mm'], 'inspection': reference,
                     'measurements': copy.deepcopy(original['measurements']),
-                    'assessment': copy.deepcopy(original['assessment']), 'verified': False}
+                    'assessment': copy.deepcopy(original['assessment']), 'verified': False,
+                    'objective_value': original['objective_value'],
+                    'objective_breakdown': copy.deepcopy(original['objective_breakdown'])}
             result['baseline_reused'] = True
         except (TimeoutError, InterruptedError):
             raise
@@ -103,7 +107,8 @@ def compensate(backend, spec, config, original, reset, call, evaluate):
             row['measurements'] = evaluate()
             row['inspection'] = verify(position)
             row['assessment'] = assess(spec, row['measurements'])
-            value = objective_value(spec, row['measurements'])
+            row['objective_breakdown'] = objective_breakdown(spec, row['measurements'])
+            value = row['objective_breakdown']['value']
             score = sign * value
             row['objective_value'] = value
             row['status'] = 'pass' if row['assessment']['passes'] else 'fail'

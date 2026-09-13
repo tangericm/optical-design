@@ -19,6 +19,9 @@ def test_validation_receipt_must_link_both_evaluations_to_original_and_saved_mod
     vpath = inputs/'validation.json'
     vpath.write_text(json.dumps(separate.data))
     report = run(model, raw, directory/'output', backend, validation_spec=separate)
+    spath, variables_path = inputs/'spec.json', inputs/'variables.json'
+    spath.write_text(json.dumps(raw))
+    variables_path.write_text(json.dumps(report['variables']))
     if mutation == 'missing_baseline':
         report['validation']['baseline'] = None
     elif mutation == 'wrong_candidate_vector':
@@ -32,8 +35,10 @@ def test_validation_receipt_must_link_both_evaluations_to_original_and_saved_mod
     record = {'_directory': directory, 'output': str(directory/'output'), 'action': 'optimize',
               'returncode': 0, 'logs': {'stdout': str(directory/'stdout.log')},
               '_inputs': {'model': (model, digest(model), model.read_bytes()),
+                          'spec': (spath, digest(spath), spath.read_bytes()),
+                          'variables': (variables_path, digest(variables_path), variables_path.read_bytes()),
                           'validation_spec': (vpath, digest(vpath), vpath.read_bytes())},
-              '_paths': {'model': model, 'validation_spec': vpath}}
+              '_paths': {'model': model, 'spec': spath, 'variables': variables_path, 'validation_spec': vpath}}
     manager = JobManager(tmp_path, [inputs])
     if mutation == 'none':
         assert manager._validate(record)['status'] == 'improved'

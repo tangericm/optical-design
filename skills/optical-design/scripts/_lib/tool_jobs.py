@@ -15,12 +15,13 @@ import uuid
 from pathlib import Path
 
 DESIGN_SCRIPT = Path(__file__).resolve().parents[1] / 'design.py'
-ACTIONS = {'audit', 'refocus', 'tolerance', 'optimize'}
+ACTIONS = {'inspect', 'edit', 'audit', 'refocus', 'tolerance', 'optimize', 'sensitivity'}
 BACKENDS = {'optiland', 'zos'}
 EXPECTED = {'audit': {'requirements_met': 0, 'requirements_not_met': 1},
             'refocus': {'improved': 0, 'no_acceptable_improvement': 1},
             'optimize': {'improved': 0, 'no_acceptable_improvement': 1, 'validation_failed': 1},
-            'tolerance': {'completed': 0}}
+            'tolerance': {'completed': 0}, 'inspect': {'inspected': 0},
+            'edit': {'applied': 0, 'requirements_not_met': 1}, 'sensitivity': {'completed': 0}}
 # Gate the owned child until it belongs to our Windows job object. No user code/argv.
 _GATE = "import runpy,sys; token=sys.stdin.buffer.read(1); assert token==b'G'; sys.argv=sys.argv[1:]; runpy.run_path(sys.argv[0],run_name='__main__')"
 
@@ -135,9 +136,10 @@ class JobManager:
             raise ValueError('stale input SHA256; refresh the input before starting')
         return resolved, expected, data
 
-    def start(self, *, action, backend, model, model_sha256, spec, spec_sha256,
+    def start(self, *, action, backend, model, model_sha256, spec=None, spec_sha256=None,
               tolerances=None, tolerances_sha256=None, variables=None, variables_sha256=None,
-              validation_spec=None, validation_spec_sha256=None):
+              validation_spec=None, validation_spec_sha256=None,
+              changes=None, changes_sha256=None, perturbations=None, perturbations_sha256=None):
         with self._lock:
             if self._closed:
                 raise RuntimeError('server has closed')
@@ -146,9 +148,11 @@ class JobManager:
             for identity in self._jobs:
                 if self.status(identity)['state'] == 'running':
                     raise RuntimeError('one job is already active')
-            inputs = {'model': self._input(model, model_sha256),
-                      'spec': self._input(spec, spec_sha256)}
+            inputs = {'model': self._input(model, model_sha256)}
             for name, path, sha, required in (
+                    ('spec', spec, spec_sha256, action != 'inspect'),
+                    ('changes', changes, changes_sha256, action == 'edit'),
+                    ('perturbations', perturbations, perturbations_sha256, action == 'sensitivity'),
                     ('tolerances', tolerances, tolerances_sha256, action == 'tolerance'),
                     ('variables', variables, variables_sha256, action == 'optimize')):
                 if required != (path is not None and sha is not None) or (
@@ -263,9 +267,57 @@ class JobManager:
                 actual = _inside(path, output)
                 if _hash(actual) != artifacts.get(name[:-6] + '_sha256'):
                     raise ValueError('artifact hash does not match receipt')
-        if report['status'] == 'improved' and (
+        if report['status'] in {'improved', 'applied'} and (
                 report.get('saved_candidate_verified') is not True or 'candidate_model' not in artifacts):
             raise ValueError('saved improvement is not verified')
+        if record['action'] != 'inspect':
+            from _lib.design_contract import DesignSpec, assess
+            expected_spec = DesignSpec.from_dict(json.loads(record['_inputs']['spec'][2].decode('utf-8-sig')))
+            expected_inputs = {'spec': expected_spec.data}
+            config_input = {'edit': 'changes', 'sensitivity': 'perturbations',
+                            'optimize': 'variables', 'tolerance': 'tolerances'}.get(record['action'])
+            if config_input is not None:
+                raw_config = json.loads(record['_inputs'][config_input][2].decode('utf-8-sig'))
+                if config_input == 'tolerances':
+                    from _lib.tolerancing import _validate as validate_tolerance
+                    expected_inputs['tolerance'] = validate_tolerance(raw_config, expected_spec)
+                elif config_input == 'variables':
+                    from _lib.optimization import validate_variables
+                    expected_inputs['variables'] = validate_variables(raw_config, expected_spec)
+                elif config_input == 'changes':
+                    from _lib.model_actions import validate_changes
+                    expected_inputs['changes'] = validate_changes(raw_config)
+                else:
+                    from _lib.sensitivity import validate_perturbations
+                    expected_inputs['perturbations'] = validate_perturbations(raw_config)
+            for name, expected in expected_inputs.items():
+                snapshot = _inside(output / (name + '.json'), output)
+                claimed_hash = report.get(name + '_sha256')
+                # Legacy tolerance receipts omit snapshot digests. Exact normalized
+                # content still binds these files and the receipt to the verified inputs.
+                if (report.get(name) != expected or
+                        (claimed_hash is not None and _hash(snapshot) != claimed_hash) or
+                        (record['action'] != 'tolerance' and claimed_hash is None) or
+                        json.loads(snapshot.read_text(encoding='utf-8')) != expected):
+                    raise ValueError(f'{name} snapshot or receipt differs from requested input')
+            entries = [report.get('nominal') if record['action'] == 'tolerance' else report.get('baseline')]
+            if report['status'] in {'applied', 'improved'}:
+                entries.append(report.get('candidate'))
+            for entry in entries:
+                if not isinstance(entry, dict) or not isinstance(entry.get('measurements'), list):
+                    raise ValueError('required model measurements missing')  # noqa: TRY004 -- malformed receipt
+                if record['action'] == 'tolerance' and entry.get('status') == 'analysis_failed':
+                    if entry.get('assessment', {}).get('passes') is not False:
+                        raise ValueError('failed tolerance analysis cannot claim optical acceptance')
+                    continue
+                assessed = assess(expected_spec, entry['measurements'])
+                if entry.get('assessment') != assessed:
+                    raise ValueError('assessment does not match measurements')
+            if report['status'] in {'applied', 'improved'} and not assessed['passes']:
+                raise ValueError('accepted candidate does not meet requirements')
+            if record['action'] == 'edit' and report['status'] == 'requirements_not_met' and (
+                    report.get('candidate') is not None or 'candidate_model' in artifacts):
+                raise ValueError('rejected edit must not expose an accepted candidate')
         if 'validation_spec' in record['_inputs']:
             from _lib.design_contract import DesignSpec, assess, finite
             expected = DesignSpec.from_dict(json.loads(record['_inputs']['validation_spec'][2].decode('utf-8-sig')))
@@ -305,6 +357,8 @@ class JobManager:
                 raise ValueError('rejected validation candidate is not quarantined')
         # Reject NaN/Infinity even if a permissive JSON parser accepted it.
         json.dumps(report, allow_nan=False)
+        from _lib.review_report import validate_review_receipt
+        validate_review_receipt(report_path)
         return report
 
     @staticmethod
@@ -324,7 +378,7 @@ class JobManager:
             if record['state'] == 'completed':
                 try:
                     record['report'] = self._validate(record)
-                    record['optical_accepted'] = record['report']['status'] in {'requirements_met', 'improved'}
+                    record['optical_accepted'] = record['report']['status'] in {'requirements_met', 'improved', 'applied'}
                 except (OSError, ValueError, TypeError, KeyError) as exc:
                     record.update(state='failed', report=None, optical_accepted=False, error=str(exc))
             return self._public(record)
@@ -333,6 +387,19 @@ class JobManager:
         with self._lock:
             result = self.status(job_id)
             return dict(result, report=self._record(job_id)['report'])
+
+    def review(self, job_id):
+        with self._lock:
+            from _lib.review_report import render_review
+            state = self.status(job_id)
+            if state['state'] != 'completed':
+                raise ValueError('review requires a completed verified owned job')
+            record = self._record(job_id)
+            directory = _inside(record['_directory'], self.workspace)
+            output = _inside(record['output'], directory)
+            target = directory / ('review-' + uuid.uuid4().hex)
+            manifest = render_review(_inside(output / 'report.json', output), target)
+            return {'job_id': job_id, 'directory': str(target), 'manifest': manifest}
 
     def cancel(self, job_id):
         with self._lock:

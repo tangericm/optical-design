@@ -1,0 +1,468 @@
+........................................................................ [  8%]
+........................................................................ [ 17%]
+........................................................................ [ 25%]
+........................................................................ [ 34%]
+........................................................................ [ 43%]
+........................................................................ [ 51%]
+........................................................................ [ 60%]
+........................................................................ [ 68%]
+........................................................................ [ 77%]
+........................................................................ [ 86%]
+....s...........................................................FFFFF... [ 94%]
+.............................................                            [100%]
+================================== FAILURES ===================================
+_ test_validation_receipt_must_link_both_evaluations_to_original_and_saved_model[none] _
+
+tmp_path = WindowsPath('C:/Users/erict/AppData/Local/Temp/pytest-of-erict/pytest-1152/test_validation_receipt_must_l0')
+mutation = 'none'
+
+    @pytest.mark.parametrize('mutation', ['none', 'missing_baseline', 'wrong_candidate_vector',
+                                        'wrong_baseline_vector', 'false_baseline_assessment'])
+    def test_validation_receipt_must_link_both_evaluations_to_original_and_saved_model(tmp_path, mutation):
+        directory = tmp_path/'owned'
+        inputs = directory/'inputs'
+        inputs.mkdir(parents=True)
+        model, raw, backend = setup(inputs, ValidationLens)
+        separate = validation(.5)
+        vpath = inputs/'validation.json'
+        vpath.write_text(json.dumps(separate.data))
+        report = run(model, raw, directory/'output', backend, validation_spec=separate)
+        if mutation == 'missing_baseline':
+            report['validation']['baseline'] = None
+        elif mutation == 'wrong_candidate_vector':
+            report['validation']['candidate']['parameters_mm'] = [999, 999]
+        elif mutation == 'wrong_baseline_vector':
+            report['validation']['baseline']['parameters_mm'] = [999, 999]
+        elif mutation == 'false_baseline_assessment':
+            report['validation']['baseline']['assessment']['passes'] = False
+        for path in (directory/'output/report.json', directory/'stdout.log'):
+            path.write_text(json.dumps(report))
+        record = {'_directory': directory, 'output': str(directory/'output'), 'action': 'optimize',
+                  'returncode': 0, 'logs': {'stdout': str(directory/'stdout.log')},
+                  '_inputs': {'model': (model, digest(model), model.read_bytes()),
+                              'validation_spec': (vpath, digest(vpath), vpath.read_bytes())},
+                  '_paths': {'model': model, 'validation_spec': vpath}}
+        manager = JobManager(tmp_path, [inputs])
+        if mutation == 'none':
+>           assert manager._validate(record)['status'] == 'improved'
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\python\test_validation_receipts.py:39: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <_lib.tool_jobs.JobManager object at 0x0000022330A6B710>
+record = {'_directory': WindowsPath('C:/Users/erict/AppData/Local/Temp/pytest-of-erict/pytest-1152/test_validation_receipt_must...est-of-erict\\pytest-1152\\test_validation_receipt_must_l0\\owned\\output', 'action': 'optimize', 'returncode': 0, ...}
+
+    def _validate(self, record):
+        directory = _inside(record['_directory'], self.workspace)
+        output = _inside(record['output'], directory)
+        if (output / 'failure.json').exists():
+            raise ValueError('failure receipt exists; partial result rejected')
+        report_path = _inside(output / 'report.json', output)
+        report = json.loads(report_path.read_text(encoding='utf-8'))
+        stdout = _inside(record['logs']['stdout'], directory)
+        emitted = json.loads(stdout.read_text(encoding='utf-8'))
+        if report != emitted:
+            raise ValueError('CLI stdout and report receipt disagree')
+        if (not isinstance(report, dict) or report.get('schema') != '1' or
+                report.get('action') != record['action']):
+            raise ValueError('report schema or action does not match owned job')
+        expected_exit = EXPECTED[record['action']].get(report.get('status'))
+        if expected_exit is None or record['returncode'] != expected_exit:
+            raise ValueError('CLI exit and report status disagree')
+        if report.get('source_unchanged') is not True or report.get('baseline_restored') is not True:
+            raise ValueError('source preservation or restoration not verified')
+        for name, (source, sha, _) in record['_inputs'].items():
+            if not any(source.resolve(strict=True).is_relative_to(root) for root in self.input_roots):
+                raise ValueError('input escaped root after job launch')
+            if _hash(source) != sha or _hash(_inside(record['_paths'][name], directory)) != sha:
+                raise ValueError('input changed after job launch; result invalidated')
+        source = report.get('source', {})
+        if (not isinstance(source, dict) or source.get('path') != str(record['_paths']['model']) or
+                source.get('sha256') != record['_inputs']['model'][1]):
+            raise ValueError('report source does not match owned snapshot')
+        artifacts = report.get('artifacts', {})
+        if not isinstance(artifacts, dict) or 'baseline_model' not in artifacts:
+            raise ValueError('missing baseline artifact')
+        for name, path in artifacts.items():
+            if name.endswith('_model'):
+                actual = _inside(path, output)
+                if _hash(actual) != artifacts.get(name[:-6] + '_sha256'):
+                    raise ValueError('artifact hash does not match receipt')
+        if report['status'] in {'improved', 'applied'} and (
+                report.get('saved_candidate_verified') is not True or 'candidate_model' not in artifacts):
+            raise ValueError('saved improvement is not verified')
+        if record['action'] != 'inspect':
+            from _lib.design_contract import DesignSpec, assess
+>           expected_spec = DesignSpec.from_dict(json.loads(record['_inputs']['spec'][2].decode('utf-8-sig')))
+                                                            ^^^^^^^^^^^^^^^^^^^^^^^^^
+E           KeyError: 'spec'
+
+skills\optical-design\scripts\_lib\tool_jobs.py:275: KeyError
+_ test_validation_receipt_must_link_both_evaluations_to_original_and_saved_model[missing_baseline] _
+
+tmp_path = WindowsPath('C:/Users/erict/AppData/Local/Temp/pytest-of-erict/pytest-1152/test_validation_receipt_must_l1')
+mutation = 'missing_baseline'
+
+    @pytest.mark.parametrize('mutation', ['none', 'missing_baseline', 'wrong_candidate_vector',
+                                        'wrong_baseline_vector', 'false_baseline_assessment'])
+    def test_validation_receipt_must_link_both_evaluations_to_original_and_saved_model(tmp_path, mutation):
+        directory = tmp_path/'owned'
+        inputs = directory/'inputs'
+        inputs.mkdir(parents=True)
+        model, raw, backend = setup(inputs, ValidationLens)
+        separate = validation(.5)
+        vpath = inputs/'validation.json'
+        vpath.write_text(json.dumps(separate.data))
+        report = run(model, raw, directory/'output', backend, validation_spec=separate)
+        if mutation == 'missing_baseline':
+            report['validation']['baseline'] = None
+        elif mutation == 'wrong_candidate_vector':
+            report['validation']['candidate']['parameters_mm'] = [999, 999]
+        elif mutation == 'wrong_baseline_vector':
+            report['validation']['baseline']['parameters_mm'] = [999, 999]
+        elif mutation == 'false_baseline_assessment':
+            report['validation']['baseline']['assessment']['passes'] = False
+        for path in (directory/'output/report.json', directory/'stdout.log'):
+            path.write_text(json.dumps(report))
+        record = {'_directory': directory, 'output': str(directory/'output'), 'action': 'optimize',
+                  'returncode': 0, 'logs': {'stdout': str(directory/'stdout.log')},
+                  '_inputs': {'model': (model, digest(model), model.read_bytes()),
+                              'validation_spec': (vpath, digest(vpath), vpath.read_bytes())},
+                  '_paths': {'model': model, 'validation_spec': vpath}}
+        manager = JobManager(tmp_path, [inputs])
+        if mutation == 'none':
+            assert manager._validate(record)['status'] == 'improved'
+        else:
+            with pytest.raises(ValueError, match='validation'):
+>               manager._validate(record)
+
+tests\python\test_validation_receipts.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <_lib.tool_jobs.JobManager object at 0x0000022330762710>
+record = {'_directory': WindowsPath('C:/Users/erict/AppData/Local/Temp/pytest-of-erict/pytest-1152/test_validation_receipt_must...est-of-erict\\pytest-1152\\test_validation_receipt_must_l1\\owned\\output', 'action': 'optimize', 'returncode': 0, ...}
+
+    def _validate(self, record):
+        directory = _inside(record['_directory'], self.workspace)
+        output = _inside(record['output'], directory)
+        if (output / 'failure.json').exists():
+            raise ValueError('failure receipt exists; partial result rejected')
+        report_path = _inside(output / 'report.json', output)
+        report = json.loads(report_path.read_text(encoding='utf-8'))
+        stdout = _inside(record['logs']['stdout'], directory)
+        emitted = json.loads(stdout.read_text(encoding='utf-8'))
+        if report != emitted:
+            raise ValueError('CLI stdout and report receipt disagree')
+        if (not isinstance(report, dict) or report.get('schema') != '1' or
+                report.get('action') != record['action']):
+            raise ValueError('report schema or action does not match owned job')
+        expected_exit = EXPECTED[record['action']].get(report.get('status'))
+        if expected_exit is None or record['returncode'] != expected_exit:
+            raise ValueError('CLI exit and report status disagree')
+        if report.get('source_unchanged') is not True or report.get('baseline_restored') is not True:
+            raise ValueError('source preservation or restoration not verified')
+        for name, (source, sha, _) in record['_inputs'].items():
+            if not any(source.resolve(strict=True).is_relative_to(root) for root in self.input_roots):
+                raise ValueError('input escaped root after job launch')
+            if _hash(source) != sha or _hash(_inside(record['_paths'][name], directory)) != sha:
+                raise ValueError('input changed after job launch; result invalidated')
+        source = report.get('source', {})
+        if (not isinstance(source, dict) or source.get('path') != str(record['_paths']['model']) or
+                source.get('sha256') != record['_inputs']['model'][1]):
+            raise ValueError('report source does not match owned snapshot')
+        artifacts = report.get('artifacts', {})
+        if not isinstance(artifacts, dict) or 'baseline_model' not in artifacts:
+            raise ValueError('missing baseline artifact')
+        for name, path in artifacts.items():
+            if name.endswith('_model'):
+                actual = _inside(path, output)
+                if _hash(actual) != artifacts.get(name[:-6] + '_sha256'):
+                    raise ValueError('artifact hash does not match receipt')
+        if report['status'] in {'improved', 'applied'} and (
+                report.get('saved_candidate_verified') is not True or 'candidate_model' not in artifacts):
+            raise ValueError('saved improvement is not verified')
+        if record['action'] != 'inspect':
+            from _lib.design_contract import DesignSpec, assess
+>           expected_spec = DesignSpec.from_dict(json.loads(record['_inputs']['spec'][2].decode('utf-8-sig')))
+                                                            ^^^^^^^^^^^^^^^^^^^^^^^^^
+E           KeyError: 'spec'
+
+skills\optical-design\scripts\_lib\tool_jobs.py:275: KeyError
+_ test_validation_receipt_must_link_both_evaluations_to_original_and_saved_model[wrong_candidate_vector] _
+
+tmp_path = WindowsPath('C:/Users/erict/AppData/Local/Temp/pytest-of-erict/pytest-1152/test_validation_receipt_must_l2')
+mutation = 'wrong_candidate_vector'
+
+    @pytest.mark.parametrize('mutation', ['none', 'missing_baseline', 'wrong_candidate_vector',
+                                        'wrong_baseline_vector', 'false_baseline_assessment'])
+    def test_validation_receipt_must_link_both_evaluations_to_original_and_saved_model(tmp_path, mutation):
+        directory = tmp_path/'owned'
+        inputs = directory/'inputs'
+        inputs.mkdir(parents=True)
+        model, raw, backend = setup(inputs, ValidationLens)
+        separate = validation(.5)
+        vpath = inputs/'validation.json'
+        vpath.write_text(json.dumps(separate.data))
+        report = run(model, raw, directory/'output', backend, validation_spec=separate)
+        if mutation == 'missing_baseline':
+            report['validation']['baseline'] = None
+        elif mutation == 'wrong_candidate_vector':
+            report['validation']['candidate']['parameters_mm'] = [999, 999]
+        elif mutation == 'wrong_baseline_vector':
+            report['validation']['baseline']['parameters_mm'] = [999, 999]
+        elif mutation == 'false_baseline_assessment':
+            report['validation']['baseline']['assessment']['passes'] = False
+        for path in (directory/'output/report.json', directory/'stdout.log'):
+            path.write_text(json.dumps(report))
+        record = {'_directory': directory, 'output': str(directory/'output'), 'action': 'optimize',
+                  'returncode': 0, 'logs': {'stdout': str(directory/'stdout.log')},
+                  '_inputs': {'model': (model, digest(model), model.read_bytes()),
+                              'validation_spec': (vpath, digest(vpath), vpath.read_bytes())},
+                  '_paths': {'model': model, 'validation_spec': vpath}}
+        manager = JobManager(tmp_path, [inputs])
+        if mutation == 'none':
+            assert manager._validate(record)['status'] == 'improved'
+        else:
+            with pytest.raises(ValueError, match='validation'):
+>               manager._validate(record)
+
+tests\python\test_validation_receipts.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <_lib.tool_jobs.JobManager object at 0x0000022330951810>
+record = {'_directory': WindowsPath('C:/Users/erict/AppData/Local/Temp/pytest-of-erict/pytest-1152/test_validation_receipt_must...est-of-erict\\pytest-1152\\test_validation_receipt_must_l2\\owned\\output', 'action': 'optimize', 'returncode': 0, ...}
+
+    def _validate(self, record):
+        directory = _inside(record['_directory'], self.workspace)
+        output = _inside(record['output'], directory)
+        if (output / 'failure.json').exists():
+            raise ValueError('failure receipt exists; partial result rejected')
+        report_path = _inside(output / 'report.json', output)
+        report = json.loads(report_path.read_text(encoding='utf-8'))
+        stdout = _inside(record['logs']['stdout'], directory)
+        emitted = json.loads(stdout.read_text(encoding='utf-8'))
+        if report != emitted:
+            raise ValueError('CLI stdout and report receipt disagree')
+        if (not isinstance(report, dict) or report.get('schema') != '1' or
+                report.get('action') != record['action']):
+            raise ValueError('report schema or action does not match owned job')
+        expected_exit = EXPECTED[record['action']].get(report.get('status'))
+        if expected_exit is None or record['returncode'] != expected_exit:
+            raise ValueError('CLI exit and report status disagree')
+        if report.get('source_unchanged') is not True or report.get('baseline_restored') is not True:
+            raise ValueError('source preservation or restoration not verified')
+        for name, (source, sha, _) in record['_inputs'].items():
+            if not any(source.resolve(strict=True).is_relative_to(root) for root in self.input_roots):
+                raise ValueError('input escaped root after job launch')
+            if _hash(source) != sha or _hash(_inside(record['_paths'][name], directory)) != sha:
+                raise ValueError('input changed after job launch; result invalidated')
+        source = report.get('source', {})
+        if (not isinstance(source, dict) or source.get('path') != str(record['_paths']['model']) or
+                source.get('sha256') != record['_inputs']['model'][1]):
+            raise ValueError('report source does not match owned snapshot')
+        artifacts = report.get('artifacts', {})
+        if not isinstance(artifacts, dict) or 'baseline_model' not in artifacts:
+            raise ValueError('missing baseline artifact')
+        for name, path in artifacts.items():
+            if name.endswith('_model'):
+                actual = _inside(path, output)
+                if _hash(actual) != artifacts.get(name[:-6] + '_sha256'):
+                    raise ValueError('artifact hash does not match receipt')
+        if report['status'] in {'improved', 'applied'} and (
+                report.get('saved_candidate_verified') is not True or 'candidate_model' not in artifacts):
+            raise ValueError('saved improvement is not verified')
+        if record['action'] != 'inspect':
+            from _lib.design_contract import DesignSpec, assess
+>           expected_spec = DesignSpec.from_dict(json.loads(record['_inputs']['spec'][2].decode('utf-8-sig')))
+                                                            ^^^^^^^^^^^^^^^^^^^^^^^^^
+E           KeyError: 'spec'
+
+skills\optical-design\scripts\_lib\tool_jobs.py:275: KeyError
+_ test_validation_receipt_must_link_both_evaluations_to_original_and_saved_model[wrong_baseline_vector] _
+
+tmp_path = WindowsPath('C:/Users/erict/AppData/Local/Temp/pytest-of-erict/pytest-1152/test_validation_receipt_must_l3')
+mutation = 'wrong_baseline_vector'
+
+    @pytest.mark.parametrize('mutation', ['none', 'missing_baseline', 'wrong_candidate_vector',
+                                        'wrong_baseline_vector', 'false_baseline_assessment'])
+    def test_validation_receipt_must_link_both_evaluations_to_original_and_saved_model(tmp_path, mutation):
+        directory = tmp_path/'owned'
+        inputs = directory/'inputs'
+        inputs.mkdir(parents=True)
+        model, raw, backend = setup(inputs, ValidationLens)
+        separate = validation(.5)
+        vpath = inputs/'validation.json'
+        vpath.write_text(json.dumps(separate.data))
+        report = run(model, raw, directory/'output', backend, validation_spec=separate)
+        if mutation == 'missing_baseline':
+            report['validation']['baseline'] = None
+        elif mutation == 'wrong_candidate_vector':
+            report['validation']['candidate']['parameters_mm'] = [999, 999]
+        elif mutation == 'wrong_baseline_vector':
+            report['validation']['baseline']['parameters_mm'] = [999, 999]
+        elif mutation == 'false_baseline_assessment':
+            report['validation']['baseline']['assessment']['passes'] = False
+        for path in (directory/'output/report.json', directory/'stdout.log'):
+            path.write_text(json.dumps(report))
+        record = {'_directory': directory, 'output': str(directory/'output'), 'action': 'optimize',
+                  'returncode': 0, 'logs': {'stdout': str(directory/'stdout.log')},
+                  '_inputs': {'model': (model, digest(model), model.read_bytes()),
+                              'validation_spec': (vpath, digest(vpath), vpath.read_bytes())},
+                  '_paths': {'model': model, 'validation_spec': vpath}}
+        manager = JobManager(tmp_path, [inputs])
+        if mutation == 'none':
+            assert manager._validate(record)['status'] == 'improved'
+        else:
+            with pytest.raises(ValueError, match='validation'):
+>               manager._validate(record)
+
+tests\python\test_validation_receipts.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <_lib.tool_jobs.JobManager object at 0x000002232E8DE910>
+record = {'_directory': WindowsPath('C:/Users/erict/AppData/Local/Temp/pytest-of-erict/pytest-1152/test_validation_receipt_must...est-of-erict\\pytest-1152\\test_validation_receipt_must_l3\\owned\\output', 'action': 'optimize', 'returncode': 0, ...}
+
+    def _validate(self, record):
+        directory = _inside(record['_directory'], self.workspace)
+        output = _inside(record['output'], directory)
+        if (output / 'failure.json').exists():
+            raise ValueError('failure receipt exists; partial result rejected')
+        report_path = _inside(output / 'report.json', output)
+        report = json.loads(report_path.read_text(encoding='utf-8'))
+        stdout = _inside(record['logs']['stdout'], directory)
+        emitted = json.loads(stdout.read_text(encoding='utf-8'))
+        if report != emitted:
+            raise ValueError('CLI stdout and report receipt disagree')
+        if (not isinstance(report, dict) or report.get('schema') != '1' or
+                report.get('action') != record['action']):
+            raise ValueError('report schema or action does not match owned job')
+        expected_exit = EXPECTED[record['action']].get(report.get('status'))
+        if expected_exit is None or record['returncode'] != expected_exit:
+            raise ValueError('CLI exit and report status disagree')
+        if report.get('source_unchanged') is not True or report.get('baseline_restored') is not True:
+            raise ValueError('source preservation or restoration not verified')
+        for name, (source, sha, _) in record['_inputs'].items():
+            if not any(source.resolve(strict=True).is_relative_to(root) for root in self.input_roots):
+                raise ValueError('input escaped root after job launch')
+            if _hash(source) != sha or _hash(_inside(record['_paths'][name], directory)) != sha:
+                raise ValueError('input changed after job launch; result invalidated')
+        source = report.get('source', {})
+        if (not isinstance(source, dict) or source.get('path') != str(record['_paths']['model']) or
+                source.get('sha256') != record['_inputs']['model'][1]):
+            raise ValueError('report source does not match owned snapshot')
+        artifacts = report.get('artifacts', {})
+        if not isinstance(artifacts, dict) or 'baseline_model' not in artifacts:
+            raise ValueError('missing baseline artifact')
+        for name, path in artifacts.items():
+            if name.endswith('_model'):
+                actual = _inside(path, output)
+                if _hash(actual) != artifacts.get(name[:-6] + '_sha256'):
+                    raise ValueError('artifact hash does not match receipt')
+        if report['status'] in {'improved', 'applied'} and (
+                report.get('saved_candidate_verified') is not True or 'candidate_model' not in artifacts):
+            raise ValueError('saved improvement is not verified')
+        if record['action'] != 'inspect':
+            from _lib.design_contract import DesignSpec, assess
+>           expected_spec = DesignSpec.from_dict(json.loads(record['_inputs']['spec'][2].decode('utf-8-sig')))
+                                                            ^^^^^^^^^^^^^^^^^^^^^^^^^
+E           KeyError: 'spec'
+
+skills\optical-design\scripts\_lib\tool_jobs.py:275: KeyError
+_ test_validation_receipt_must_link_both_evaluations_to_original_and_saved_model[false_baseline_assessment] _
+
+tmp_path = WindowsPath('C:/Users/erict/AppData/Local/Temp/pytest-of-erict/pytest-1152/test_validation_receipt_must_l4')
+mutation = 'false_baseline_assessment'
+
+    @pytest.mark.parametrize('mutation', ['none', 'missing_baseline', 'wrong_candidate_vector',
+                                        'wrong_baseline_vector', 'false_baseline_assessment'])
+    def test_validation_receipt_must_link_both_evaluations_to_original_and_saved_model(tmp_path, mutation):
+        directory = tmp_path/'owned'
+        inputs = directory/'inputs'
+        inputs.mkdir(parents=True)
+        model, raw, backend = setup(inputs, ValidationLens)
+        separate = validation(.5)
+        vpath = inputs/'validation.json'
+        vpath.write_text(json.dumps(separate.data))
+        report = run(model, raw, directory/'output', backend, validation_spec=separate)
+        if mutation == 'missing_baseline':
+            report['validation']['baseline'] = None
+        elif mutation == 'wrong_candidate_vector':
+            report['validation']['candidate']['parameters_mm'] = [999, 999]
+        elif mutation == 'wrong_baseline_vector':
+            report['validation']['baseline']['parameters_mm'] = [999, 999]
+        elif mutation == 'false_baseline_assessment':
+            report['validation']['baseline']['assessment']['passes'] = False
+        for path in (directory/'output/report.json', directory/'stdout.log'):
+            path.write_text(json.dumps(report))
+        record = {'_directory': directory, 'output': str(directory/'output'), 'action': 'optimize',
+                  'returncode': 0, 'logs': {'stdout': str(directory/'stdout.log')},
+                  '_inputs': {'model': (model, digest(model), model.read_bytes()),
+                              'validation_spec': (vpath, digest(vpath), vpath.read_bytes())},
+                  '_paths': {'model': model, 'validation_spec': vpath}}
+        manager = JobManager(tmp_path, [inputs])
+        if mutation == 'none':
+            assert manager._validate(record)['status'] == 'improved'
+        else:
+            with pytest.raises(ValueError, match='validation'):
+>               manager._validate(record)
+
+tests\python\test_validation_receipts.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <_lib.tool_jobs.JobManager object at 0x0000022333F90890>
+record = {'_directory': WindowsPath('C:/Users/erict/AppData/Local/Temp/pytest-of-erict/pytest-1152/test_validation_receipt_must...est-of-erict\\pytest-1152\\test_validation_receipt_must_l4\\owned\\output', 'action': 'optimize', 'returncode': 0, ...}
+
+    def _validate(self, record):
+        directory = _inside(record['_directory'], self.workspace)
+        output = _inside(record['output'], directory)
+        if (output / 'failure.json').exists():
+            raise ValueError('failure receipt exists; partial result rejected')
+        report_path = _inside(output / 'report.json', output)
+        report = json.loads(report_path.read_text(encoding='utf-8'))
+        stdout = _inside(record['logs']['stdout'], directory)
+        emitted = json.loads(stdout.read_text(encoding='utf-8'))
+        if report != emitted:
+            raise ValueError('CLI stdout and report receipt disagree')
+        if (not isinstance(report, dict) or report.get('schema') != '1' or
+                report.get('action') != record['action']):
+            raise ValueError('report schema or action does not match owned job')
+        expected_exit = EXPECTED[record['action']].get(report.get('status'))
+        if expected_exit is None or record['returncode'] != expected_exit:
+            raise ValueError('CLI exit and report status disagree')
+        if report.get('source_unchanged') is not True or report.get('baseline_restored') is not True:
+            raise ValueError('source preservation or restoration not verified')
+        for name, (source, sha, _) in record['_inputs'].items():
+            if not any(source.resolve(strict=True).is_relative_to(root) for root in self.input_roots):
+                raise ValueError('input escaped root after job launch')
+            if _hash(source) != sha or _hash(_inside(record['_paths'][name], directory)) != sha:
+                raise ValueError('input changed after job launch; result invalidated')
+        source = report.get('source', {})
+        if (not isinstance(source, dict) or source.get('path') != str(record['_paths']['model']) or
+                source.get('sha256') != record['_inputs']['model'][1]):
+            raise ValueError('report source does not match owned snapshot')
+        artifacts = report.get('artifacts', {})
+        if not isinstance(artifacts, dict) or 'baseline_model' not in artifacts:
+            raise ValueError('missing baseline artifact')
+        for name, path in artifacts.items():
+            if name.endswith('_model'):
+                actual = _inside(path, output)
+                if _hash(actual) != artifacts.get(name[:-6] + '_sha256'):
+                    raise ValueError('artifact hash does not match receipt')
+        if report['status'] in {'improved', 'applied'} and (
+                report.get('saved_candidate_verified') is not True or 'candidate_model' not in artifacts):
+            raise ValueError('saved improvement is not verified')
+        if record['action'] != 'inspect':
+            from _lib.design_contract import DesignSpec, assess
+>           expected_spec = DesignSpec.from_dict(json.loads(record['_inputs']['spec'][2].decode('utf-8-sig')))
+                                                            ^^^^^^^^^^^^^^^^^^^^^^^^^
+E           KeyError: 'spec'
+
+skills\optical-design\scripts\_lib\tool_jobs.py:275: KeyError
+=========================== short test summary info ===========================
+FAILED tests/python/test_validation_receipts.py::test_validation_receipt_must_link_both_evaluations_to_original_and_saved_model[none]
+FAILED tests/python/test_validation_receipts.py::test_validation_receipt_must_link_both_evaluations_to_original_and_saved_model[missing_baseline]
+FAILED tests/python/test_validation_receipts.py::test_validation_receipt_must_link_both_evaluations_to_original_and_saved_model[wrong_candidate_vector]
+FAILED tests/python/test_validation_receipts.py::test_validation_receipt_must_link_both_evaluations_to_original_and_saved_model[wrong_baseline_vector]
+FAILED tests/python/test_validation_receipts.py::test_validation_receipt_must_link_both_evaluations_to_original_and_saved_model[false_baseline_assessment]
+5 failed, 831 passed, 1 skipped in 66.63s (0:01:06)

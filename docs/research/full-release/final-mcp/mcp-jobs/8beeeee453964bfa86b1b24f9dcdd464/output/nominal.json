@@ -1,0 +1,152 @@
+{
+  "kind": "nominal",
+  "index": 0,
+  "perturbations": [],
+  "baseline_verified": true,
+  "measurements": [
+    {
+      "metric": "efl_mm",
+      "unit": "mm",
+      "value": 49.05139286997028,
+      "settings": {
+        "wavelength": 1,
+        "wavelength_um": 0.55
+      }
+    },
+    {
+      "metric": "f_number",
+      "unit": "1",
+      "value": 4.905139,
+      "settings": {
+        "wavelength": 1,
+        "wavelength_um": 0.55
+      }
+    },
+    {
+      "metric": "total_track_mm",
+      "unit": "mm",
+      "value": 51.76947
+    },
+    {
+      "metric": "image_distance_mm",
+      "unit": "mm",
+      "value": 46.7694746245767
+    },
+    {
+      "metric": "rms_spot_um",
+      "field": 1,
+      "wavelength": 1,
+      "unit": "um",
+      "value": 15.841366208313875,
+      "settings": {
+        "reference": "centroid",
+        "ray_density": 16,
+        "native_analysis": "StandardSpot",
+        "ray_check_count": 17,
+        "field": 1,
+        "field_xy_deg": [
+          0.0,
+          0.0
+        ],
+        "wavelength": 1,
+        "wavelength_um": 0.55,
+        "spectral_mode": "monochromatic"
+      }
+    },
+    {
+      "metric": "mtf",
+      "field": 1,
+      "wavelength": 1,
+      "frequency": 20,
+      "axis": "tangential",
+      "unit": "1",
+      "value": 0.3985805096694023,
+      "settings": {
+        "analysis": "FFTMTF",
+        "sampling": 128,
+        "polarization": false,
+        "frequency_interpolation": "linear; no extrapolation"
+      }
+    },
+    {
+      "metric": "mtf",
+      "field": 1,
+      "wavelength": 1,
+      "frequency": 20,
+      "axis": "sagittal",
+      "unit": "1",
+      "value": 0.3985805096694023,
+      "settings": {
+        "analysis": "FFTMTF",
+        "sampling": 128,
+        "polarization": false,
+        "frequency_interpolation": "linear; no extrapolation"
+      }
+    }
+  ],
+  "assessment": {
+    "passes": true,
+    "requirements": [
+      {
+        "id": "focal-length",
+        "key": "efl_mm",
+        "requirement": {
+          "id": "focal-length",
+          "metric": "efl_mm",
+          "unit": "mm",
+          "min": 48,
+          "max": 51
+        },
+        "status": "pass",
+        "value": 49.05139286997028,
+        "unit": "mm"
+      },
+      {
+        "id": "track",
+        "key": "total_track_mm",
+        "requirement": {
+          "id": "track",
+          "metric": "total_track_mm",
+          "unit": "mm",
+          "max": 65
+        },
+        "status": "pass",
+        "value": 51.76947,
+        "unit": "mm"
+      },
+      {
+        "id": "contrast",
+        "key": "mtf|f=1|w=1|nu=20|axis=tangential",
+        "requirement": {
+          "id": "contrast",
+          "metric": "mtf",
+          "field": 1,
+          "wavelength": 1,
+          "frequency": 20,
+          "axis": "tangential",
+          "unit": "1",
+          "min": 0.3
+        },
+        "status": "pass",
+        "value": 0.3985805096694023,
+        "unit": "1"
+      },
+      {
+        "id": "spot",
+        "key": "rms_spot_um|f=1|w=1",
+        "requirement": {
+          "id": "spot",
+          "metric": "rms_spot_um",
+          "field": 1,
+          "wavelength": 1,
+          "unit": "um",
+          "max": 30
+        },
+        "status": "pass",
+        "value": 15.841366208313875,
+        "unit": "um"
+      }
+    ]
+  },
+  "status": "pass"
+}

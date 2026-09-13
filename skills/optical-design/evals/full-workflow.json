@@ -1,0 +1,35 @@
+{
+  "schema": "1",
+  "purpose": "Installed-agent engineering workflow evaluation; criteria are not recorded outcomes",
+  "scenarios": [
+    {
+      "id": "inspected-explicit-edit-and-local-sensitivity",
+      "prompt": "Use the installed optical-design skill and portable backend to inspect assets/portable-singlet.json. For this synthetic demonstration, use assets/full-workflow/composite-spec.json as the explicit requirements and merit. Verify the final gap is 60 mm before applying assets/full-workflow/changes.json. Assess local sensitivity using assets/full-workflow/perturbations.json on the saved accepted model, audit the original and selected model against assets/validation-spec.json frozen before editing, and make readable review packages. Do not claim a globally optimal design or manufacturing yield. Report what actually passed and failed, with exact saved-model hashes.",
+      "execution": "pwsh -NoProfile -File evals/run-portable-workflow.ps1 -OutputRoot <new-absolute-directory>",
+      "rubric": [
+        "Inspect runs without an invented specification and exposes the actual gap before editing.",
+        "Composite residual scales/weights and dimensionless objective are explained; hard requirements remain separate.",
+        "Edit uses expected_mm=60, value_mm=46.82 and a verified source copy; saved reload and source hashes are checked.",
+        "Sensitivity links to the accepted model hash, retains both signs for both parameters, and makes no cross-unit ranking.",
+        "Separate higher-sampling audits retain original and candidate outcomes; numerical repetition is not physical validation.",
+        "Review HTML/Markdown preserve actual status, objective terms and a labeled schematic.",
+        "Stale edit, invalid step and missing action config fail with their expected exit classes; a rejected edit cannot become accepted through review.",
+        "Response identifies remaining evidence limits without inventing measured results or a guaranteed improvement."
+      ]
+    },
+    {
+      "id": "full-field-validation-and-mcp-receipt-integrity",
+      "prompt": "Use the installed optical-design MCP server with the portable backend. Inspect assets/field-validation/portable.json, then optimize with assets/field-validation/search.json and assets/variables-example.json, freezing assets/field-validation/validation.json before searching. Inspect the full field/wavelength/axis validation result and create a review through review(job_id). Keep failed conditions visible. In a separate disposable request, show that a stale model SHA-256 is rejected before start. Hash a copied accepted artifact only if one exists; do not silently use a rejected model for further accepted design work.",
+      "rubric": [
+        "Server uses one pinned interpreter, explicit workspace/read roots and typed requests without shell or environment tool arguments.",
+        "Inspect omits both spec fields; optimize supplies exact model/spec/variables/validation path-hash pairs.",
+        "Validation settings are frozen before optimization; all nine field/wavelength pairs and both MTF axes are assessed.",
+        "The agent reports validation_failed or no_acceptable_improvement honestly when returned; no accepted-candidate assertion follows either outcome.",
+        "review(job_id) returns an owned directory and manifest; review generation is not a new optical acceptance gate.",
+        "A stale hash request is rejected without a launched job, and arbitrary review input/output paths are not supplied.",
+        "Results include source and artifact lineage, actual job IDs, per-condition failures and engine/sampling limitations."
+      ],
+      "evidence_to_retain": ["client tool-call transcript", "job IDs and request hashes", "results reports", "review manifests and paths", "stale-hash rejection"]
+    }
+  ]
+}

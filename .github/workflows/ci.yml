@@ -32,6 +32,22 @@ jobs:
       - run: uv run ruff check skills tests
       - run: uv run pytest -m "not zos and not tier1" -q
 
+  portable:
+    name: portable engine and MCP (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.11"
+      - run: uv sync
+      - run: uv run --with optiland==0.6.2 --with mcp==2.2.0 pytest -m "not zos" -q
+
   node:
     name: node packaging and skill lint
     runs-on: ubuntu-latest

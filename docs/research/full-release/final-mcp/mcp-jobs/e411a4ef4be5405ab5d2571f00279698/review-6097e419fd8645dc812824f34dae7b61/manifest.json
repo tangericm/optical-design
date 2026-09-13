@@ -1,0 +1,26 @@
+{
+  "accepted_candidate": true,
+  "action": "edit",
+  "files": {
+    "report.html": {
+      "bytes": 33041,
+      "sha256": "ec416e4c268a0a38011f2c60fd939c78a95a24034df5616faac30e0f79c05618"
+    },
+    "report.md": {
+      "bytes": 21834,
+      "sha256": "3eb565ac5e687673f9a7a7c48431664dc51040cdcd765e33360031b6361628a0"
+    }
+  },
+  "receipt_sha256": "a0900c1bcd536897a65050eca467a72295e0b37886daa290a6d0ca816a9e1a79",
+  "schema": "1",
+  "status": "applied",
+  "tool": "optical-design-review",
+  "verification": "offline receipt consistency and local hashes; no optical engine or source reopen",
+  "verified_local_artifacts": {
+    "baseline-model.zmx": "4fe32615eac8c57b2d80c6745c99f0e3235f7586a2917e62dffe0aba2b9f7cf8",
+    "candidate-model.zmx": "217526648ca75334c9dc49e32992b24a4f4a73edcb90d6835c83d3b59bf78eba",
+    "changes.json": "5429430ce401cba866c69c3ec6fe74dd658260c37106f8ce1354dd8f735f9a7a",
+    "source_snapshot.zmx": "4fe32615eac8c57b2d80c6745c99f0e3235f7586a2917e62dffe0aba2b9f7cf8",
+    "spec.json": "da3cef163a4dc9872aaab67aa95ab82937d80a87f5451967ae91a552b92b4b81"
+  }
+}

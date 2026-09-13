@@ -23,7 +23,7 @@ def test_actual_stdio_client_tools_dispatch_and_rejection(tmp_path):
             '--workspace', str(tmp_path / 'workspace'), '--input-root', str(inputs)])
         async with mcp.Client(params, read_timeout_seconds=15) as client:
             listed = await client.list_tools()
-            assert {tool.name for tool in listed.tools} == {'capabilities', 'start', 'status', 'cancel', 'results'}
+            assert {tool.name for tool in listed.tools} == {'capabilities', 'start', 'status', 'cancel', 'results', 'review'}
             capabilities = await client.call_tool('capabilities')
             assert capabilities.structured_content['max_active_jobs'] == 1
             unknown = await client.call_tool('status', {'job_id': '../other'})
@@ -46,6 +46,7 @@ def test_actual_stdio_client_tools_dispatch_and_rejection(tmp_path):
             assert result.structured_content['state'] == 'failed'
             assert result.structured_content['optical_accepted'] is False
             assert result.structured_content['report'] is None
+            assert (await client.call_tool('review', {'job_id': identity})).is_error
             assert Path(result.structured_content['logs']['stderr']).read_text()
             cancelled = await client.call_tool('cancel', {'job_id': identity})
             assert cancelled.structured_content['state'] == 'failed'

@@ -8,8 +8,8 @@ import shutil
 import time
 from pathlib import Path
 
-from _lib.design_contract import DesignSpec, assess, finite, objective_value
-from _lib.design_jobs import sha256, write_json
+from _lib.design_contract import DesignSpec, assess, finite, objective_breakdown
+from _lib.design_jobs import sha256, verify_artifact_hashes, write_json
 
 
 def validate_variables(raw: dict, spec: DesignSpec) -> dict:
@@ -131,6 +131,8 @@ def run_optimization_job(model, spec: DesignSpec, out, factory, variables: dict,
     Exceptions abort acceptance, restore the backend even after deadline/cancellation,
     and retain failure evidence. A receipt is written only after backend teardown.
     """
+    spec = DesignSpec.from_dict(spec.data)
+    frozen_spec = copy.deepcopy(spec.data)
     config = validate_variables(variables, spec)
     validation = None
     if validation_spec is not None:
@@ -160,9 +162,12 @@ def run_optimization_job(model, spec: DesignSpec, out, factory, variables: dict,
     initial, baseline, candidate, rejected_candidate = None, None, None, None
     validation_deadline = None
     restored, cleanup_error = False, None
+    evidence_hashes = {model: original_hash}
     sign = 1 if spec.objective['direction'] == 'maximize' else -1
 
     def check_time():
+        if spec.data != frozen_spec:
+            raise RuntimeError('specification changed during optimization')
         if cancelled and cancelled():
             raise InterruptedError('optimization cancelled')
         if time.monotonic() >= deadline:
@@ -179,11 +184,17 @@ def run_optimization_job(model, spec: DesignSpec, out, factory, variables: dict,
     try:
         shutil.copy2(model, working)
         shutil.copy2(model, snapshot)
-        write_json(out / 'spec.json', spec.data)
+        if sha256(working) != original_hash or sha256(snapshot) != original_hash:
+            raise RuntimeError('source copy changed before optimization')
+        evidence_hashes[snapshot] = original_hash
+        write_json(out / 'spec.json', frozen_spec)
         write_json(out / 'variables.json', config)
+        for path in (out / 'spec.json', out / 'variables.json'):
+            evidence_hashes[path] = sha256(path)
         if validation is not None:
             write_json(out / 'validation-spec.json', validation_spec.data)
             validation['spec_sha256'] = sha256(out / 'validation-spec.json')
+            evidence_hashes[out / 'validation-spec.json'] = validation['spec_sha256']
         with factory(working) as backend:
             recovery = snapshot
             active_error = None
@@ -192,6 +203,7 @@ def run_optimization_job(model, spec: DesignSpec, out, factory, variables: dict,
                 baseline_path = out / ('baseline-model' + getattr(backend, 'model_suffix', model.suffix))
                 candidate_path = out / ('candidate-model' + getattr(backend, 'model_suffix', model.suffix))
                 call(backend.save, baseline_path)
+                evidence_hashes[baseline_path] = sha256(baseline_path)
                 recovery = baseline_path
                 allowed = {s['index'] for s in initial['surfaces']
                            if s['index'] > 0 and not s.get('is_image') and s['index'] < initial['image_surface']}
@@ -210,7 +222,7 @@ def run_optimization_job(model, spec: DesignSpec, out, factory, variables: dict,
                         if (not math.isclose(found, requested, rel_tol=1e-12, abs_tol=1e-12) or
                                 (requested != original and found == original)):
                             raise RuntimeError('all-variable readback did not reproduce requested vector')
-                    inspection = call(backend.inspect)
+                    inspection = copy.deepcopy(call(backend.inspect))
                     if _fixed_inspection(inspection, initial, variables) != fixed:
                         raise RuntimeError('fixed optical model invariants changed')
                     return inspection, actual
@@ -226,14 +238,15 @@ def run_optimization_job(model, spec: DesignSpec, out, factory, variables: dict,
                     selected_spec = spec if analysis_spec is None else analysis_spec
                     if analysis_spec is not None and analysis_spec.data != validation['spec']:
                         raise RuntimeError('validation specification changed before analysis')
-                    rows = call(backend.evaluate, selected_spec)
+                    rows = copy.deepcopy(call(backend.evaluate, selected_spec))
                     if analysis_spec is not None and analysis_spec.data != validation['spec']:
                         raise RuntimeError('validation specification changed during analysis')
                     inspection, actual = verify(expected, bounded=bounded)
                     entry = {'kind': kind, 'parameters_mm': actual, 'inspection': inspection,
                              'measurements': rows, 'assessment': assess(selected_spec, rows)}
                     if analysis_spec is None:
-                        entry['objective_value'] = objective_value(spec, rows)
+                        entry['objective_breakdown'] = objective_breakdown(spec, rows)
+                        entry['objective_value'] = entry['objective_breakdown']['value']
                     history.append(entry)
                     return entry
 
@@ -248,6 +261,7 @@ def run_optimization_job(model, spec: DesignSpec, out, factory, variables: dict,
 
                 baseline = evaluate(baseline_vector, 'baseline', bounded=False)
                 write_json(out / 'baseline.json', baseline)
+                evidence_hashes[out / 'baseline.json'] = sha256(out / 'baseline.json')
                 widths = [v['max_mm'] - v['min_mm'] for v in variables]
                 start = [min(1.0, max(0.0, (x - v['min_mm']) / width))
                          for x, v, width in zip(baseline_vector, variables, widths)]
@@ -308,6 +322,7 @@ def run_optimization_job(model, spec: DesignSpec, out, factory, variables: dict,
                     candidate = evaluate(best['parameters_mm'], 'candidate_verification')
                     require_gain(candidate)
                     call(backend.save, candidate_path)
+                    evidence_hashes[candidate_path] = sha256(candidate_path)
                     call(backend.load, candidate_path)
                     reloaded = evaluate(candidate['parameters_mm'], 'saved_reload_verification')
                     require_gain(reloaded)
@@ -349,23 +364,24 @@ def run_optimization_job(model, spec: DesignSpec, out, factory, variables: dict,
         check_time()
         if sha256(model) != original_hash:
             raise RuntimeError('source changed during optimization; result cannot be accepted')
-        artifacts = {'baseline_model': str(baseline_path), 'baseline_sha256': sha256(baseline_path),
-                     'source_snapshot_sha256': sha256(snapshot)}
+        verify_artifact_hashes(evidence_hashes)
+        artifacts = {'baseline_model': str(baseline_path), 'baseline_sha256': evidence_hashes[baseline_path],
+                     'source_snapshot_sha256': original_hash}
         if candidate:
-            artifacts.update(candidate_model=str(candidate_path), candidate_sha256=sha256(candidate_path))
+            artifacts.update(candidate_model=str(candidate_path), candidate_sha256=evidence_hashes[candidate_path])
         if rejected_candidate:
             rejected_path = out / ('rejected-candidate-model' + candidate_path.suffix)
             candidate_path.replace(rejected_path)
             artifacts.update(rejected_candidate_model=str(rejected_path),
-                             rejected_candidate_sha256=sha256(rejected_path))
+                             rejected_candidate_sha256=evidence_hashes[candidate_path])
         report = {'schema': '1', 'action': 'optimize',
                   'status': ('improved' if candidate else 'validation_failed' if rejected_candidate
                              else 'no_acceptable_improvement'),
                   'source': {'path': str(model), 'sha256': original_hash}, 'source_unchanged': True,
-                  'spec': spec.data, 'variables': config, 'baseline': baseline, 'candidate': candidate,
+                  'spec': frozen_spec, 'variables': config, 'baseline': baseline, 'candidate': candidate,
                   'history': history, 'evaluations': count, 'baseline_restored': restored,
                   'saved_candidate_verified': candidate is not None, 'artifacts': artifacts,
-                  'spec_sha256': sha256(out / 'spec.json'), 'variables_sha256': sha256(out / 'variables.json'),
+                  'spec_sha256': evidence_hashes[out / 'spec.json'], 'variables_sha256': evidence_hashes[out / 'variables.json'],
                   'python_version': platform.python_version(),
                   'search': {'method': 'normalized_bounded_pattern_search', 'global_optimum_proven': False,
                              'termination': termination, 'final_normalized_step': step,

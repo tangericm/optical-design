@@ -2,6 +2,23 @@
 
 ## Unreleased
 
+## 1.0.0 — 2026-09-13
+
+- Complete the saved sequential-imaging workflow with inspection, expected-value edits,
+  composite merit, local sensitivity, separate validation and verified HTML/Markdown reviews.
+- Support native centered Standard conics and EvenAspheric surfaces with fixed A2–A16
+  coefficient readback, saved reload and independent sag anchors.
+- Expose all engineering actions and review generation through owned MCP jobs.
+- Bind every MCP receipt to its requested specification/configuration and reassess optical
+  acceptance. Pin evidence hashes before engine teardown; reject mutable specs, altered
+  artifacts and contradictory parameter readbacks.
+- Add installed-client workflow scenarios, two-engine composite/MCP evidence and portable
+  engine/MCP CI on Windows and Linux. Preserve all deliberate optical rejection cases.
+- Publish through GitHub for `npx skills add tangericm/optical-design`; no npm registry
+  package is required. Existing dev.1–dev.5 work is included below.
+
+### Earlier local development milestones
+
 ### 0.1.0-dev.5
 
 - Fix native RMS spot measurements on multi-wavelength models: explicitly select each

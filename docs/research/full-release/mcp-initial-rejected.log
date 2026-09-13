@@ -1,0 +1,134 @@
+Tool 'start' raised an unexpected exception
+Traceback (most recent call last):
+  File "C:\Users\erict\AppData\Local\uv\cache\archive-v0\1oTiDYYjy2XEHm8e\Lib\site-packages\mcp\server\mcpserver\tools\base.py", line 176, in run
+    result = await self.fn_metadata.call_fn(self.fn, self.is_async, validated, pass_directly)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\erict\AppData\Local\uv\cache\archive-v0\1oTiDYYjy2XEHm8e\Lib\site-packages\mcp\server\mcpserver\utilities\func_metadata.py", line 164, in call_fn
+    return await anyio.to_thread.run_sync(functools.partial(fn, **kwargs))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\erict\AppData\Local\uv\cache\archive-v0\1oTiDYYjy2XEHm8e\Lib\site-packages\anyio\to_thread.py", line 65, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\erict\AppData\Local\uv\cache\archive-v0\1oTiDYYjy2XEHm8e\Lib\site-packages\anyio\_backends\_asyncio.py", line 2706, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\Users\erict\AppData\Local\uv\cache\archive-v0\1oTiDYYjy2XEHm8e\Lib\site-packages\anyio\_backends\_asyncio.py", line 1100, in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\erict\OneDrive\Desktop\Projects\optical-design-v1\skills\optical-design\scripts\server.py", line 56, in start
+    return manager.start(**request.model_dump())
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\erict\OneDrive\Desktop\Projects\optical-design-v1\skills\optical-design\scripts\_lib\tool_jobs.py", line 151, in start
+    inputs = {'model': self._input(model, model_sha256)}
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\erict\OneDrive\Desktop\Projects\optical-design-v1\skills\optical-design\scripts\_lib\tool_jobs.py", line 136, in _input
+    raise ValueError('stale input SHA256; refresh the input before starting')
+ValueError: stale input SHA256; refresh the input before starting
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\erict\AppData\Local\uv\cache\archive-v0\1oTiDYYjy2XEHm8e\Lib\site-packages\mcp\server\mcpserver\server.py", line 433, in _handle_call_tool
+    return await self.call_tool(params.name, params.arguments or {}, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\erict\AppData\Local\uv\cache\archive-v0\1oTiDYYjy2XEHm8e\Lib\site-packages\mcp\server\mcpserver\server.py", line 539, in call_tool
+    return await self._tool_manager.call_tool(name, arguments, context, convert_result=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\erict\AppData\Local\uv\cache\archive-v0\1oTiDYYjy2XEHm8e\Lib\site-packages\mcp\server\mcpserver\tools\tool_manager.py", line 87, in call_tool
+    return await tool.run(arguments, context, convert_result=convert_result)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\erict\AppData\Local\uv\cache\archive-v0\1oTiDYYjy2XEHm8e\Lib\site-packages\mcp\server\mcpserver\tools\base.py", line 210, in run
+    raise UnexpectedToolError(f"Error executing tool {self.name}") from exc
+mcp.server.mcpserver.exceptions.UnexpectedToolError: Error executing tool start
+optiland inspect inspected
+Tool 'start' raised an unexpected exception
+Traceback (most recent call last):
+  File "C:\Users\erict\AppData\Local\uv\cache\archive-v0\1oTiDYYjy2XEHm8e\Lib\site-packages\mcp\server\mcpserver\tools\base.py", line 176, in run
+    result = await self.fn_metadata.call_fn(self.fn, self.is_async, validated, pass_directly)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\erict\AppData\Local\uv\cache\archive-v0\1oTiDYYjy2XEHm8e\Lib\site-packages\mcp\server\mcpserver\utilities\func_metadata.py", line 164, in call_fn
+    return await anyio.to_thread.run_sync(functools.partial(fn, **kwargs))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\erict\AppData\Local\uv\cache\archive-v0\1oTiDYYjy2XEHm8e\Lib\site-packages\anyio\to_thread.py", line 65, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\erict\AppData\Local\uv\cache\archive-v0\1oTiDYYjy2XEHm8e\Lib\site-packages\anyio\_backends\_asyncio.py", line 2706, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\Users\erict\AppData\Local\uv\cache\archive-v0\1oTiDYYjy2XEHm8e\Lib\site-packages\anyio\_backends\_asyncio.py", line 1100, in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\erict\OneDrive\Desktop\Projects\optical-design-v1\skills\optical-design\scripts\server.py", line 56, in start
+    return manager.start(**request.model_dump())
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\erict\OneDrive\Desktop\Projects\optical-design-v1\skills\optical-design\scripts\_lib\tool_jobs.py", line 151, in start
+    inputs = {'model': self._input(model, model_sha256)}
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\erict\OneDrive\Desktop\Projects\optical-design-v1\skills\optical-design\scripts\_lib\tool_jobs.py", line 136, in _input
+    raise ValueError('stale input SHA256; refresh the input before starting')
+ValueError: stale input SHA256; refresh the input before starting
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\erict\AppData\Local\uv\cache\archive-v0\1oTiDYYjy2XEHm8e\Lib\site-packages\mcp\server\mcpserver\server.py", line 433, in _handle_call_tool
+    return await self.call_tool(params.name, params.arguments or {}, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\erict\AppData\Local\uv\cache\archive-v0\1oTiDYYjy2XEHm8e\Lib\site-packages\mcp\server\mcpserver\server.py", line 539, in call_tool
+    return await self._tool_manager.call_tool(name, arguments, context, convert_result=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\erict\AppData\Local\uv\cache\archive-v0\1oTiDYYjy2XEHm8e\Lib\site-packages\mcp\server\mcpserver\tools\tool_manager.py", line 87, in call_tool
+    return await tool.run(arguments, context, convert_result=convert_result)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\erict\AppData\Local\uv\cache\archive-v0\1oTiDYYjy2XEHm8e\Lib\site-packages\mcp\server\mcpserver\tools\base.py", line 210, in run
+    raise UnexpectedToolError(f"Error executing tool {self.name}") from exc
+mcp.server.mcpserver.exceptions.UnexpectedToolError: Error executing tool start
+optiland edit requirements_not_met
+  + Exception Group Traceback (most recent call last):
+  |   File "C:\Users\erict\OneDrive\Desktop\Projects\optical-design-v1\docs\research\full-release\run_mcp_workflow.py", line 75, in <module>
+  |     asyncio.run(exercise())
+  |   File "C:\Users\erict\AppData\Roaming\uv\python\cpython-3.11-windows-x86_64-none\Lib\asyncio\runners.py", line 190, in run
+  |     return runner.run(main)
+  |            ^^^^^^^^^^^^^^^^
+  |   File "C:\Users\erict\AppData\Roaming\uv\python\cpython-3.11-windows-x86_64-none\Lib\asyncio\runners.py", line 118, in run
+  |     return self._loop.run_until_complete(task)
+  |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  |   File "C:\Users\erict\AppData\Roaming\uv\python\cpython-3.11-windows-x86_64-none\Lib\asyncio\base_events.py", line 654, in run_until_complete
+  |     return future.result()
+  |            ^^^^^^^^^^^^^^^
+  |   File "C:\Users\erict\OneDrive\Desktop\Projects\optical-design-v1\docs\research\full-release\run_mcp_workflow.py", line 22, in exercise
+  |     async with mcp.Client(params, read_timeout_seconds=120) as client:
+  |   File "C:\Users\erict\AppData\Local\uv\cache\archive-v0\1oTiDYYjy2XEHm8e\Lib\site-packages\mcp\client\client.py", line 475, in __aexit__
+  |     await self._exit_stack.__aexit__(exc_type, exc_val, exc_tb)
+  |   File "C:\Users\erict\AppData\Roaming\uv\python\cpython-3.11-windows-x86_64-none\Lib\contextlib.py", line 745, in __aexit__
+  |     raise exc_details[1]
+  |   File "C:\Users\erict\AppData\Roaming\uv\python\cpython-3.11-windows-x86_64-none\Lib\contextlib.py", line 728, in __aexit__
+  |     cb_suppress = await cb(*exc_details)
+  |                   ^^^^^^^^^^^^^^^^^^^^^^
+  |   File "C:\Users\erict\AppData\Roaming\uv\python\cpython-3.11-windows-x86_64-none\Lib\contextlib.py", line 231, in __aexit__
+  |     await self.gen.athrow(typ, value, traceback)
+  |   File "C:\Users\erict\AppData\Local\uv\cache\archive-v0\1oTiDYYjy2XEHm8e\Lib\site-packages\mcp\client\stdio.py", line 200, in stdio_client
+  |     async with anyio.create_task_group() as tg:
+  |   File "C:\Users\erict\AppData\Local\uv\cache\archive-v0\1oTiDYYjy2XEHm8e\Lib\site-packages\anyio\_backends\_asyncio.py", line 847, in __aexit__
+  |     raise BaseExceptionGroup(
+  | ExceptionGroup: unhandled errors in a TaskGroup (1 sub-exception)
+  +-+---------------- 1 ----------------
+    | Exception Group Traceback (most recent call last):
+    |   File "C:\Users\erict\AppData\Local\uv\cache\archive-v0\1oTiDYYjy2XEHm8e\Lib\site-packages\mcp\client\stdio.py", line 204, in stdio_client
+    |     yield read_stream, write_stream
+    |   File "C:\Users\erict\AppData\Roaming\uv\python\cpython-3.11-windows-x86_64-none\Lib\contextlib.py", line 728, in __aexit__
+    |     cb_suppress = await cb(*exc_details)
+    |                   ^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\erict\AppData\Local\uv\cache\archive-v0\1oTiDYYjy2XEHm8e\Lib\site-packages\mcp\client\session.py", line 514, in __aexit__
+    |     result = await self._task_group.__aexit__(exc_type, exc_val, exc_tb)
+    |              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\erict\AppData\Local\uv\cache\archive-v0\1oTiDYYjy2XEHm8e\Lib\site-packages\anyio\_backends\_asyncio.py", line 847, in __aexit__
+    |     raise BaseExceptionGroup(
+    | ExceptionGroup: unhandled errors in a TaskGroup (1 sub-exception)
+    +-+---------------- 1 ----------------
+      | Traceback (most recent call last):
+      |   File "C:\Users\erict\OneDrive\Desktop\Projects\optical-design-v1\docs\research\full-release\run_mcp_workflow.py", line 65, in exercise
+      |     assert edited['status'] == 'applied'
+      |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+      | AssertionError
+      +------------------------------------

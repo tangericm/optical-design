@@ -1,0 +1,11 @@
+{
+  "schema": "1",
+  "changes": [
+    {
+      "surface": 2,
+      "parameter": "thickness_mm",
+      "expected_mm": 46.7694746245767,
+      "value_mm": 60
+    }
+  ]
+}

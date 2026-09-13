@@ -344,8 +344,8 @@ class OptilandBackend:
         lens = self._open()
         settings = spec.data["analysis"]
         requested = {metric_key(row): row for row in spec.data["requirements"]}
-        if spec.objective:
-            requested.setdefault(metric_key(spec.objective), spec.objective)
+        for objective in spec.objective_metrics:
+            requested.setdefault(metric_key(objective), objective)
         rows, mtf_cache = [], {}
         for req in requested.values():
             name = req["metric"]

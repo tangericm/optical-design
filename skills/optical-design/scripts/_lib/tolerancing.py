@@ -11,7 +11,7 @@ from pathlib import Path
 
 from _lib.compensation import compensate, validate_compensator
 from _lib.design_contract import DesignSpec, assess, finite
-from _lib.design_jobs import sha256, write_json
+from _lib.design_jobs import sha256, verify_artifact_hashes, write_json
 
 
 def _validate(raw: dict, spec: DesignSpec) -> dict:
@@ -113,6 +113,8 @@ def run_tolerance_job(model, spec: DesignSpec, out, factory, tolerance: dict) ->
     Monte Carlo applies all independent draws together. No compensators are inferred.
     Time limits are cooperative between native calls, never an engine interruption.
     """
+    spec = DesignSpec.from_dict(spec.data)
+    frozen_spec = copy.deepcopy(spec.data)
     config = _validate(tolerance, spec)
     model, out = Path(model).resolve(strict=True), Path(out).resolve()
     if not model.is_file():
@@ -130,8 +132,11 @@ def run_tolerance_job(model, spec: DesignSpec, out, factory, tolerance: dict) ->
     restored, cleanup_error = False, None
     evaluations = 0
     active_trial = None
+    evidence_hashes = {model: original_hash}
 
     def check_time():
+        if spec.data != frozen_spec:
+            raise RuntimeError('specification changed during tolerance job')
         if time.monotonic() >= deadline:
             raise TimeoutError("tolerance time budget exhausted between native calls")
 
@@ -144,8 +149,13 @@ def run_tolerance_job(model, spec: DesignSpec, out, factory, tolerance: dict) ->
     try:
         shutil.copy2(model, working)
         shutil.copy2(model, original_copy)
-        write_json(out / "spec.json", spec.data)
+        if sha256(working) != original_hash or sha256(original_copy) != original_hash:
+            raise RuntimeError('source copy changed before tolerance analysis')
+        evidence_hashes[original_copy] = original_hash
+        write_json(out / "spec.json", frozen_spec)
         write_json(out / "tolerance.json", config)
+        for path in (out / 'spec.json', out / 'tolerance.json'):
+            evidence_hashes[path] = sha256(path)
         with factory(working) as backend:
             baseline_path = out / ("baseline" + getattr(backend, "model_suffix", model.suffix))
             recovery = original_copy
@@ -160,6 +170,7 @@ def run_tolerance_job(model, spec: DesignSpec, out, factory, tolerance: dict) ->
                     if "invariants" not in initial:
                         raise ValueError("compensation requires backend focus invariants")
                 call(backend.save, baseline_path)
+                evidence_hashes[baseline_path] = sha256(baseline_path)
                 recovery = baseline_path
                 base_parameters = []
                 for p in config["perturbations"]:
@@ -206,7 +217,7 @@ def run_tolerance_job(model, spec: DesignSpec, out, factory, tolerance: dict) ->
                         if compensator:
                             before_analysis = copy.deepcopy(call(backend.inspect))
                         evaluations += 1
-                        entry["measurements"] = call(backend.evaluate, spec)
+                        entry["measurements"] = copy.deepcopy(call(backend.evaluate, spec))
                         if compensator and call(backend.inspect) != before_analysis:
                             raise RuntimeError("uncompensated analysis changed the perturbed baseline")
                         entry["assessment"] = assess(spec, entry["measurements"])
@@ -229,7 +240,7 @@ def run_tolerance_job(model, spec: DesignSpec, out, factory, tolerance: dict) ->
                             nonlocal evaluations
                             check_time()
                             evaluations += 1
-                            return call(backend.evaluate, spec)
+                            return copy.deepcopy(call(backend.evaluate, spec))
 
                         entry["compensated"] = _failure_evidence(compensate(
                             backend, spec, compensator, entry, reset, call, evaluate))
@@ -268,11 +279,15 @@ def run_tolerance_job(model, spec: DesignSpec, out, factory, tolerance: dict) ->
                     cleanup_error = f"{type(exc).__name__}: {exc}"
                     if active_error is None:
                         raise
+        check_time()
         if sha256(model) != original_hash:
             raise RuntimeError("source changed during tolerance job; evidence cannot be accepted")
+        verify_artifact_hashes(evidence_hashes)
         report = {"schema": "1", "action": "tolerance", "status": "completed",
                   "source": {"path": str(model), "sha256": original_hash}, "source_unchanged": True,
-                  "spec": spec.data, "tolerance": config, "inspection": initial,
+                  "spec": frozen_spec, "tolerance": config, "inspection": initial,
+                  'spec_sha256': evidence_hashes[out / 'spec.json'],
+                  'tolerance_sha256': evidence_hashes[out / 'tolerance.json'],
                   "nominal": nominal, "sensitivity": sensitivity, "monte_carlo": monte_carlo,
                   "yield": _yield(monte_carlo, config["samples"]), "compensation": "none",
                   "baseline_restored": restored, "evaluations": evaluations,
@@ -280,8 +295,8 @@ def run_tolerance_job(model, spec: DesignSpec, out, factory, tolerance: dict) ->
                                                    "nonzero_delta_requires_actual_change": True},
                   "python_version": platform.python_version(), "random_engine": "Python random.Random MT19937; independent uniform or Gaussian draws",
                   "time_budget_policy": "cooperative_between_native_calls",
-                  "artifacts": {"baseline_model": str(baseline_path), "baseline_sha256": sha256(baseline_path),
-                                "source_snapshot_sha256": sha256(original_copy)}}
+                  "artifacts": {"baseline_model": str(baseline_path), "baseline_sha256": evidence_hashes[baseline_path],
+                                "source_snapshot_sha256": original_hash}}
         if config.get("compensator"):
             report["compensation"] = config["compensator"]
             report["paired_yield"] = _paired_yield(monte_carlo, config["samples"])

@@ -1,6 +1,7 @@
 """Copy-on-write optical jobs with bounded search and verifiable evidence."""
 from __future__ import annotations
 
+import copy
 import hashlib
 import json
 import math
@@ -9,7 +10,7 @@ import shutil
 import time
 from pathlib import Path
 
-from _lib.design_contract import DesignSpec, assess, objective_value
+from _lib.design_contract import DesignSpec, assess, objective_breakdown, objective_value
 
 
 def sha256(path) -> str:
@@ -18,6 +19,13 @@ def sha256(path) -> str:
 
 def write_json(path, data):
     Path(path).write_text(json.dumps(data, indent=2, allow_nan=False), encoding="utf-8")
+
+
+def verify_artifact_hashes(expected):
+    """Reject changed/deleted evidence against digests pinned when it was created."""
+    for path, digest in expected.items():
+        if not Path(path).is_file() or sha256(path) != digest:
+            raise RuntimeError(f'artifact changed after creation: {Path(path).name}')
 
 
 def write_report(path, report):
@@ -46,8 +54,17 @@ def run_job(model, spec: DesignSpec, out, factory, *, action="audit", cancelled=
     target = Path(out).resolve()
     if target.exists() and (not target.is_dir() or any(target.iterdir())):
         raise ValueError('output directory must be new or empty; existing artifacts are never overwritten')
+    spec = DesignSpec.from_dict(spec.data)
+    frozen_spec, evidence_hashes = copy.deepcopy(spec.data), {}
+    result = None
     try:
-        return _run_job(model, spec, out, factory, action=action, cancelled=cancelled)
+        result = _run_job(model, spec, out, factory, action=action, cancelled=cancelled,
+                          evidence_hashes=evidence_hashes)
+        # _run_job's context manager has closed before this final acceptance gate.
+        if spec.data != frozen_spec:
+            raise RuntimeError('specification changed during job')
+        verify_artifact_hashes(evidence_hashes)
+        return result
     except BaseException as exc:
         if target.is_dir():
             failure = target / 'failure.json'
@@ -57,16 +74,21 @@ def run_job(model, spec: DesignSpec, out, factory, *, action="audit", cancelled=
             # A report is not a success receipt if engine teardown failed.
             report_path = target / 'report.json'
             if report_path.exists():
-                prior = json.loads(report_path.read_text(encoding='utf-8'))
+                try:
+                    prior = copy.deepcopy(result) if result is not None else json.loads(report_path.read_text(encoding='utf-8'))
+                except (ValueError, OSError):
+                    prior = {'schema': '1', 'action': action}
                 prior['status'] = 'failed'
                 prior['saved_candidate_verified'] = False
                 prior['error'] = str(exc)
                 write_json(report_path, prior)
-                write_report(target / 'report.md', prior)
+                if 'source' in prior and 'evaluations' in prior:
+                    write_report(target / 'report.md', prior)
         raise
 
 
-def _run_job(model, spec: DesignSpec, out, factory, *, action="audit", cancelled=None) -> dict:
+def _run_job(model, spec: DesignSpec, out, factory, *, action="audit", cancelled=None,
+             evidence_hashes=None) -> dict:
     if action not in {"audit", "refocus"}:
         raise ValueError("action must be audit or refocus")
     if action == "refocus" and (spec.objective is None or "focus" not in spec.data):
@@ -78,16 +100,27 @@ def _run_job(model, spec: DesignSpec, out, factory, *, action="audit", cancelled
         raise ValueError("output directory must be new or empty; existing artifacts are never overwritten")
     out.mkdir(parents=True, exist_ok=True)
     original_hash = sha256(model)
+    evidence_hashes = {} if evidence_hashes is None else evidence_hashes
+    evidence_hashes[model] = original_hash
+    frozen_spec = copy.deepcopy(spec.data)
     working = out / ("working" + model.suffix)
+    snapshot = out / ('source_snapshot' + model.suffix)
     baseline_path = out / ("baseline-model" + model.suffix)
     candidate_path = out / ("candidate-model" + model.suffix)
     shutil.copy2(model, working)
-    write_json(out / "spec.json", spec.data)
+    shutil.copy2(model, snapshot)
+    if sha256(working) != original_hash or sha256(snapshot) != original_hash:
+        raise RuntimeError('source copy changed before analysis')
+    evidence_hashes[snapshot] = original_hash
+    write_json(out / "spec.json", frozen_spec)
+    evidence_hashes[out / 'spec.json'] = sha256(out / 'spec.json')
     deadline = time.monotonic() + spec.data["budget"]["timeout_s"]
     count, history = 0, []
     baseline = None
 
     def check_budget():
+        if spec.data != frozen_spec:
+            raise RuntimeError('specification changed during job')
         if cancelled and cancelled():
             raise InterruptedError("job cancelled")
         if time.monotonic() > deadline:
@@ -99,27 +132,37 @@ def _run_job(model, spec: DesignSpec, out, factory, *, action="audit", cancelled
         suffix = getattr(backend, 'model_suffix', model.suffix)
         baseline_path = out / ('baseline-model' + suffix)
         candidate_path = out / ('candidate-model' + suffix)
-        initial = backend.inspect()
+        initial = copy.deepcopy(backend.inspect())
         backend.save(baseline_path)
+        evidence_hashes[baseline_path] = sha256(baseline_path)
 
         def evaluate():
             nonlocal count
             check_budget()
-            rows = backend.evaluate(spec)
+            rows = copy.deepcopy(backend.evaluate(spec))
+            if spec.data != frozen_spec:
+                raise RuntimeError('specification changed during job')
             count += 1
             if time.monotonic() > deadline or (cancelled and cancelled()):
                 raise TimeoutError('job cancelled or time budget exhausted after native call')
-            inspection = backend.inspect()
+            inspection = copy.deepcopy(backend.inspect())
             if inspection["invariants"] != initial["invariants"]:
                 raise RuntimeError("optical model invariants changed outside the allowed focus gap")
             result = {"inspection": inspection, "measurements": rows, "assessment": assess(spec, rows)}
+            if spec.objective is not None:
+                result['objective_breakdown'] = objective_breakdown(spec, rows)
+                result['objective_value'] = result['objective_breakdown']['value']
             history.append({"focus_mm": inspection["focus_mm"], "assessment": result["assessment"],
                             "measurements": rows})
+            if spec.objective is not None:
+                history[-1].update(objective_breakdown=result['objective_breakdown'],
+                                   objective_value=result['objective_value'])
             return result
 
         try:
             baseline = evaluate()
             write_json(out / "baseline.json", baseline)
+            evidence_hashes[out / 'baseline.json'] = sha256(out / 'baseline.json')
             candidate = None
             if action == "refocus":
                 sign = 1 if spec.objective["direction"] == "maximize" else -1
@@ -163,6 +206,7 @@ def _run_job(model, spec: DesignSpec, out, factory, *, action="audit", cancelled
                             sign * (objective_value(spec, candidate["measurements"]) - base_value) <= spec.data["minimum_gain"]):
                         raise RuntimeError("candidate improvement did not reproduce")
                     backend.save(candidate_path)
+                    evidence_hashes[candidate_path] = sha256(candidate_path)
                     backend.load(candidate_path)
                     reloaded = evaluate()
                     if not reloaded["assessment"]["passes"]:
@@ -186,18 +230,22 @@ def _run_job(model, spec: DesignSpec, out, factory, *, action="audit", cancelled
                 raise RuntimeError('baseline restoration did not reproduce the original inspection')
             status = ("improved" if candidate else "no_acceptable_improvement") if action == "refocus" else (
                 "requirements_met" if baseline["assessment"]["passes"] else "requirements_not_met")
-            artifacts = {"baseline_model": str(baseline_path), "baseline_sha256": sha256(baseline_path)}
+            verify_artifact_hashes(evidence_hashes)
+            artifacts = {"baseline_model": str(baseline_path), "baseline_sha256": evidence_hashes[baseline_path],
+                         'source_snapshot_sha256': original_hash}
             if candidate:
-                artifacts.update(candidate_model=str(candidate_path), candidate_sha256=sha256(candidate_path))
+                artifacts.update(candidate_model=str(candidate_path), candidate_sha256=evidence_hashes[candidate_path])
             report = {"schema": "1", "action": action, "status": status,
-                      "source": {"path": str(model), "sha256": original_hash}, "spec": spec.data,
+                      "source": {"path": str(model), "sha256": original_hash}, "spec": frozen_spec,
                       "python_version": platform.python_version(), "baseline": baseline, "candidate": candidate,
                       "history": history, "evaluations": count, "source_unchanged": source_unchanged,
                       "saved_candidate_verified": candidate is not None, "artifacts": artifacts,
-                      "baseline_restored": True, "spec_sha256": sha256(out / 'spec.json'),
+                      "baseline_restored": True, "spec_sha256": evidence_hashes[out / 'spec.json'],
                       "time_budget_policy": "cooperative_between_native_calls"}
             write_json(out / "report.json", report)
             write_report(out / "report.md", report)
+            for path in (out / 'report.json', out / 'report.md'):
+                evidence_hashes[path] = sha256(path)
             return report
         except BaseException as exc:
             restored = False

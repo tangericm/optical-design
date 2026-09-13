@@ -16,6 +16,21 @@ def digest(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
+def design_spec(**controls):
+    return {'schema': '1', 'name': json.dumps(controls), 'fields': [1], 'wavelengths': [1],
+            'requirements': [{'id': 'efl', 'metric': 'efl_mm', 'unit': 'mm', 'min': 40}],
+            'objective': {'metric': 'efl_mm', 'direction': 'minimize'},
+            'focus': {'min_mm': 1, 'max_mm': 100}}
+
+
+def action_config(action):
+    if action == 'optimize':
+        return {'schema': '1', 'variables': [
+            {'surface': 1, 'parameter': 'radius_mm', 'min_mm': 10, 'max_mm': 100}]}
+    return {'schema': '1', 'samples': 2, 'seed': 1, 'perturbations': [
+        {'surface': 1, 'parameter': 'radius_mm', 'distribution': 'uniform', 'half_width_mm': .1}]}
+
+
 def process_stopped(pid):
     if os.name == 'nt':
         import ctypes
@@ -46,16 +61,19 @@ def jobs(tmp_path, monkeypatch):
     model = inputs / 'model.json'
     model.write_text('{}')
     spec = inputs / 'spec.json'
-    spec.write_text('{}')
+    spec.write_text(json.dumps(design_spec()))
     script = tmp_path / 'fixture_cli.py'
-    script.write_text('''import argparse, hashlib, json, pathlib, subprocess, sys, time
+    script.write_text('import sys\nsys.path.insert(0, ' + repr(str(tool_jobs.DESIGN_SCRIPT.parent)) + ')\n' + '''import argparse, hashlib, json, pathlib, subprocess, sys, time
+from _lib.design_contract import DesignSpec, assess
+from _lib.tolerancing import _validate as validate_tolerance
 p = argparse.ArgumentParser()
 p.add_argument('action')
 for name in ('model', 'spec', 'out', 'backend', 'tolerances', 'variables', 'validation-spec'): p.add_argument('--'+name)
 p.add_argument('--json', action='store_true')
 a = p.parse_args()
 out = pathlib.Path(a.out); out.mkdir()
-cfg = json.loads(pathlib.Path(a.spec).read_text())
+spec = DesignSpec.from_dict(json.loads(pathlib.Path(a.spec).read_text()))
+cfg = json.loads(spec.data['name'])
 if cfg.get('child'):
     child = subprocess.Popen([sys.executable, '-c', 'import time; time.sleep(90)'])
     (out / 'child.pid').write_text(str(child.pid))
@@ -66,6 +84,31 @@ r = dict(schema='1', action=a.action, status=cfg.get('status', 'requirements_met
          source=dict(path=a.model, sha256=sha(a.model)), source_unchanged=True,
          baseline_restored=True, saved_candidate_verified=False,
          artifacts=dict(baseline_model=str(baseline), baseline_sha256=sha(baseline)))
+rows = [dict(metric='efl_mm', unit='mm', value=30 if r['status'] == 'requirements_not_met' else 50)]
+r['baseline'] = dict(measurements=rows, assessment=assess(spec, rows))
+r['spec'] = spec.data
+spath = out / 'spec.json'; spath.write_text(json.dumps(spec.data))
+r['spec_sha256'] = sha(spath)
+for input_name, report_name in [('variables', 'variables'), ('tolerances', 'tolerance')]:
+    filename = getattr(a, input_name)
+    if filename:
+        data = json.loads(pathlib.Path(filename).read_text())
+        if report_name == 'tolerance': data = validate_tolerance(data, spec)
+        if cfg.get('wrong_config'): data['unexpected'] = True
+        cpath = out / (report_name + '.json'); cpath.write_text(json.dumps(data))
+        r[report_name] = data
+        r[report_name + '_sha256'] = sha(cpath)
+if cfg.get('wrong_spec'):
+    r['spec'] = dict(spec.data, requirements=[dict(id='efl', metric='efl_mm', unit='mm', min=-100)])
+    spath.write_text(json.dumps(r['spec'])); r['spec_sha256'] = sha(spath)
+    r['baseline']['assessment'] = assess(DesignSpec.from_dict(r['spec']), rows)
+if a.action == 'tolerance':
+    r['nominal'] = r.pop('baseline')
+    if cfg.get('nominal_failure'):
+        r['nominal'] = dict(status='analysis_failed', error='analysis unavailable', measurements=[],
+                            assessment=dict(passes=False, requirements=[]))
+    if cfg.get('legacy_hashes'):
+        r.pop('spec_sha256'); r.pop('tolerance_sha256')
 r.update(cfg.get('override', {}))
 if a.validation_spec and not cfg.get('omit_validation'):
     validation_spec = json.loads(pathlib.Path(a.validation_spec).read_text())
@@ -96,7 +139,7 @@ def wait(manager, identity):
 
 
 def configure(request, spec, **config):
-    spec.write_text(json.dumps(config))
+    spec.write_text(json.dumps(design_spec(**config)))
     request['spec_sha256'] = digest(spec)
 
 
@@ -106,7 +149,9 @@ def test_optional_validation_input_is_allowlisted_hashed_and_preserved(jobs):
     manager, request, spec = jobs
     vpath = spec.parent/'validation.json'
     vpath.write_text(json.dumps(validation().data))
-    request.update(action='optimize', variables=str(vpath), variables_sha256=digest(vpath),
+    variables = spec.parent / 'variables.json'
+    variables.write_text(json.dumps(action_config('optimize')))
+    request.update(action='optimize', variables=str(variables), variables_sha256=digest(variables),
                    validation_spec=str(vpath), validation_spec_sha256=digest(vpath))
     configure(request, spec, status='no_acceptable_improvement', exit=1)
     identity = manager.start(**request)['job_id']
@@ -123,7 +168,9 @@ def test_requested_validation_cannot_be_silently_dropped_from_receipt(jobs):
     manager, request, spec = jobs
     vpath = spec.parent/'validation.json'
     vpath.write_text(json.dumps(validation().data))
-    request.update(action='optimize', variables=str(vpath), variables_sha256=digest(vpath),
+    variables = spec.parent / 'variables.json'
+    variables.write_text(json.dumps(action_config('optimize')))
+    request.update(action='optimize', variables=str(variables), variables_sha256=digest(variables),
                    validation_spec=str(vpath), validation_spec_sha256=digest(vpath))
     configure(request, spec, status='no_acceptable_improvement', exit=1, omit_validation=True)
     identity = manager.start(**request)['job_id']
@@ -187,6 +234,77 @@ def test_job_identity_completion_and_owned_artifacts(jobs):
     assert Path(result['logs']['stdout']).is_file()
     with pytest.raises(ValueError, match='unknown'):
         manager.status('../report.json')
+
+
+@pytest.mark.parametrize('override', [
+    {'baseline': None}, {'baseline': {'assessment': {'passes': True, 'requirements': []}}},
+    {'baseline': {'measurements': [{'metric': 'efl_mm', 'unit': 'mm', 'value': 0}],
+                  'assessment': {'passes': True, 'requirements': []}}},
+    {'spec': {}},
+])
+def test_matching_output_channels_cannot_forge_optical_acceptance(jobs, override):
+    manager, request, spec = jobs
+    configure(request, spec, override=override)
+    identity = manager.start(**request)['job_id']
+    result = wait(manager, identity)
+    assert result['state'] == 'failed' and not result['optical_accepted']
+
+
+@pytest.mark.parametrize('action,status,code', [('audit', 'requirements_not_met', 1),
+    ('refocus', 'no_acceptable_improvement', 1), ('optimize', 'no_acceptable_improvement', 1),
+    ('tolerance', 'completed', 0)])
+def test_honest_negative_receipts_remain_completed(jobs, action, status, code):
+    manager, request, spec = jobs
+    request['action'] = action
+    if action in {'optimize', 'tolerance'}:
+        field = 'variables' if action == 'optimize' else 'tolerances'
+        path = spec.parent / (field + '.json')
+        path.write_text(json.dumps(action_config(action)))
+        request.update({field: str(path), field + '_sha256': digest(path)})
+    configure(request, spec, status=status, exit=code, legacy_hashes=action == 'tolerance')
+    result = wait(manager, manager.start(**request)['job_id'])
+    assert result['state'] == 'completed', result['error']
+    assert not result['optical_accepted']
+
+
+@pytest.mark.parametrize('action', ['audit', 'refocus', 'optimize', 'tolerance'])
+def test_self_consistent_forged_spec_is_bound_to_original_requested_spec(jobs, action):
+    manager, request, spec = jobs
+    request['action'] = action
+    if action in {'optimize', 'tolerance'}:
+        field = 'variables' if action == 'optimize' else 'tolerances'
+        path = spec.parent / (field + '.json')
+        path.write_text(json.dumps(action_config(action)))
+        request.update({field: str(path), field + '_sha256': digest(path)})
+    status = {'audit': 'requirements_met', 'refocus': 'no_acceptable_improvement',
+              'optimize': 'no_acceptable_improvement', 'tolerance': 'completed'}[action]
+    configure(request, spec, status=status, exit=int(action in {'refocus', 'optimize'}), wrong_spec=True)
+    result = wait(manager, manager.start(**request)['job_id'])
+    assert result['state'] == 'failed' and 'spec' in result['error']
+
+
+@pytest.mark.parametrize('action', ['optimize', 'tolerance'])
+def test_matching_report_and_config_snapshot_cannot_change_requested_config(jobs, action):
+    manager, request, spec = jobs
+    request['action'] = action
+    field = 'variables' if action == 'optimize' else 'tolerances'
+    path = spec.parent / (field + '.json')
+    path.write_text(json.dumps(action_config(action)))
+    request.update({field: str(path), field + '_sha256': digest(path)})
+    configure(request, spec, status='completed' if action == 'tolerance' else 'no_acceptable_improvement',
+              exit=int(action == 'optimize'), wrong_config=True)
+    result = wait(manager, manager.start(**request)['job_id'])
+    assert result['state'] == 'failed' and 'snapshot' in result['error']
+
+
+def test_tolerance_nominal_analysis_failure_remains_diagnostic_completion(jobs):
+    manager, request, spec = jobs
+    path = spec.parent / 'tolerances.json'
+    path.write_text(json.dumps(action_config('tolerance')))
+    request.update(action='tolerance', tolerances=str(path), tolerances_sha256=digest(path))
+    configure(request, spec, status='completed', nominal_failure=True)
+    result = wait(manager, manager.start(**request)['job_id'])
+    assert result['state'] == 'completed' and not result['optical_accepted'], result['error']
 
 
 @pytest.mark.parametrize('config', [{'exit': 4}, {'no_report': True}, {'no_stdout': True},

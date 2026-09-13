@@ -1,0 +1,140 @@
+{
+  "kind": "nominal",
+  "index": 0,
+  "perturbations": [],
+  "baseline_verified": true,
+  "measurements": [
+    {
+      "metric": "efl_mm",
+      "value": 49.05139286997028,
+      "unit": "mm",
+      "analysis": {
+        "sampling": 128,
+        "use_polarization": false,
+        "wavelength": 1,
+        "wavelength_um": 0.55
+      }
+    },
+    {
+      "metric": "total_track_mm",
+      "value": 51.8191425091652,
+      "unit": "mm",
+      "analysis": {
+        "sampling": 128,
+        "use_polarization": false
+      }
+    },
+    {
+      "metric": "mtf",
+      "field": 1,
+      "wavelength": 1,
+      "frequency": 20,
+      "axis": "tangential",
+      "value": 0.4706893577206028,
+      "unit": "1",
+      "analysis": {
+        "sampling": 128,
+        "use_polarization": false,
+        "field_xy_deg": [
+          0.0,
+          0.0
+        ],
+        "wavelength_um": 0.55,
+        "scalar": true,
+        "method": "scalar FFT MTF",
+        "interpolation": "linear, no extrapolation",
+        "frequency_range_cyc_per_mm": [
+          0.0,
+          754.5920352882184
+        ]
+      }
+    },
+    {
+      "metric": "rms_spot_um",
+      "field": 1,
+      "wavelength": 1,
+      "value": 14.271818695450222,
+      "unit": "um",
+      "analysis": {
+        "sampling": 128,
+        "use_polarization": false,
+        "field_xy_deg": [
+          0.0,
+          0.0
+        ],
+        "wavelength_um": 0.55,
+        "scalar": true,
+        "sampled_rays": 3169,
+        "transmitted_rays": 3169,
+        "method": "geometric RMS radius about centroid",
+        "distribution": "hexapolar",
+        "num_rings": 32
+      }
+    }
+  ],
+  "assessment": {
+    "passes": true,
+    "requirements": [
+      {
+        "id": "focal-length",
+        "key": "efl_mm",
+        "requirement": {
+          "id": "focal-length",
+          "metric": "efl_mm",
+          "unit": "mm",
+          "min": 48,
+          "max": 51
+        },
+        "status": "pass",
+        "value": 49.05139286997028,
+        "unit": "mm"
+      },
+      {
+        "id": "track",
+        "key": "total_track_mm",
+        "requirement": {
+          "id": "track",
+          "metric": "total_track_mm",
+          "unit": "mm",
+          "max": 65
+        },
+        "status": "pass",
+        "value": 51.8191425091652,
+        "unit": "mm"
+      },
+      {
+        "id": "contrast",
+        "key": "mtf|f=1|w=1|nu=20|axis=tangential",
+        "requirement": {
+          "id": "contrast",
+          "metric": "mtf",
+          "field": 1,
+          "wavelength": 1,
+          "frequency": 20,
+          "axis": "tangential",
+          "unit": "1",
+          "min": 0.3
+        },
+        "status": "pass",
+        "value": 0.4706893577206028,
+        "unit": "1"
+      },
+      {
+        "id": "spot",
+        "key": "rms_spot_um|f=1|w=1",
+        "requirement": {
+          "id": "spot",
+          "metric": "rms_spot_um",
+          "field": 1,
+          "wavelength": 1,
+          "unit": "um",
+          "max": 30
+        },
+        "status": "pass",
+        "value": 14.271818695450222,
+        "unit": "um"
+      }
+    ]
+  },
+  "status": "pass"
+}

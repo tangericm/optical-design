@@ -22,3 +22,10 @@ docs/research/field-validation/*.log -text whitespace=cr-at-eol
 docs/research/field-validation/*.csv -text whitespace=cr-at-eol
 # Preserve the exact failing pytest diagnostic, including its whitespace-only error line.
 docs/research/field-validation/wavelength-red.log -whitespace
+# Preserve all research/installer receipt bytes, including hashed text logs.
+docs/research/full-release/** -text whitespace=cr-at-eol
+docs/research/full-release/**/*.log -whitespace
+docs/research/full-release/*.log -whitespace
+# Generated Markdown hashes include its final paragraph separator.
+docs/research/full-release/**/report.md whitespace=-blank-at-eof,cr-at-eol
+docs/research/full-release/installed-release-installer/help.txt -whitespace

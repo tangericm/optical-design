@@ -1,0 +1,1 @@
+{"schema": "1", "parameters": [{"surface": 1, "parameter": "radius_mm", "step_mm": 0.01}, {"surface": 2, "parameter": "thickness_mm", "step_mm": 0.01}]}

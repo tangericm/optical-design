@@ -29,3 +29,11 @@ The optional MCP stdio server exposes typed job operations. It confines outputs 
 declared workspace and input reads to declared roots, verifies supplied hashes, and runs
 allowlisted CLI argument lists. It owns job processes and cancellation. Transport completion
 is separate from optical acceptance; partial or mismatched receipts cannot accept a model.
+
+Every action binds normalized specifications/configurations to the requested input snapshots.
+Optical acceptance requires consistent measurements and hard-requirement assessments.
+Hashes are pinned when evidence files are created and checked after engine teardown.
+Explicit edits require expected original cell values. Local review packages escape text,
+validate confined artifact paths and recalculate recorded numerical evidence; they do not
+authenticate external engine claims or rerun optics. The host must keep declared job
+directories private from untrusted local writers; this is an API boundary, not an OS sandbox.

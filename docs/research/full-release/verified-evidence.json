@@ -1,0 +1,411 @@
+{
+  "schema": "1",
+  "verified_receipts": {
+    "composite-zos\\report.json": {
+      "action": "optimize",
+      "status": "improved",
+      "accepted_candidate": true,
+      "receipt_sha256": "0e5abb3b760bb64ba943db146445b3e8f414d6e3f68c2ebeea495b1f557d1d34",
+      "verified_local_artifacts": {
+        "baseline-model.zmx": "af1586cf6f861655d8de2e20bfbf5eca7541f25262e3c9fff23eb7b68b4ae77f",
+        "candidate-model.zmx": "6d4c51393613d141180fb153bb0c221b3c665338236eeb20f6c3e04cc6d1cc8e",
+        "source_snapshot.zmx": "af1586cf6f861655d8de2e20bfbf5eca7541f25262e3c9fff23eb7b68b4ae77f",
+        "spec.json": "e780d8af20ee46c438671c8e4783ac3b578ffbcfe73dfe4ce152afb34097aa12",
+        "variables.json": "db85aef954a4501a3ad8233a76ec2426ef5d7b0075dc2eb611eecdea4340d2cf"
+      }
+    },
+    "composite-optiland\\report.json": {
+      "action": "optimize",
+      "status": "improved",
+      "accepted_candidate": true,
+      "receipt_sha256": "c9f597a327e37b6382b38d7e5ccb16a700b3ab5fe45527df0985a0b64e240277",
+      "verified_local_artifacts": {
+        "baseline-model.json": "e4e4bbbeae97ab08907f687c14ce4c4ec8802b81cc07306376777ee2b2a95671",
+        "candidate-model.json": "27f6bdd919aaa31d4bbb0af842d33b9dfda1b972224a7dbfca07280cc00b6ad2",
+        "source_snapshot.json": "3e45f82e50379e39ac3985f3ff5334725cba6fa6f397aed6d760f862d9d5955a",
+        "spec.json": "e780d8af20ee46c438671c8e4783ac3b578ffbcfe73dfe4ce152afb34097aa12",
+        "variables.json": "db85aef954a4501a3ad8233a76ec2426ef5d7b0075dc2eb611eecdea4340d2cf"
+      }
+    },
+    "mcp-jobs\\96ddf9a33d064e65a092a43a16b670ef\\output\\report.json": {
+      "action": "inspect",
+      "status": "inspected",
+      "accepted_candidate": false,
+      "receipt_sha256": "0d44ce849360d98f4291e4b8c554b70bffd6fb422b4c6f332fe4ddc3b61abcf9",
+      "verified_local_artifacts": {
+        "baseline-model.json": "3758f736982111e1e9f05f4442bd50d920c04f2bba274f09299f221dc8ac694d",
+        "source_snapshot.json": "73d813dea1ad75db10d87d5023b3608740c652a6ccc38b999eec38599aa803ca"
+      }
+    },
+    "mcp-jobs\\fb20d80c9dff41f5ba8e91b87c803125\\output\\report.json": {
+      "action": "refocus",
+      "status": "improved",
+      "accepted_candidate": true,
+      "receipt_sha256": "4c6eabc7f0e96ac88542b65295ff7aab9674d99ccd26339d17c506a9c928b5cb",
+      "verified_local_artifacts": {
+        "baseline-model.json": "3758f736982111e1e9f05f4442bd50d920c04f2bba274f09299f221dc8ac694d",
+        "candidate-model.json": "a910db4a1dc27b10e638d9fbaaced32563b433af04a5e4be442b508826e325da",
+        "spec.json": "da3cef163a4dc9872aaab67aa95ab82937d80a87f5451967ae91a552b92b4b81"
+      }
+    },
+    "mcp-jobs\\bdefdfa5249d4f50a7261b660b7beb75\\output\\report.json": {
+      "action": "edit",
+      "status": "applied",
+      "accepted_candidate": true,
+      "receipt_sha256": "0d19f8a8d250c6dcddc3bd20cf5910a65f9bb836c0c6813dc016a73ec1762080",
+      "verified_local_artifacts": {
+        "baseline-model.json": "3758f736982111e1e9f05f4442bd50d920c04f2bba274f09299f221dc8ac694d",
+        "candidate-model.json": "a910db4a1dc27b10e638d9fbaaced32563b433af04a5e4be442b508826e325da",
+        "changes.json": "6541847fb5a3f4821edb2505eed4381ad95dd2147e77032d7a019c35707c4545",
+        "source_snapshot.json": "73d813dea1ad75db10d87d5023b3608740c652a6ccc38b999eec38599aa803ca",
+        "spec.json": "da3cef163a4dc9872aaab67aa95ab82937d80a87f5451967ae91a552b92b4b81"
+      }
+    },
+    "mcp-jobs\\4888293e06784bd4a6c0fa7ab7676fea\\output\\report.json": {
+      "action": "sensitivity",
+      "status": "completed",
+      "accepted_candidate": false,
+      "receipt_sha256": "3708bff535f35010d3d0d062d007e07077dc6f9a804ff3e2b3b77762fd4e693f",
+      "verified_local_artifacts": {
+        "baseline-model.json": "a910db4a1dc27b10e638d9fbaaced32563b433af04a5e4be442b508826e325da",
+        "perturbations.json": "ede327fc57b343518e9c785277d24adf1afc6e86a465d8d4fe732dd41ff81291",
+        "source_snapshot.json": "a910db4a1dc27b10e638d9fbaaced32563b433af04a5e4be442b508826e325da",
+        "spec.json": "da3cef163a4dc9872aaab67aa95ab82937d80a87f5451967ae91a552b92b4b81"
+      }
+    },
+    "mcp-jobs\\d6bda74251ef4b93a9cd797b3b07c43c\\output\\report.json": {
+      "action": "edit",
+      "status": "requirements_not_met",
+      "accepted_candidate": false,
+      "receipt_sha256": "8930d8e0d10b049bc2d31babe4c48e5f1400a59cd8361cbe55f1b07a21f5209f",
+      "verified_local_artifacts": {
+        "baseline-model.json": "a910db4a1dc27b10e638d9fbaaced32563b433af04a5e4be442b508826e325da",
+        "changes.json": "73cf17e8300759c7ee505f9dec299e11c54f04a9c9674f8d4d652bde87ffeaa9",
+        "rejected-candidate-model.json": "0ba19cd80e32867a4df845f20e4bcee1d10d3e2d948f5485875d6001877220c8",
+        "source_snapshot.json": "a910db4a1dc27b10e638d9fbaaced32563b433af04a5e4be442b508826e325da",
+        "spec.json": "da3cef163a4dc9872aaab67aa95ab82937d80a87f5451967ae91a552b92b4b81"
+      }
+    },
+    "mcp-jobs\\09ba63c5253a435e95c7f6ac417316e8\\output\\report.json": {
+      "action": "inspect",
+      "status": "inspected",
+      "accepted_candidate": false,
+      "receipt_sha256": "8fda8fb7df828eeb4bf85fd56bc5c24cf6ee5918c58a862a892b7a86693bf806",
+      "verified_local_artifacts": {
+        "baseline-model.zmx": "4fe32615eac8c57b2d80c6745c99f0e3235f7586a2917e62dffe0aba2b9f7cf8",
+        "source_snapshot.zmx": "4fe32615eac8c57b2d80c6745c99f0e3235f7586a2917e62dffe0aba2b9f7cf8"
+      }
+    },
+    "mcp-jobs\\9add0c94af524d729051c878b200e0f0\\output\\report.json": {
+      "action": "refocus",
+      "status": "improved",
+      "accepted_candidate": true,
+      "receipt_sha256": "ed431adf2e92049f33f8451c40bbfd53e0de41d75e23edf4b85eb53246f7e5cb",
+      "verified_local_artifacts": {
+        "baseline-model.zmx": "4fe32615eac8c57b2d80c6745c99f0e3235f7586a2917e62dffe0aba2b9f7cf8",
+        "candidate-model.zmx": "60520fbcbab43ae84d381af2eb9832e19025ac206c4a9b6a0d37857ef39edefb",
+        "spec.json": "da3cef163a4dc9872aaab67aa95ab82937d80a87f5451967ae91a552b92b4b81"
+      }
+    },
+    "mcp-jobs\\ae826de0954e4ad08d275980a5ada68e\\output\\report.json": {
+      "action": "edit",
+      "status": "applied",
+      "accepted_candidate": true,
+      "receipt_sha256": "dbb600c7cd66484895c7c2020cff7a5007617045ec621882ab620edce92068e7",
+      "verified_local_artifacts": {
+        "baseline-model.zmx": "4fe32615eac8c57b2d80c6745c99f0e3235f7586a2917e62dffe0aba2b9f7cf8",
+        "candidate-model.zmx": "217526648ca75334c9dc49e32992b24a4f4a73edcb90d6835c83d3b59bf78eba",
+        "changes.json": "5429430ce401cba866c69c3ec6fe74dd658260c37106f8ce1354dd8f735f9a7a",
+        "source_snapshot.zmx": "4fe32615eac8c57b2d80c6745c99f0e3235f7586a2917e62dffe0aba2b9f7cf8",
+        "spec.json": "da3cef163a4dc9872aaab67aa95ab82937d80a87f5451967ae91a552b92b4b81"
+      }
+    },
+    "mcp-jobs\\81f3d9fe4c31409bbdd1dfe12d35681b\\output\\report.json": {
+      "action": "sensitivity",
+      "status": "completed",
+      "accepted_candidate": false,
+      "receipt_sha256": "36b546f847d9469709339e47a422578bb828a89f6bdfb834235acec288c707c3",
+      "verified_local_artifacts": {
+        "baseline-model.zmx": "217526648ca75334c9dc49e32992b24a4f4a73edcb90d6835c83d3b59bf78eba",
+        "perturbations.json": "ede327fc57b343518e9c785277d24adf1afc6e86a465d8d4fe732dd41ff81291",
+        "source_snapshot.zmx": "217526648ca75334c9dc49e32992b24a4f4a73edcb90d6835c83d3b59bf78eba",
+        "spec.json": "da3cef163a4dc9872aaab67aa95ab82937d80a87f5451967ae91a552b92b4b81"
+      }
+    },
+    "mcp-jobs\\8152d406066f4ca2afc047b2901fa625\\output\\report.json": {
+      "action": "edit",
+      "status": "requirements_not_met",
+      "accepted_candidate": false,
+      "receipt_sha256": "14b8c7cffbd982f92d0772bd6bb4df3041a989a6a3a47eb0ff334b432f75a982",
+      "verified_local_artifacts": {
+        "baseline-model.zmx": "217526648ca75334c9dc49e32992b24a4f4a73edcb90d6835c83d3b59bf78eba",
+        "changes.json": "9ad7dad630d542153937b62d5e3787d0f737a5d6b9d95c38dd22b50c65aeaede",
+        "rejected-candidate-model.zmx": "56022c7795f39df41d6b1b6b82da881e281f2a1325d43316c7b4e24125749a9e",
+        "source_snapshot.zmx": "217526648ca75334c9dc49e32992b24a4f4a73edcb90d6835c83d3b59bf78eba",
+        "spec.json": "da3cef163a4dc9872aaab67aa95ab82937d80a87f5451967ae91a552b92b4b81"
+      }
+    },
+    "final-composite\\composite-zos\\report.json": {
+      "action": "optimize",
+      "status": "improved",
+      "accepted_candidate": true,
+      "receipt_sha256": "9ae0c13669bbcbb42cdcef28cd83d0cfe4c83ab14e04f267db4d92c47d55603b",
+      "verified_local_artifacts": {
+        "baseline-model.zmx": "af1586cf6f861655d8de2e20bfbf5eca7541f25262e3c9fff23eb7b68b4ae77f",
+        "candidate-model.zmx": "6d4c51393613d141180fb153bb0c221b3c665338236eeb20f6c3e04cc6d1cc8e",
+        "source_snapshot.zmx": "af1586cf6f861655d8de2e20bfbf5eca7541f25262e3c9fff23eb7b68b4ae77f",
+        "spec.json": "e780d8af20ee46c438671c8e4783ac3b578ffbcfe73dfe4ce152afb34097aa12",
+        "variables.json": "db85aef954a4501a3ad8233a76ec2426ef5d7b0075dc2eb611eecdea4340d2cf"
+      }
+    },
+    "final-composite\\composite-optiland\\report.json": {
+      "action": "optimize",
+      "status": "improved",
+      "accepted_candidate": true,
+      "receipt_sha256": "f196313d2cbc76fc327df84114681f0593a187d52b9594545d2441604e24edce",
+      "verified_local_artifacts": {
+        "baseline-model.json": "e4e4bbbeae97ab08907f687c14ce4c4ec8802b81cc07306376777ee2b2a95671",
+        "candidate-model.json": "27f6bdd919aaa31d4bbb0af842d33b9dfda1b972224a7dbfca07280cc00b6ad2",
+        "source_snapshot.json": "3e45f82e50379e39ac3985f3ff5334725cba6fa6f397aed6d760f862d9d5955a",
+        "spec.json": "e780d8af20ee46c438671c8e4783ac3b578ffbcfe73dfe4ce152afb34097aa12",
+        "variables.json": "db85aef954a4501a3ad8233a76ec2426ef5d7b0075dc2eb611eecdea4340d2cf"
+      }
+    },
+    "final-mcp\\mcp-jobs\\c5c1d49e689b4e49bca23b5eff9d930d\\output\\report.json": {
+      "action": "inspect",
+      "status": "inspected",
+      "accepted_candidate": false,
+      "receipt_sha256": "83ec2bd66be7fd2ab720c9df841ec028cd307bee082aaf596afbaa06e4eeea24",
+      "verified_local_artifacts": {
+        "baseline-model.json": "3758f736982111e1e9f05f4442bd50d920c04f2bba274f09299f221dc8ac694d",
+        "source_snapshot.json": "73d813dea1ad75db10d87d5023b3608740c652a6ccc38b999eec38599aa803ca"
+      }
+    },
+    "final-mcp\\mcp-jobs\\c0ca9d63226747d49893ff57062774f5\\output\\report.json": {
+      "action": "refocus",
+      "status": "improved",
+      "accepted_candidate": true,
+      "receipt_sha256": "f9d7c6def12e22754e0ee18431a952d189b10b0a25aaeba99afa65c155db9d48",
+      "verified_local_artifacts": {
+        "baseline-model.json": "3758f736982111e1e9f05f4442bd50d920c04f2bba274f09299f221dc8ac694d",
+        "candidate-model.json": "a910db4a1dc27b10e638d9fbaaced32563b433af04a5e4be442b508826e325da",
+        "source_snapshot.json": "73d813dea1ad75db10d87d5023b3608740c652a6ccc38b999eec38599aa803ca",
+        "spec.json": "da3cef163a4dc9872aaab67aa95ab82937d80a87f5451967ae91a552b92b4b81"
+      }
+    },
+    "final-mcp\\mcp-jobs\\a6044f90d447412c8cf6e6f12a0d478d\\output\\report.json": {
+      "action": "edit",
+      "status": "applied",
+      "accepted_candidate": true,
+      "receipt_sha256": "1d164105336e592886b6bfa6dda7142c861b779c7ec7024a795f91b7ddcf1600",
+      "verified_local_artifacts": {
+        "baseline-model.json": "3758f736982111e1e9f05f4442bd50d920c04f2bba274f09299f221dc8ac694d",
+        "candidate-model.json": "a910db4a1dc27b10e638d9fbaaced32563b433af04a5e4be442b508826e325da",
+        "changes.json": "6541847fb5a3f4821edb2505eed4381ad95dd2147e77032d7a019c35707c4545",
+        "source_snapshot.json": "73d813dea1ad75db10d87d5023b3608740c652a6ccc38b999eec38599aa803ca",
+        "spec.json": "da3cef163a4dc9872aaab67aa95ab82937d80a87f5451967ae91a552b92b4b81"
+      }
+    },
+    "final-mcp\\mcp-jobs\\e93ce8d3c5a946cfaa458ce809c70b80\\output\\report.json": {
+      "action": "sensitivity",
+      "status": "completed",
+      "accepted_candidate": false,
+      "receipt_sha256": "2d538ee3cae31fdc0cab1208a2a326943b46fdb69414e531711593c78db305bb",
+      "verified_local_artifacts": {
+        "baseline-model.json": "a910db4a1dc27b10e638d9fbaaced32563b433af04a5e4be442b508826e325da",
+        "perturbations.json": "ede327fc57b343518e9c785277d24adf1afc6e86a465d8d4fe732dd41ff81291",
+        "source_snapshot.json": "a910db4a1dc27b10e638d9fbaaced32563b433af04a5e4be442b508826e325da",
+        "spec.json": "da3cef163a4dc9872aaab67aa95ab82937d80a87f5451967ae91a552b92b4b81"
+      }
+    },
+    "final-mcp\\mcp-jobs\\33f0652b5ab14b8996bfc38e01fb9c28\\output\\report.json": {
+      "action": "audit",
+      "status": "requirements_met",
+      "accepted_candidate": false,
+      "receipt_sha256": "76a112e880258946505d58253d485ec26fceba7d610db363136911779f174864",
+      "verified_local_artifacts": {
+        "baseline-model.json": "a910db4a1dc27b10e638d9fbaaced32563b433af04a5e4be442b508826e325da",
+        "source_snapshot.json": "a910db4a1dc27b10e638d9fbaaced32563b433af04a5e4be442b508826e325da",
+        "spec.json": "2d48a04a9f2c1efd5de2f763918c02236cae293e227cc568c3432645d65b9916"
+      }
+    },
+    "final-mcp\\mcp-jobs\\3a04a88562b045f7b919e776c1e1b7ec\\output\\report.json": {
+      "action": "tolerance",
+      "status": "completed",
+      "accepted_candidate": false,
+      "receipt_sha256": "268f85a7ea5ff7e1b2cf27fd19f91c9bec186bebd9fb6695bab797bf302f24ad",
+      "verified_local_artifacts": {
+        "baseline.json": "a910db4a1dc27b10e638d9fbaaced32563b433af04a5e4be442b508826e325da",
+        "source_snapshot.json": "a910db4a1dc27b10e638d9fbaaced32563b433af04a5e4be442b508826e325da",
+        "spec.json": "da3cef163a4dc9872aaab67aa95ab82937d80a87f5451967ae91a552b92b4b81",
+        "tolerance.json": "92cbb031a4043eadee150ec9b8e3216e0de9898c5f44e743fdeb3b18d53638c9"
+      }
+    },
+    "final-mcp\\mcp-jobs\\9b08f8f459674054be95564e68ef0625\\output\\report.json": {
+      "action": "optimize",
+      "status": "improved",
+      "accepted_candidate": true,
+      "receipt_sha256": "9af3eafefae8352408169ef6f3ecbb86caacd29b941f58afb4892b66f8ae469a",
+      "verified_local_artifacts": {
+        "baseline-model.json": "3758f736982111e1e9f05f4442bd50d920c04f2bba274f09299f221dc8ac694d",
+        "candidate-model.json": "b1a66a7bb7a489643cc4d718ecba99e85cf0b2d8f4e8a9a257268373d7496158",
+        "source_snapshot.json": "73d813dea1ad75db10d87d5023b3608740c652a6ccc38b999eec38599aa803ca",
+        "spec.json": "13421999188c70b83377c2716ecc65e91e8d0f11510b0c944d4534774af153b9",
+        "validation-spec.json": "2d48a04a9f2c1efd5de2f763918c02236cae293e227cc568c3432645d65b9916",
+        "variables.json": "db85aef954a4501a3ad8233a76ec2426ef5d7b0075dc2eb611eecdea4340d2cf"
+      }
+    },
+    "final-mcp\\mcp-jobs\\164ca50cfcc94cbdb0a8265579f89a09\\output\\report.json": {
+      "action": "edit",
+      "status": "requirements_not_met",
+      "accepted_candidate": false,
+      "receipt_sha256": "7b82d34e1f21e10e592d426d855d3cfe2eeb2cd1bcd208149e2be72b59d1f7f9",
+      "verified_local_artifacts": {
+        "baseline-model.json": "a910db4a1dc27b10e638d9fbaaced32563b433af04a5e4be442b508826e325da",
+        "changes.json": "73cf17e8300759c7ee505f9dec299e11c54f04a9c9674f8d4d652bde87ffeaa9",
+        "rejected-candidate-model.json": "0ba19cd80e32867a4df845f20e4bcee1d10d3e2d948f5485875d6001877220c8",
+        "source_snapshot.json": "a910db4a1dc27b10e638d9fbaaced32563b433af04a5e4be442b508826e325da",
+        "spec.json": "da3cef163a4dc9872aaab67aa95ab82937d80a87f5451967ae91a552b92b4b81"
+      }
+    },
+    "final-mcp\\mcp-jobs\\8d9390a8dd804767bd95cfd6b35edb3d\\output\\report.json": {
+      "action": "inspect",
+      "status": "inspected",
+      "accepted_candidate": false,
+      "receipt_sha256": "2fda4147a41c95f0ba34fc7f271ccec5b008ad0fd0329294aa2705829d49e3cf",
+      "verified_local_artifacts": {
+        "baseline-model.zmx": "4fe32615eac8c57b2d80c6745c99f0e3235f7586a2917e62dffe0aba2b9f7cf8",
+        "source_snapshot.zmx": "4fe32615eac8c57b2d80c6745c99f0e3235f7586a2917e62dffe0aba2b9f7cf8"
+      }
+    },
+    "final-mcp\\mcp-jobs\\ab21f583781c4aedb3c290fe314935e1\\output\\report.json": {
+      "action": "refocus",
+      "status": "improved",
+      "accepted_candidate": true,
+      "receipt_sha256": "9494d8eb5d550c6f9a6dd9ad99d4d0a58dcb592ebda3dc1b259750e4ce253aea",
+      "verified_local_artifacts": {
+        "baseline-model.zmx": "4fe32615eac8c57b2d80c6745c99f0e3235f7586a2917e62dffe0aba2b9f7cf8",
+        "candidate-model.zmx": "60520fbcbab43ae84d381af2eb9832e19025ac206c4a9b6a0d37857ef39edefb",
+        "source_snapshot.zmx": "4fe32615eac8c57b2d80c6745c99f0e3235f7586a2917e62dffe0aba2b9f7cf8",
+        "spec.json": "da3cef163a4dc9872aaab67aa95ab82937d80a87f5451967ae91a552b92b4b81"
+      }
+    },
+    "final-mcp\\mcp-jobs\\e411a4ef4be5405ab5d2571f00279698\\output\\report.json": {
+      "action": "edit",
+      "status": "applied",
+      "accepted_candidate": true,
+      "receipt_sha256": "a0900c1bcd536897a65050eca467a72295e0b37886daa290a6d0ca816a9e1a79",
+      "verified_local_artifacts": {
+        "baseline-model.zmx": "4fe32615eac8c57b2d80c6745c99f0e3235f7586a2917e62dffe0aba2b9f7cf8",
+        "candidate-model.zmx": "217526648ca75334c9dc49e32992b24a4f4a73edcb90d6835c83d3b59bf78eba",
+        "changes.json": "5429430ce401cba866c69c3ec6fe74dd658260c37106f8ce1354dd8f735f9a7a",
+        "source_snapshot.zmx": "4fe32615eac8c57b2d80c6745c99f0e3235f7586a2917e62dffe0aba2b9f7cf8",
+        "spec.json": "da3cef163a4dc9872aaab67aa95ab82937d80a87f5451967ae91a552b92b4b81"
+      }
+    },
+    "final-mcp\\mcp-jobs\\b72380e91005490d8b78dda3be2ecc77\\output\\report.json": {
+      "action": "sensitivity",
+      "status": "completed",
+      "accepted_candidate": false,
+      "receipt_sha256": "85f70fc90673f7200b7bcea5c3e78cabb8ebd7a60a47bd1948beda0a417b3a1a",
+      "verified_local_artifacts": {
+        "baseline-model.zmx": "217526648ca75334c9dc49e32992b24a4f4a73edcb90d6835c83d3b59bf78eba",
+        "perturbations.json": "ede327fc57b343518e9c785277d24adf1afc6e86a465d8d4fe732dd41ff81291",
+        "source_snapshot.zmx": "217526648ca75334c9dc49e32992b24a4f4a73edcb90d6835c83d3b59bf78eba",
+        "spec.json": "da3cef163a4dc9872aaab67aa95ab82937d80a87f5451967ae91a552b92b4b81"
+      }
+    },
+    "final-mcp\\mcp-jobs\\bc6ddd249e6740da96ca3d94257c1950\\output\\report.json": {
+      "action": "audit",
+      "status": "requirements_met",
+      "accepted_candidate": false,
+      "receipt_sha256": "8b3381bb48249be29c86d07b1a481596247271a27d30e8b4607da5c3a76edd62",
+      "verified_local_artifacts": {
+        "baseline-model.zmx": "217526648ca75334c9dc49e32992b24a4f4a73edcb90d6835c83d3b59bf78eba",
+        "source_snapshot.zmx": "217526648ca75334c9dc49e32992b24a4f4a73edcb90d6835c83d3b59bf78eba",
+        "spec.json": "2d48a04a9f2c1efd5de2f763918c02236cae293e227cc568c3432645d65b9916"
+      }
+    },
+    "final-mcp\\mcp-jobs\\8beeeee453964bfa86b1b24f9dcdd464\\output\\report.json": {
+      "action": "tolerance",
+      "status": "completed",
+      "accepted_candidate": false,
+      "receipt_sha256": "f7132abc3b9dfd7a07f588ee9988b79d61d21501c733b3e53623ec08d837a7cf",
+      "verified_local_artifacts": {
+        "baseline.zmx": "217526648ca75334c9dc49e32992b24a4f4a73edcb90d6835c83d3b59bf78eba",
+        "source_snapshot.zmx": "217526648ca75334c9dc49e32992b24a4f4a73edcb90d6835c83d3b59bf78eba",
+        "spec.json": "da3cef163a4dc9872aaab67aa95ab82937d80a87f5451967ae91a552b92b4b81",
+        "tolerance.json": "92cbb031a4043eadee150ec9b8e3216e0de9898c5f44e743fdeb3b18d53638c9"
+      }
+    },
+    "final-mcp\\mcp-jobs\\025276915f4945698e78912c47bb5e95\\output\\report.json": {
+      "action": "optimize",
+      "status": "improved",
+      "accepted_candidate": true,
+      "receipt_sha256": "ecc92d43109e7af0640a7bada0f15e79ec29bbccdc4f9d9fa45d939c74994fb3",
+      "verified_local_artifacts": {
+        "baseline-model.zmx": "4fe32615eac8c57b2d80c6745c99f0e3235f7586a2917e62dffe0aba2b9f7cf8",
+        "candidate-model.zmx": "3fc172e560f1e7b32cb985c699286af5657a59530e69135b85a95979eade8e8d",
+        "source_snapshot.zmx": "4fe32615eac8c57b2d80c6745c99f0e3235f7586a2917e62dffe0aba2b9f7cf8",
+        "spec.json": "13421999188c70b83377c2716ecc65e91e8d0f11510b0c944d4534774af153b9",
+        "validation-spec.json": "2d48a04a9f2c1efd5de2f763918c02236cae293e227cc568c3432645d65b9916",
+        "variables.json": "db85aef954a4501a3ad8233a76ec2426ef5d7b0075dc2eb611eecdea4340d2cf"
+      }
+    },
+    "final-mcp\\mcp-jobs\\7ad0f2e60d734f68958834857dfac5fb\\output\\report.json": {
+      "action": "edit",
+      "status": "requirements_not_met",
+      "accepted_candidate": false,
+      "receipt_sha256": "61da122a349d6dcfdbea798dc699f998ef2feb4deb3a026d3cc893088fda4ae4",
+      "verified_local_artifacts": {
+        "baseline-model.zmx": "217526648ca75334c9dc49e32992b24a4f4a73edcb90d6835c83d3b59bf78eba",
+        "changes.json": "9ad7dad630d542153937b62d5e3787d0f737a5d6b9d95c38dd22b50c65aeaede",
+        "rejected-candidate-model.zmx": "56022c7795f39df41d6b1b6b82da881e281f2a1325d43316c7b4e24125749a9e",
+        "source_snapshot.zmx": "217526648ca75334c9dc49e32992b24a4f4a73edcb90d6835c83d3b59bf78eba",
+        "spec.json": "da3cef163a4dc9872aaab67aa95ab82937d80a87f5451967ae91a552b92b4b81"
+      }
+    }
+  },
+  "implementation_sha256": {
+    "package.json": "f9b12bfa6d7c0ff95762f55ce22d0b9b2533da4d8ca15cb446e066357e91ef11",
+    "skills\\optical-design\\scripts\\_lib\\__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "skills\\optical-design\\scripts\\_lib\\backends.py": "f656e70a42f4f53de98f225ca2af988dcb5f9eb33ef60fd5f6d8b4aee177a455",
+    "skills\\optical-design\\scripts\\_lib\\catalog.py": "151ec4495a20eeb96118e790e710077f2312b953f937757aa5175321140e3fe9",
+    "skills\\optical-design\\scripts\\_lib\\cli.py": "721b16b85574a4530f2f354782af42d46a2395ede2cd6e687834245aa519beea",
+    "skills\\optical-design\\scripts\\_lib\\comparison.py": "10e2d8a59e075f0b14aa13b7e0e2b1e5ac3672b1a8c8a5d3ceff49a77e17fa6c",
+    "skills\\optical-design\\scripts\\_lib\\compensation.py": "72e39367e94430b0bbf198c1d537077cdeb526f783c474a1c04281f27f99812e",
+    "skills\\optical-design\\scripts\\_lib\\design_contract.py": "00dd60788e44fadb83c08ad255c7d78ffbc7395f9544cc03eadfa0e820ca0fe5",
+    "skills\\optical-design\\scripts\\_lib\\design_jobs.py": "0251d1572e0927ef8ef79efb1fb035c7331b9d5a90f3f6e2276c6e9e3b93b137",
+    "skills\\optical-design\\scripts\\_lib\\fourier.py": "7e7a2a6e24d50232eae97fc3b66fb7141785c23a83ab5afca61baf9991153dce",
+    "skills\\optical-design\\scripts\\_lib\\model_actions.py": "056ad0ad5210311c863a6a1dd5746c5fd5349cf8486ef9c7c518ad10815e6424",
+    "skills\\optical-design\\scripts\\_lib\\native_profiles.py": "311618cd834f5b00ef5c4f8ed0f8e98c36059fffb43d178e89706c65e08c1ce3",
+    "skills\\optical-design\\scripts\\_lib\\native_worker.py": "2bff7e7b095894c418035a89a634d6a8859993df18a93d4aa57272aff045494c",
+    "skills\\optical-design\\scripts\\_lib\\optics.py": "9b5adbec9d1a4c8fc027f740757440da2169cbd01f4e8b0ad035e6597ff3e553",
+    "skills\\optical-design\\scripts\\_lib\\optiland_backend.py": "ed0d43141d50234737d46d7426d7700b9c8000aa2e9063c8b2c4f0da01988145",
+    "skills\\optical-design\\scripts\\_lib\\optimization.py": "0913a65cd00919fea2f3bfc4d2ca208bced8992dd7f0325c121fa11d83db026d",
+    "skills\\optical-design\\scripts\\_lib\\profile_benchmark.py": "f153856c5f3b2e4d22d111738df26b91a1b83dcb7b1010a98fb4de71e8ea2943",
+    "skills\\optical-design\\scripts\\_lib\\profiles.py": "07b85c38a63df9574cfcd2ef5ce5918706fe691966eba897d37395690f53b07e",
+    "skills\\optical-design\\scripts\\_lib\\review_report.py": "682ce156f7171385cf925d8475f798a0b55707f545ed9791482acdbf50e5be27",
+    "skills\\optical-design\\scripts\\_lib\\sensitivity.py": "a4f3fa555f6784b4697f4dfee6397e0b06d016697bb813697c00cc29158d7814",
+    "skills\\optical-design\\scripts\\_lib\\tolerancing.py": "a9547fd66610c4af61831c1adb2f6cbfd7591acdbc3c7b278e4333226111241e",
+    "skills\\optical-design\\scripts\\_lib\\tool_jobs.py": "67872dda25c477af7550c279dabad9d2c2ce34cd91f67c3938cb3fa736faf1c8",
+    "skills\\optical-design\\scripts\\_lib\\wfmap.py": "b929428b036415d1e75ad1eddefa7170dd6d85d71805c77b5640d6fa4b4cbe83",
+    "skills\\optical-design\\scripts\\_lib\\zernike.py": "762b66d328d7b18c3315c03c88c05aceae826a4ae618c1c3c8445394f165a486",
+    "skills\\optical-design\\scripts\\_lib\\zos_backend.py": "6e147a0e61aab3b6c142ee52a88c39c88a7fc8fa5c1574bc9c9691cbb7634049",
+    "skills\\optical-design\\scripts\\benchmark.py": "cfc595c00b46a0fbdb95e357a0018be515d4e50c162d2485339307811306cb47",
+    "skills\\optical-design\\scripts\\catalog.py": "9715631c3aabba9a649c8d1c38de27eae5cc15dc930663038cb1a31bc2296f2a",
+    "skills\\optical-design\\scripts\\compare.py": "943d68bbb51d6902a030763a0fe3dc20d6ee5444314f4ea9643b859a67021ccb",
+    "skills\\optical-design\\scripts\\design.py": "3b9b9dd2a3d67b4086612d8864e94651a5c93fccf39f3bf21cadf040b7f730f3",
+    "skills\\optical-design\\scripts\\interfero.py": "cff7996af8844db24469ceb457e5e4953ddedc25da74bd0398dbf5fb7629b0c3",
+    "skills\\optical-design\\scripts\\resolve.py": "8c6053753569e206fd44d55fe7745e8934522b99ab14ec37e3150ec04e649a82",
+    "skills\\optical-design\\scripts\\review.py": "308e76c18febf042375f1614b04b3b52d9f81a148ef4b4bbe587e165f3bd638d",
+    "skills\\optical-design\\scripts\\server.py": "c9de767e70e58e23e20dac1397672ad69496914732bb29c468d604dc9f891553",
+    "skills\\optical-design\\scripts\\wavefront.py": "f594f4bc907ca3040311ec6d3067592ad172325e91450c5f3cc28e938bd619bc",
+    "skills\\optical-design\\scripts\\zernike.py": "b5f9f0f30baaa42e340be677bfd688d22f574c4595bafd75bbd430fb11354f38",
+    "skills\\optical-design\\scripts\\zos.py": "da9a6245cc64d90e69ced009cfb7bea6c431bb0a84254cf7ae6e291d94ade4b6",
+    "skills\\optical-design\\SKILL.md": "859f35444c281189d3366e18ea53dbcf20bb488de481d6af1b92b21c388265b0"
+  },
+  "native_shape_fixture_sha256": "b4afd341a52ff89c605399defe4af5ab9d1a4dd0acc7b03bd6c56d8c9382fc37",
+  "installed_release_sha256": "f560840138d8036442df52ee0836db996e8fbab49c2f97c939b73ea9e22464bd",
+  "scope": "retained local receipt/byte validation; not a fresh optical run or physical certification"
+}

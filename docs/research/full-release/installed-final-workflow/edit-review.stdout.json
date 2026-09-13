@@ -1,0 +1,26 @@
+{
+  "accepted_candidate": true,
+  "action": "edit",
+  "files": {
+    "report.html": {
+      "bytes": 37008,
+      "sha256": "7542ddde593cd9516faacfb2eb6d5bd97ba79140b97924c9579598d64c1281b9"
+    },
+    "report.md": {
+      "bytes": 24930,
+      "sha256": "af0aaed5369982a93cb3c824e5943d7797d06f49d53a6941416927263e66dc33"
+    }
+  },
+  "receipt_sha256": "646942af38b7ce53e11dc34b3f64585160103552a0607591863ca1e5a6a32e86",
+  "schema": "1",
+  "status": "applied",
+  "tool": "optical-design-review",
+  "verification": "offline receipt consistency and local hashes; no optical engine or source reopen",
+  "verified_local_artifacts": {
+    "baseline-model.json": "26f22e472efbf6fc5a8bc12a56df9108ceca05331e0d039d4222668c431ee302",
+    "candidate-model.json": "a124eab4a27842e5eae280696dcc2ef250605214f5b9d215c63abd5f1780c3aa",
+    "changes.json": "372ff4de4d3e0ee5361e7ecdfe4f662bdbbdaeb0cb58fdb0ba4efacc76ff0679",
+    "source_snapshot.json": "73d813dea1ad75db10d87d5023b3608740c652a6ccc38b999eec38599aa803ca",
+    "spec.json": "13421999188c70b83377c2716ecc65e91e8d0f11510b0c944d4534774af153b9"
+  }
+}

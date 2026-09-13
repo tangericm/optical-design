@@ -75,6 +75,7 @@ def run_worker(script, argv):
                     expected = 0 if report['available'] is True else 3
                 else:
                     expected = {'improved': 0, 'requirements_met': 0, 'completed': 0,
+                                'inspected': 0, 'applied': 0,
                                 'benchmark_passed': 0, 'benchmark_failed': 1,
                                 'requirements_not_met': 1, 'no_acceptable_improvement': 1,
                                 'validation_failed': 1}.get(report.get('status'))

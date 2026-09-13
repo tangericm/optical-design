@@ -1,6 +1,6 @@
 # Interactive optical jobs over MCP
 
-`scripts/server.py` exposes `capabilities`, `start`, `status`, `cancel`, and `results`
+`scripts/server.py` exposes `capabilities`, `start`, `status`, `cancel`, `results`, and `review`
 through the official MCP Python SDK over stdio. It dispatches the existing `design.py`
 CLI in an owned subprocess. All optical requirements, budgets, native isolation, and
 saved-candidate verification remain in the CLI implementation.
@@ -17,13 +17,13 @@ the SDK v2 API; v1 FastMCP examples are not interchangeable. Sources checked Sep
 Portable engine, from the installed skill directory:
 
 ```powershell
-uv run --with optiland==0.6.2 scripts/server.py --workspace C:/Optical/jobs --input-root C:/Optical/models --input-root C:/Optical/specs
+uv run --python 3.11 --with optiland==0.6.2 scripts/server.py --workspace C:/Optical/jobs --input-root C:/Optical/models --input-root C:/Optical/specs
 ```
 
 Licensed native engine on Windows:
 
 ```powershell
-uv run --with zospy==2.1.5 --with pythonnet==3.1.0 scripts/server.py --workspace C:/Optical/jobs --input-root C:/Optical/models --input-root C:/Optical/specs
+uv run --python 3.11 --with zospy==2.1.5 --with pythonnet==3.1.0 scripts/server.py --workspace C:/Optical/jobs --input-root C:/Optical/models --input-root C:/Optical/specs
 ```
 
 The script's PEP 723 metadata installs the SDK and NumPy. The `--with` options put
@@ -62,10 +62,22 @@ one strict `request` object:
 }
 ```
 
-Actions are `audit`, `refocus`, `tolerance`, and `optimize`; backends are `optiland`
-and `zos`. For `tolerance`, add `tolerances` and `tolerances_sha256`. For `optimize`,
-add `variables` and `variables_sha256`. These additional inputs are accepted only for
-their corresponding action. For optional post-search validation on `optimize`, add
+Actions are `inspect`, `audit`, `edit`, `refocus`, `tolerance`, `optimize`, and `sensitivity`;
+backends are `optiland` and `zos`. `inspect` requires only model identity: omit both
+`spec` and `spec_sha256`. All other actions require that pair.
+
+| Action | Additional input path/hash pair |
+|---|---|
+| `edit` | `changes`, `changes_sha256` |
+| `sensitivity` | `perturbations`, `perturbations_sha256` |
+| `tolerance` | `tolerances`, `tolerances_sha256` |
+| `optimize` | `variables`, `variables_sha256` |
+
+Each pair is required only for its corresponding action; partial or unrelated pairs
+reject. Changes use schema 1 `changes` rows with `surface`, `parameter`, `expected_mm`,
+`value_mm`. Perturbations use schema 1 `parameters` rows with `surface`, `parameter`,
+positive `step_mm`. These are declarative data files, not code or native commands.
+For optional post-search validation on `optimize`, add
 `validation_spec` and `validation_spec_sha256`; both are required together and undergo the
 same root, hash, snapshot and stale-input checks. Each file must resolve beneath a declared input root.
 A changed hash is rejected before creating a job. The exact verified bytes are copied
@@ -77,6 +89,14 @@ resume old jobs or make old workspace folders executable. Outputs use generated 
 directories and never overwrite an earlier job. Jobs are serialized within this
 server; use one server for a licensed execution queue.
 
+For a completed job, `review({"job_id":"..."})` rechecks the owned receipt and renders
+a fresh owned review directory. It accepts no arbitrary report/output path and runs no
+optical engine. The return is `{job_id, directory, manifest}`; `directory` is an absolute
+local path. The manifest records schema, tool, action, optical status, acceptance,
+receipt hash, artifact verification, and SHA-256/byte counts for `report.html` and
+`report.md`. Link those files for the engineer; rendering does not change acceptance.
+Recheck `results` for optical status instead of treating a rendered package as a pass.
+
 Each job directory contains `inputs/`, `output/`, `temp/`, `stdout.log`, and `stderr.log`.
 Native startup and teardown output remains in diagnostic logs, keeping MCP stdout
 reserved for protocol messages. Native worker temporary receipts use the owned `temp/`
@@ -86,10 +106,12 @@ this wrapper does not sandbox the installed engine.
 ## Completion and acceptance
 
 `state` is `running`, `completed`, `failed`, or `cancelled`. `optical_accepted` is true
-only for a fully checked `requirements_met` or `improved` result. A completed audit
+only for a fully checked `requirements_met`, `improved`, or explicit-edit `applied`
+result. An applied edit meets its requirements but need not improve merit. A completed audit
 that misses requirements and a completed refocus/optimization without an acceptable
 improvement, or whose separate validation fails (`validation_failed`), have `optical_accepted: false`; their exit code 1 is an expected optical
-outcome. Tolerance completion is evidence collection, so it also has
+outcome. Inspection and sensitivity completion are evidence collection, with
+`optical_accepted: false`. Tolerance completion is evidence collection, so it also has
 `optical_accepted: false`; inspect the conditional tolerance statistics in `report`.
 
 `results.report` remains null while running and for failed/cancelled jobs. Before
@@ -124,11 +146,22 @@ uv run --with mcp==2.2.0 pytest tests/python/test_tool_jobs.py tests/python/test
 The subprocess tests cover allowlists, stale hashes, root confinement, unknown IDs,
 one active job under concurrent starts, receipt/exit disagreement, artifact tampering,
 cancel/shutdown cleanup, and owned child termination while an unrelated process stays
-alive. The real SDK stdio test lists and invokes all five tools, rejects unknown
-request fields/stale hashes, dispatches the real CLI, and confirms an invalid optical
+alive. The SDK stdio tests exercise the registered tools, reject unknown
+request fields/stale hashes, dispatch the real CLI, and confirm an invalid optical
 spec fails without acceptance. A symbolic-link test skips where Windows cannot create
 links. Real optical acceptance is a separate engine-enabled integration check, not
 inferred from this transport test.
+
+Use [the full-workflow eval scenarios](../evals/README.md) to collect current installed-client
+evidence for inspection, edits, composite merit, sensitivity and review. The scenarios
+include stale expected values, stale input hashes, and rejected designs; a test
+description is not a claim that a specific engine/client run passed.
+
+For chained calls, preserve the preceding job ID, accepted saved-model path and SHA-256.
+The next model path must still lie under a declared input root. Copy a reviewed accepted
+artifact into an authorized model root when needed, then hash the copied bytes. Never
+weaken root confinement or silently swap in a rejected file. Define all next-step inputs
+before `start`; report the exact returned evidence rather than predicting an optimum.
 
 When validation is requested, the manager also checks the frozen specification and its
 snapshot hash, reassesses both validation measurements, and links their parameter vectors

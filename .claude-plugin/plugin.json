@@ -1,6 +1,6 @@
 {
   "name": "optical-design",
-  "version": "0.1.0-dev.5",
+  "version": "1.0.0",
   "description": "Optical-design copilot skill: numerical optics, sequential audit/refocus, tolerance evidence, and OpticStudio/Optiland adapters.",
   "author": {
     "name": "Eric Tang"

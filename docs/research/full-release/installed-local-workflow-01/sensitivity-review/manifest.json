@@ -1,0 +1,25 @@
+{
+  "accepted_candidate": false,
+  "action": "sensitivity",
+  "files": {
+    "report.html": {
+      "bytes": 112681,
+      "sha256": "0f830c660d9aaeffdd39acc36e2698d8a5836c1b4558d13d26aecf4c4ac8f8da"
+    },
+    "report.md": {
+      "bytes": 80807,
+      "sha256": "de6c18839ebc51e10ac75a4ed62023d35d0d8d51d6298c7fb2dc5d66b05e1485"
+    }
+  },
+  "receipt_sha256": "d61ea33c0b0f6a45253dc98bf780489cb1a6fb1c14ac7cf2f28d135accc62170",
+  "schema": "1",
+  "status": "completed",
+  "tool": "optical-design-review",
+  "verification": "offline receipt consistency and local hashes; no optical engine or source reopen",
+  "verified_local_artifacts": {
+    "baseline-model.json": "a124eab4a27842e5eae280696dcc2ef250605214f5b9d215c63abd5f1780c3aa",
+    "perturbations.json": "33981ee0eb72e88b66f69d19cf6e6719df8e3fce214cd4b14bc2a084967839d8",
+    "source_snapshot.json": "a124eab4a27842e5eae280696dcc2ef250605214f5b9d215c63abd5f1780c3aa",
+    "spec.json": "13421999188c70b83377c2716ecc65e91e8d0f11510b0c944d4534774af153b9"
+  }
+}

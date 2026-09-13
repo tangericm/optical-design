@@ -1,0 +1,2599 @@
+{
+  "schema": "1",
+  "action": "edit",
+  "status": "requirements_not_met",
+  "source": {
+    "path": "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-v1\\docs\\research\\full-release\\final-mcp\\mcp-jobs\\7ad0f2e60d734f68958834857dfac5fb\\inputs\\model.zmx",
+    "sha256": "217526648ca75334c9dc49e32992b24a4f4a73edcb90d6835c83d3b59bf78eba"
+  },
+  "source_unchanged": true,
+  "baseline": {
+    "kind": "baseline",
+    "parameters_mm": [
+      46.7694746245767
+    ],
+    "inspection": {
+      "engine": {
+        "name": "OpticStudio",
+        "version": "24.1.0",
+        "zospy_version": "2.1.5",
+        "pythonnet_version": "3.1.0",
+        "license": "PremiumEdition"
+      },
+      "focus_mm": 46.7694746245767,
+      "image_surface": 3,
+      "surfaces": [
+        {
+          "index": 0,
+          "is_image": false,
+          "is_stop": false,
+          "type": "Standard",
+          "radius_mm": "Infinity",
+          "thickness_mm": "Infinity",
+          "material": "",
+          "conic": 0.0,
+          "coating": "",
+          "tilts": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "aperture": "None",
+          "semi_diameter_solve": "Automatic",
+          "asphere_coefficients": []
+        },
+        {
+          "index": 1,
+          "is_image": false,
+          "is_stop": true,
+          "type": "EvenAspheric",
+          "radius_mm": 50.0,
+          "thickness_mm": 5.0,
+          "material": "N-BK7",
+          "conic": -0.5,
+          "coating": "",
+          "tilts": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "aperture": "None",
+          "semi_diameter_solve": "Automatic",
+          "asphere_coefficients": [
+            {
+              "order": 2,
+              "value": 0.0,
+              "unit": "mm^-1"
+            },
+            {
+              "order": 4,
+              "value": 1e-06,
+              "unit": "mm^-3"
+            },
+            {
+              "order": 6,
+              "value": -1e-09,
+              "unit": "mm^-5"
+            },
+            {
+              "order": 8,
+              "value": 0.0,
+              "unit": "mm^-7"
+            },
+            {
+              "order": 10,
+              "value": 0.0,
+              "unit": "mm^-9"
+            },
+            {
+              "order": 12,
+              "value": 0.0,
+              "unit": "mm^-11"
+            },
+            {
+              "order": 14,
+              "value": 0.0,
+              "unit": "mm^-13"
+            },
+            {
+              "order": 16,
+              "value": 1e-20,
+              "unit": "mm^-15"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "is_image": false,
+          "is_stop": false,
+          "type": "Standard",
+          "radius_mm": -50.0,
+          "thickness_mm": 46.7694746245767,
+          "material": "",
+          "conic": 0.0,
+          "coating": "",
+          "tilts": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "aperture": "None",
+          "semi_diameter_solve": "Automatic",
+          "asphere_coefficients": []
+        },
+        {
+          "index": 3,
+          "is_image": true,
+          "is_stop": false,
+          "type": "Standard",
+          "radius_mm": "Infinity",
+          "thickness_mm": "Infinity",
+          "material": "",
+          "conic": 0.0,
+          "coating": "",
+          "tilts": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "aperture": "None",
+          "semi_diameter_solve": "Automatic",
+          "asphere_coefficients": []
+        }
+      ],
+      "invariants": {
+        "surfaces": [
+          {
+            "index": 0,
+            "is_image": false,
+            "is_stop": false,
+            "type": "Standard",
+            "radius_mm": "Infinity",
+            "thickness_mm": "Infinity",
+            "material": "",
+            "conic": 0.0,
+            "coating": "",
+            "tilts": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "aperture": "None",
+            "semi_diameter_solve": "Automatic",
+            "asphere_coefficients": []
+          },
+          {
+            "index": 1,
+            "is_image": false,
+            "is_stop": true,
+            "type": "EvenAspheric",
+            "radius_mm": 50.0,
+            "thickness_mm": 5.0,
+            "material": "N-BK7",
+            "conic": -0.5,
+            "coating": "",
+            "tilts": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "aperture": "None",
+            "semi_diameter_solve": "Automatic",
+            "asphere_coefficients": [
+              {
+                "order": 2,
+                "value": 0.0,
+                "unit": "mm^-1"
+              },
+              {
+                "order": 4,
+                "value": 1e-06,
+                "unit": "mm^-3"
+              },
+              {
+                "order": 6,
+                "value": -1e-09,
+                "unit": "mm^-5"
+              },
+              {
+                "order": 8,
+                "value": 0.0,
+                "unit": "mm^-7"
+              },
+              {
+                "order": 10,
+                "value": 0.0,
+                "unit": "mm^-9"
+              },
+              {
+                "order": 12,
+                "value": 0.0,
+                "unit": "mm^-11"
+              },
+              {
+                "order": 14,
+                "value": 0.0,
+                "unit": "mm^-13"
+              },
+              {
+                "order": 16,
+                "value": 1e-20,
+                "unit": "mm^-15"
+              }
+            ]
+          },
+          {
+            "index": 2,
+            "is_image": false,
+            "is_stop": false,
+            "type": "Standard",
+            "radius_mm": -50.0,
+            "material": "",
+            "conic": 0.0,
+            "coating": "",
+            "tilts": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "aperture": "None",
+            "semi_diameter_solve": "Automatic",
+            "asphere_coefficients": []
+          },
+          {
+            "index": 3,
+            "is_image": true,
+            "is_stop": false,
+            "type": "Standard",
+            "radius_mm": "Infinity",
+            "thickness_mm": "Infinity",
+            "material": "",
+            "conic": 0.0,
+            "coating": "",
+            "tilts": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "aperture": "None",
+            "semi_diameter_solve": "Automatic",
+            "asphere_coefficients": []
+          }
+        ],
+        "fields": [
+          {
+            "index": 1,
+            "x_deg": 0.0,
+            "y_deg": 0.0,
+            "weight": 1.0
+          }
+        ],
+        "wavelengths": [
+          {
+            "index": 1,
+            "um": 0.55,
+            "weight": 1.0,
+            "primary": true
+          }
+        ],
+        "aperture_type": "EntrancePupilDiameter",
+        "aperture_mm": 10.0,
+        "lens_units": "mm"
+      },
+      "limits": [
+        "Sequential centered Standard conic/EvenAspheric refractive systems; fixed shape coefficients; angle fields; mm; EPD.",
+        "Geometric centroid RMS spot and scalar FFT MTF are distinct metrics.",
+        "A sparse pupil ray check detects gross failures; it is not a full vignetting analysis."
+      ]
+    },
+    "measurements": [
+      {
+        "metric": "efl_mm",
+        "unit": "mm",
+        "value": 49.05139286997028,
+        "settings": {
+          "wavelength": 1,
+          "wavelength_um": 0.55
+        }
+      },
+      {
+        "metric": "f_number",
+        "unit": "1",
+        "value": 4.905139,
+        "settings": {
+          "wavelength": 1,
+          "wavelength_um": 0.55
+        }
+      },
+      {
+        "metric": "total_track_mm",
+        "unit": "mm",
+        "value": 51.76947
+      },
+      {
+        "metric": "image_distance_mm",
+        "unit": "mm",
+        "value": 46.7694746245767
+      },
+      {
+        "metric": "rms_spot_um",
+        "field": 1,
+        "wavelength": 1,
+        "unit": "um",
+        "value": 15.841366208313875,
+        "settings": {
+          "reference": "centroid",
+          "ray_density": 16,
+          "native_analysis": "StandardSpot",
+          "ray_check_count": 17,
+          "field": 1,
+          "field_xy_deg": [
+            0.0,
+            0.0
+          ],
+          "wavelength": 1,
+          "wavelength_um": 0.55,
+          "spectral_mode": "monochromatic"
+        }
+      },
+      {
+        "metric": "mtf",
+        "field": 1,
+        "wavelength": 1,
+        "frequency": 20,
+        "axis": "tangential",
+        "unit": "1",
+        "value": 0.3985805096694023,
+        "settings": {
+          "analysis": "FFTMTF",
+          "sampling": 128,
+          "polarization": false,
+          "frequency_interpolation": "linear; no extrapolation"
+        }
+      },
+      {
+        "metric": "mtf",
+        "field": 1,
+        "wavelength": 1,
+        "frequency": 20,
+        "axis": "sagittal",
+        "unit": "1",
+        "value": 0.3985805096694023,
+        "settings": {
+          "analysis": "FFTMTF",
+          "sampling": 128,
+          "polarization": false,
+          "frequency_interpolation": "linear; no extrapolation"
+        }
+      }
+    ],
+    "assessment": {
+      "passes": true,
+      "requirements": [
+        {
+          "id": "focal-length",
+          "key": "efl_mm",
+          "requirement": {
+            "id": "focal-length",
+            "metric": "efl_mm",
+            "unit": "mm",
+            "min": 48,
+            "max": 51
+          },
+          "status": "pass",
+          "value": 49.05139286997028,
+          "unit": "mm"
+        },
+        {
+          "id": "track",
+          "key": "total_track_mm",
+          "requirement": {
+            "id": "track",
+            "metric": "total_track_mm",
+            "unit": "mm",
+            "max": 65
+          },
+          "status": "pass",
+          "value": 51.76947,
+          "unit": "mm"
+        },
+        {
+          "id": "contrast",
+          "key": "mtf|f=1|w=1|nu=20|axis=tangential",
+          "requirement": {
+            "id": "contrast",
+            "metric": "mtf",
+            "field": 1,
+            "wavelength": 1,
+            "frequency": 20,
+            "axis": "tangential",
+            "unit": "1",
+            "min": 0.3
+          },
+          "status": "pass",
+          "value": 0.3985805096694023,
+          "unit": "1"
+        },
+        {
+          "id": "spot",
+          "key": "rms_spot_um|f=1|w=1",
+          "requirement": {
+            "id": "spot",
+            "metric": "rms_spot_um",
+            "field": 1,
+            "wavelength": 1,
+            "unit": "um",
+            "max": 30
+          },
+          "status": "pass",
+          "value": 15.841366208313875,
+          "unit": "um"
+        }
+      ]
+    },
+    "objective_breakdown": {
+      "aggregation": "scalar",
+      "direction": "minimize",
+      "value": 15.841366208313875,
+      "unit": "um",
+      "terms": [
+        {
+          "metric": "rms_spot_um",
+          "field": 1,
+          "wavelength": 1,
+          "key": "rms_spot_um|f=1|w=1",
+          "unit": "um",
+          "value": 15.841366208313875
+        }
+      ]
+    },
+    "objective_value": 15.841366208313875
+  },
+  "candidate": null,
+  "history": [
+    {
+      "kind": "baseline",
+      "parameters_mm": [
+        46.7694746245767
+      ],
+      "inspection": {
+        "engine": {
+          "name": "OpticStudio",
+          "version": "24.1.0",
+          "zospy_version": "2.1.5",
+          "pythonnet_version": "3.1.0",
+          "license": "PremiumEdition"
+        },
+        "focus_mm": 46.7694746245767,
+        "image_surface": 3,
+        "surfaces": [
+          {
+            "index": 0,
+            "is_image": false,
+            "is_stop": false,
+            "type": "Standard",
+            "radius_mm": "Infinity",
+            "thickness_mm": "Infinity",
+            "material": "",
+            "conic": 0.0,
+            "coating": "",
+            "tilts": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "aperture": "None",
+            "semi_diameter_solve": "Automatic",
+            "asphere_coefficients": []
+          },
+          {
+            "index": 1,
+            "is_image": false,
+            "is_stop": true,
+            "type": "EvenAspheric",
+            "radius_mm": 50.0,
+            "thickness_mm": 5.0,
+            "material": "N-BK7",
+            "conic": -0.5,
+            "coating": "",
+            "tilts": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "aperture": "None",
+            "semi_diameter_solve": "Automatic",
+            "asphere_coefficients": [
+              {
+                "order": 2,
+                "value": 0.0,
+                "unit": "mm^-1"
+              },
+              {
+                "order": 4,
+                "value": 1e-06,
+                "unit": "mm^-3"
+              },
+              {
+                "order": 6,
+                "value": -1e-09,
+                "unit": "mm^-5"
+              },
+              {
+                "order": 8,
+                "value": 0.0,
+                "unit": "mm^-7"
+              },
+              {
+                "order": 10,
+                "value": 0.0,
+                "unit": "mm^-9"
+              },
+              {
+                "order": 12,
+                "value": 0.0,
+                "unit": "mm^-11"
+              },
+              {
+                "order": 14,
+                "value": 0.0,
+                "unit": "mm^-13"
+              },
+              {
+                "order": 16,
+                "value": 1e-20,
+                "unit": "mm^-15"
+              }
+            ]
+          },
+          {
+            "index": 2,
+            "is_image": false,
+            "is_stop": false,
+            "type": "Standard",
+            "radius_mm": -50.0,
+            "thickness_mm": 46.7694746245767,
+            "material": "",
+            "conic": 0.0,
+            "coating": "",
+            "tilts": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "aperture": "None",
+            "semi_diameter_solve": "Automatic",
+            "asphere_coefficients": []
+          },
+          {
+            "index": 3,
+            "is_image": true,
+            "is_stop": false,
+            "type": "Standard",
+            "radius_mm": "Infinity",
+            "thickness_mm": "Infinity",
+            "material": "",
+            "conic": 0.0,
+            "coating": "",
+            "tilts": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "aperture": "None",
+            "semi_diameter_solve": "Automatic",
+            "asphere_coefficients": []
+          }
+        ],
+        "invariants": {
+          "surfaces": [
+            {
+              "index": 0,
+              "is_image": false,
+              "is_stop": false,
+              "type": "Standard",
+              "radius_mm": "Infinity",
+              "thickness_mm": "Infinity",
+              "material": "",
+              "conic": 0.0,
+              "coating": "",
+              "tilts": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "aperture": "None",
+              "semi_diameter_solve": "Automatic",
+              "asphere_coefficients": []
+            },
+            {
+              "index": 1,
+              "is_image": false,
+              "is_stop": true,
+              "type": "EvenAspheric",
+              "radius_mm": 50.0,
+              "thickness_mm": 5.0,
+              "material": "N-BK7",
+              "conic": -0.5,
+              "coating": "",
+              "tilts": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "aperture": "None",
+              "semi_diameter_solve": "Automatic",
+              "asphere_coefficients": [
+                {
+                  "order": 2,
+                  "value": 0.0,
+                  "unit": "mm^-1"
+                },
+                {
+                  "order": 4,
+                  "value": 1e-06,
+                  "unit": "mm^-3"
+                },
+                {
+                  "order": 6,
+                  "value": -1e-09,
+                  "unit": "mm^-5"
+                },
+                {
+                  "order": 8,
+                  "value": 0.0,
+                  "unit": "mm^-7"
+                },
+                {
+                  "order": 10,
+                  "value": 0.0,
+                  "unit": "mm^-9"
+                },
+                {
+                  "order": 12,
+                  "value": 0.0,
+                  "unit": "mm^-11"
+                },
+                {
+                  "order": 14,
+                  "value": 0.0,
+                  "unit": "mm^-13"
+                },
+                {
+                  "order": 16,
+                  "value": 1e-20,
+                  "unit": "mm^-15"
+                }
+              ]
+            },
+            {
+              "index": 2,
+              "is_image": false,
+              "is_stop": false,
+              "type": "Standard",
+              "radius_mm": -50.0,
+              "material": "",
+              "conic": 0.0,
+              "coating": "",
+              "tilts": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "aperture": "None",
+              "semi_diameter_solve": "Automatic",
+              "asphere_coefficients": []
+            },
+            {
+              "index": 3,
+              "is_image": true,
+              "is_stop": false,
+              "type": "Standard",
+              "radius_mm": "Infinity",
+              "thickness_mm": "Infinity",
+              "material": "",
+              "conic": 0.0,
+              "coating": "",
+              "tilts": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "aperture": "None",
+              "semi_diameter_solve": "Automatic",
+              "asphere_coefficients": []
+            }
+          ],
+          "fields": [
+            {
+              "index": 1,
+              "x_deg": 0.0,
+              "y_deg": 0.0,
+              "weight": 1.0
+            }
+          ],
+          "wavelengths": [
+            {
+              "index": 1,
+              "um": 0.55,
+              "weight": 1.0,
+              "primary": true
+            }
+          ],
+          "aperture_type": "EntrancePupilDiameter",
+          "aperture_mm": 10.0,
+          "lens_units": "mm"
+        },
+        "limits": [
+          "Sequential centered Standard conic/EvenAspheric refractive systems; fixed shape coefficients; angle fields; mm; EPD.",
+          "Geometric centroid RMS spot and scalar FFT MTF are distinct metrics.",
+          "A sparse pupil ray check detects gross failures; it is not a full vignetting analysis."
+        ]
+      },
+      "measurements": [
+        {
+          "metric": "efl_mm",
+          "unit": "mm",
+          "value": 49.05139286997028,
+          "settings": {
+            "wavelength": 1,
+            "wavelength_um": 0.55
+          }
+        },
+        {
+          "metric": "f_number",
+          "unit": "1",
+          "value": 4.905139,
+          "settings": {
+            "wavelength": 1,
+            "wavelength_um": 0.55
+          }
+        },
+        {
+          "metric": "total_track_mm",
+          "unit": "mm",
+          "value": 51.76947
+        },
+        {
+          "metric": "image_distance_mm",
+          "unit": "mm",
+          "value": 46.7694746245767
+        },
+        {
+          "metric": "rms_spot_um",
+          "field": 1,
+          "wavelength": 1,
+          "unit": "um",
+          "value": 15.841366208313875,
+          "settings": {
+            "reference": "centroid",
+            "ray_density": 16,
+            "native_analysis": "StandardSpot",
+            "ray_check_count": 17,
+            "field": 1,
+            "field_xy_deg": [
+              0.0,
+              0.0
+            ],
+            "wavelength": 1,
+            "wavelength_um": 0.55,
+            "spectral_mode": "monochromatic"
+          }
+        },
+        {
+          "metric": "mtf",
+          "field": 1,
+          "wavelength": 1,
+          "frequency": 20,
+          "axis": "tangential",
+          "unit": "1",
+          "value": 0.3985805096694023,
+          "settings": {
+            "analysis": "FFTMTF",
+            "sampling": 128,
+            "polarization": false,
+            "frequency_interpolation": "linear; no extrapolation"
+          }
+        },
+        {
+          "metric": "mtf",
+          "field": 1,
+          "wavelength": 1,
+          "frequency": 20,
+          "axis": "sagittal",
+          "unit": "1",
+          "value": 0.3985805096694023,
+          "settings": {
+            "analysis": "FFTMTF",
+            "sampling": 128,
+            "polarization": false,
+            "frequency_interpolation": "linear; no extrapolation"
+          }
+        }
+      ],
+      "assessment": {
+        "passes": true,
+        "requirements": [
+          {
+            "id": "focal-length",
+            "key": "efl_mm",
+            "requirement": {
+              "id": "focal-length",
+              "metric": "efl_mm",
+              "unit": "mm",
+              "min": 48,
+              "max": 51
+            },
+            "status": "pass",
+            "value": 49.05139286997028,
+            "unit": "mm"
+          },
+          {
+            "id": "track",
+            "key": "total_track_mm",
+            "requirement": {
+              "id": "track",
+              "metric": "total_track_mm",
+              "unit": "mm",
+              "max": 65
+            },
+            "status": "pass",
+            "value": 51.76947,
+            "unit": "mm"
+          },
+          {
+            "id": "contrast",
+            "key": "mtf|f=1|w=1|nu=20|axis=tangential",
+            "requirement": {
+              "id": "contrast",
+              "metric": "mtf",
+              "field": 1,
+              "wavelength": 1,
+              "frequency": 20,
+              "axis": "tangential",
+              "unit": "1",
+              "min": 0.3
+            },
+            "status": "pass",
+            "value": 0.3985805096694023,
+            "unit": "1"
+          },
+          {
+            "id": "spot",
+            "key": "rms_spot_um|f=1|w=1",
+            "requirement": {
+              "id": "spot",
+              "metric": "rms_spot_um",
+              "field": 1,
+              "wavelength": 1,
+              "unit": "um",
+              "max": 30
+            },
+            "status": "pass",
+            "value": 15.841366208313875,
+            "unit": "um"
+          }
+        ]
+      },
+      "objective_breakdown": {
+        "aggregation": "scalar",
+        "direction": "minimize",
+        "value": 15.841366208313875,
+        "unit": "um",
+        "terms": [
+          {
+            "metric": "rms_spot_um",
+            "field": 1,
+            "wavelength": 1,
+            "key": "rms_spot_um|f=1|w=1",
+            "unit": "um",
+            "value": 15.841366208313875
+          }
+        ]
+      },
+      "objective_value": 15.841366208313875
+    },
+    {
+      "kind": "explicit_candidate",
+      "parameters_mm": [
+        60.0
+      ],
+      "inspection": {
+        "engine": {
+          "name": "OpticStudio",
+          "version": "24.1.0",
+          "zospy_version": "2.1.5",
+          "pythonnet_version": "3.1.0",
+          "license": "PremiumEdition"
+        },
+        "focus_mm": 60.0,
+        "image_surface": 3,
+        "surfaces": [
+          {
+            "index": 0,
+            "is_image": false,
+            "is_stop": false,
+            "type": "Standard",
+            "radius_mm": "Infinity",
+            "thickness_mm": "Infinity",
+            "material": "",
+            "conic": 0.0,
+            "coating": "",
+            "tilts": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "aperture": "None",
+            "semi_diameter_solve": "Automatic",
+            "asphere_coefficients": []
+          },
+          {
+            "index": 1,
+            "is_image": false,
+            "is_stop": true,
+            "type": "EvenAspheric",
+            "radius_mm": 50.0,
+            "thickness_mm": 5.0,
+            "material": "N-BK7",
+            "conic": -0.5,
+            "coating": "",
+            "tilts": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "aperture": "None",
+            "semi_diameter_solve": "Automatic",
+            "asphere_coefficients": [
+              {
+                "order": 2,
+                "value": 0.0,
+                "unit": "mm^-1"
+              },
+              {
+                "order": 4,
+                "value": 1e-06,
+                "unit": "mm^-3"
+              },
+              {
+                "order": 6,
+                "value": -1e-09,
+                "unit": "mm^-5"
+              },
+              {
+                "order": 8,
+                "value": 0.0,
+                "unit": "mm^-7"
+              },
+              {
+                "order": 10,
+                "value": 0.0,
+                "unit": "mm^-9"
+              },
+              {
+                "order": 12,
+                "value": 0.0,
+                "unit": "mm^-11"
+              },
+              {
+                "order": 14,
+                "value": 0.0,
+                "unit": "mm^-13"
+              },
+              {
+                "order": 16,
+                "value": 1e-20,
+                "unit": "mm^-15"
+              }
+            ]
+          },
+          {
+            "index": 2,
+            "is_image": false,
+            "is_stop": false,
+            "type": "Standard",
+            "radius_mm": -50.0,
+            "thickness_mm": 60.0,
+            "material": "",
+            "conic": 0.0,
+            "coating": "",
+            "tilts": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "aperture": "None",
+            "semi_diameter_solve": "Automatic",
+            "asphere_coefficients": []
+          },
+          {
+            "index": 3,
+            "is_image": true,
+            "is_stop": false,
+            "type": "Standard",
+            "radius_mm": "Infinity",
+            "thickness_mm": "Infinity",
+            "material": "",
+            "conic": 0.0,
+            "coating": "",
+            "tilts": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "aperture": "None",
+            "semi_diameter_solve": "Automatic",
+            "asphere_coefficients": []
+          }
+        ],
+        "invariants": {
+          "surfaces": [
+            {
+              "index": 0,
+              "is_image": false,
+              "is_stop": false,
+              "type": "Standard",
+              "radius_mm": "Infinity",
+              "thickness_mm": "Infinity",
+              "material": "",
+              "conic": 0.0,
+              "coating": "",
+              "tilts": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "aperture": "None",
+              "semi_diameter_solve": "Automatic",
+              "asphere_coefficients": []
+            },
+            {
+              "index": 1,
+              "is_image": false,
+              "is_stop": true,
+              "type": "EvenAspheric",
+              "radius_mm": 50.0,
+              "thickness_mm": 5.0,
+              "material": "N-BK7",
+              "conic": -0.5,
+              "coating": "",
+              "tilts": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "aperture": "None",
+              "semi_diameter_solve": "Automatic",
+              "asphere_coefficients": [
+                {
+                  "order": 2,
+                  "value": 0.0,
+                  "unit": "mm^-1"
+                },
+                {
+                  "order": 4,
+                  "value": 1e-06,
+                  "unit": "mm^-3"
+                },
+                {
+                  "order": 6,
+                  "value": -1e-09,
+                  "unit": "mm^-5"
+                },
+                {
+                  "order": 8,
+                  "value": 0.0,
+                  "unit": "mm^-7"
+                },
+                {
+                  "order": 10,
+                  "value": 0.0,
+                  "unit": "mm^-9"
+                },
+                {
+                  "order": 12,
+                  "value": 0.0,
+                  "unit": "mm^-11"
+                },
+                {
+                  "order": 14,
+                  "value": 0.0,
+                  "unit": "mm^-13"
+                },
+                {
+                  "order": 16,
+                  "value": 1e-20,
+                  "unit": "mm^-15"
+                }
+              ]
+            },
+            {
+              "index": 2,
+              "is_image": false,
+              "is_stop": false,
+              "type": "Standard",
+              "radius_mm": -50.0,
+              "material": "",
+              "conic": 0.0,
+              "coating": "",
+              "tilts": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "aperture": "None",
+              "semi_diameter_solve": "Automatic",
+              "asphere_coefficients": []
+            },
+            {
+              "index": 3,
+              "is_image": true,
+              "is_stop": false,
+              "type": "Standard",
+              "radius_mm": "Infinity",
+              "thickness_mm": "Infinity",
+              "material": "",
+              "conic": 0.0,
+              "coating": "",
+              "tilts": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "aperture": "None",
+              "semi_diameter_solve": "Automatic",
+              "asphere_coefficients": []
+            }
+          ],
+          "fields": [
+            {
+              "index": 1,
+              "x_deg": 0.0,
+              "y_deg": 0.0,
+              "weight": 1.0
+            }
+          ],
+          "wavelengths": [
+            {
+              "index": 1,
+              "um": 0.55,
+              "weight": 1.0,
+              "primary": true
+            }
+          ],
+          "aperture_type": "EntrancePupilDiameter",
+          "aperture_mm": 10.0,
+          "lens_units": "mm"
+        },
+        "limits": [
+          "Sequential centered Standard conic/EvenAspheric refractive systems; fixed shape coefficients; angle fields; mm; EPD.",
+          "Geometric centroid RMS spot and scalar FFT MTF are distinct metrics.",
+          "A sparse pupil ray check detects gross failures; it is not a full vignetting analysis."
+        ]
+      },
+      "measurements": [
+        {
+          "metric": "efl_mm",
+          "unit": "mm",
+          "value": 49.05139286997028,
+          "settings": {
+            "wavelength": 1,
+            "wavelength_um": 0.55
+          }
+        },
+        {
+          "metric": "f_number",
+          "unit": "1",
+          "value": 4.905139,
+          "settings": {
+            "wavelength": 1,
+            "wavelength_um": 0.55
+          }
+        },
+        {
+          "metric": "total_track_mm",
+          "unit": "mm",
+          "value": 65.0
+        },
+        {
+          "metric": "image_distance_mm",
+          "unit": "mm",
+          "value": 60.0
+        },
+        {
+          "metric": "rms_spot_um",
+          "field": 1,
+          "wavelength": 1,
+          "unit": "um",
+          "value": 993.4228136201618,
+          "settings": {
+            "reference": "centroid",
+            "ray_density": 16,
+            "native_analysis": "StandardSpot",
+            "ray_check_count": 17,
+            "field": 1,
+            "field_xy_deg": [
+              0.0,
+              0.0
+            ],
+            "wavelength": 1,
+            "wavelength_um": 0.55,
+            "spectral_mode": "monochromatic"
+          }
+        },
+        {
+          "metric": "mtf",
+          "field": 1,
+          "wavelength": 1,
+          "frequency": 20,
+          "axis": "tangential",
+          "unit": "1",
+          "value": 0.00040010977242531186,
+          "settings": {
+            "analysis": "FFTMTF",
+            "sampling": 128,
+            "polarization": false,
+            "frequency_interpolation": "linear; no extrapolation"
+          }
+        },
+        {
+          "metric": "mtf",
+          "field": 1,
+          "wavelength": 1,
+          "frequency": 20,
+          "axis": "sagittal",
+          "unit": "1",
+          "value": 0.00040010977242531186,
+          "settings": {
+            "analysis": "FFTMTF",
+            "sampling": 128,
+            "polarization": false,
+            "frequency_interpolation": "linear; no extrapolation"
+          }
+        }
+      ],
+      "assessment": {
+        "passes": false,
+        "requirements": [
+          {
+            "id": "focal-length",
+            "key": "efl_mm",
+            "requirement": {
+              "id": "focal-length",
+              "metric": "efl_mm",
+              "unit": "mm",
+              "min": 48,
+              "max": 51
+            },
+            "status": "pass",
+            "value": 49.05139286997028,
+            "unit": "mm"
+          },
+          {
+            "id": "track",
+            "key": "total_track_mm",
+            "requirement": {
+              "id": "track",
+              "metric": "total_track_mm",
+              "unit": "mm",
+              "max": 65
+            },
+            "status": "pass",
+            "value": 65.0,
+            "unit": "mm"
+          },
+          {
+            "id": "contrast",
+            "key": "mtf|f=1|w=1|nu=20|axis=tangential",
+            "requirement": {
+              "id": "contrast",
+              "metric": "mtf",
+              "field": 1,
+              "wavelength": 1,
+              "frequency": 20,
+              "axis": "tangential",
+              "unit": "1",
+              "min": 0.3
+            },
+            "status": "fail",
+            "value": 0.00040010977242531186,
+            "unit": "1"
+          },
+          {
+            "id": "spot",
+            "key": "rms_spot_um|f=1|w=1",
+            "requirement": {
+              "id": "spot",
+              "metric": "rms_spot_um",
+              "field": 1,
+              "wavelength": 1,
+              "unit": "um",
+              "max": 30
+            },
+            "status": "fail",
+            "value": 993.4228136201618,
+            "unit": "um"
+          }
+        ]
+      },
+      "objective_breakdown": {
+        "aggregation": "scalar",
+        "direction": "minimize",
+        "value": 993.4228136201618,
+        "unit": "um",
+        "terms": [
+          {
+            "metric": "rms_spot_um",
+            "field": 1,
+            "wavelength": 1,
+            "key": "rms_spot_um|f=1|w=1",
+            "unit": "um",
+            "value": 993.4228136201618
+          }
+        ]
+      },
+      "objective_value": 993.4228136201618
+    },
+    {
+      "kind": "saved_reload_verification",
+      "parameters_mm": [
+        60.0
+      ],
+      "inspection": {
+        "engine": {
+          "name": "OpticStudio",
+          "version": "24.1.0",
+          "zospy_version": "2.1.5",
+          "pythonnet_version": "3.1.0",
+          "license": "PremiumEdition"
+        },
+        "focus_mm": 60.0,
+        "image_surface": 3,
+        "surfaces": [
+          {
+            "index": 0,
+            "is_image": false,
+            "is_stop": false,
+            "type": "Standard",
+            "radius_mm": "Infinity",
+            "thickness_mm": "Infinity",
+            "material": "",
+            "conic": 0.0,
+            "coating": "",
+            "tilts": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "aperture": "None",
+            "semi_diameter_solve": "Automatic",
+            "asphere_coefficients": []
+          },
+          {
+            "index": 1,
+            "is_image": false,
+            "is_stop": true,
+            "type": "EvenAspheric",
+            "radius_mm": 50.0,
+            "thickness_mm": 5.0,
+            "material": "N-BK7",
+            "conic": -0.5,
+            "coating": "",
+            "tilts": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "aperture": "None",
+            "semi_diameter_solve": "Automatic",
+            "asphere_coefficients": [
+              {
+                "order": 2,
+                "value": 0.0,
+                "unit": "mm^-1"
+              },
+              {
+                "order": 4,
+                "value": 1e-06,
+                "unit": "mm^-3"
+              },
+              {
+                "order": 6,
+                "value": -1e-09,
+                "unit": "mm^-5"
+              },
+              {
+                "order": 8,
+                "value": 0.0,
+                "unit": "mm^-7"
+              },
+              {
+                "order": 10,
+                "value": 0.0,
+                "unit": "mm^-9"
+              },
+              {
+                "order": 12,
+                "value": 0.0,
+                "unit": "mm^-11"
+              },
+              {
+                "order": 14,
+                "value": 0.0,
+                "unit": "mm^-13"
+              },
+              {
+                "order": 16,
+                "value": 1e-20,
+                "unit": "mm^-15"
+              }
+            ]
+          },
+          {
+            "index": 2,
+            "is_image": false,
+            "is_stop": false,
+            "type": "Standard",
+            "radius_mm": -50.0,
+            "thickness_mm": 60.0,
+            "material": "",
+            "conic": 0.0,
+            "coating": "",
+            "tilts": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "aperture": "None",
+            "semi_diameter_solve": "Automatic",
+            "asphere_coefficients": []
+          },
+          {
+            "index": 3,
+            "is_image": true,
+            "is_stop": false,
+            "type": "Standard",
+            "radius_mm": "Infinity",
+            "thickness_mm": "Infinity",
+            "material": "",
+            "conic": 0.0,
+            "coating": "",
+            "tilts": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "aperture": "None",
+            "semi_diameter_solve": "Automatic",
+            "asphere_coefficients": []
+          }
+        ],
+        "invariants": {
+          "surfaces": [
+            {
+              "index": 0,
+              "is_image": false,
+              "is_stop": false,
+              "type": "Standard",
+              "radius_mm": "Infinity",
+              "thickness_mm": "Infinity",
+              "material": "",
+              "conic": 0.0,
+              "coating": "",
+              "tilts": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "aperture": "None",
+              "semi_diameter_solve": "Automatic",
+              "asphere_coefficients": []
+            },
+            {
+              "index": 1,
+              "is_image": false,
+              "is_stop": true,
+              "type": "EvenAspheric",
+              "radius_mm": 50.0,
+              "thickness_mm": 5.0,
+              "material": "N-BK7",
+              "conic": -0.5,
+              "coating": "",
+              "tilts": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "aperture": "None",
+              "semi_diameter_solve": "Automatic",
+              "asphere_coefficients": [
+                {
+                  "order": 2,
+                  "value": 0.0,
+                  "unit": "mm^-1"
+                },
+                {
+                  "order": 4,
+                  "value": 1e-06,
+                  "unit": "mm^-3"
+                },
+                {
+                  "order": 6,
+                  "value": -1e-09,
+                  "unit": "mm^-5"
+                },
+                {
+                  "order": 8,
+                  "value": 0.0,
+                  "unit": "mm^-7"
+                },
+                {
+                  "order": 10,
+                  "value": 0.0,
+                  "unit": "mm^-9"
+                },
+                {
+                  "order": 12,
+                  "value": 0.0,
+                  "unit": "mm^-11"
+                },
+                {
+                  "order": 14,
+                  "value": 0.0,
+                  "unit": "mm^-13"
+                },
+                {
+                  "order": 16,
+                  "value": 1e-20,
+                  "unit": "mm^-15"
+                }
+              ]
+            },
+            {
+              "index": 2,
+              "is_image": false,
+              "is_stop": false,
+              "type": "Standard",
+              "radius_mm": -50.0,
+              "material": "",
+              "conic": 0.0,
+              "coating": "",
+              "tilts": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "aperture": "None",
+              "semi_diameter_solve": "Automatic",
+              "asphere_coefficients": []
+            },
+            {
+              "index": 3,
+              "is_image": true,
+              "is_stop": false,
+              "type": "Standard",
+              "radius_mm": "Infinity",
+              "thickness_mm": "Infinity",
+              "material": "",
+              "conic": 0.0,
+              "coating": "",
+              "tilts": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "aperture": "None",
+              "semi_diameter_solve": "Automatic",
+              "asphere_coefficients": []
+            }
+          ],
+          "fields": [
+            {
+              "index": 1,
+              "x_deg": 0.0,
+              "y_deg": 0.0,
+              "weight": 1.0
+            }
+          ],
+          "wavelengths": [
+            {
+              "index": 1,
+              "um": 0.55,
+              "weight": 1.0,
+              "primary": true
+            }
+          ],
+          "aperture_type": "EntrancePupilDiameter",
+          "aperture_mm": 10.0,
+          "lens_units": "mm"
+        },
+        "limits": [
+          "Sequential centered Standard conic/EvenAspheric refractive systems; fixed shape coefficients; angle fields; mm; EPD.",
+          "Geometric centroid RMS spot and scalar FFT MTF are distinct metrics.",
+          "A sparse pupil ray check detects gross failures; it is not a full vignetting analysis."
+        ]
+      },
+      "measurements": [
+        {
+          "metric": "efl_mm",
+          "unit": "mm",
+          "value": 49.05139286997028,
+          "settings": {
+            "wavelength": 1,
+            "wavelength_um": 0.55
+          }
+        },
+        {
+          "metric": "f_number",
+          "unit": "1",
+          "value": 4.905139,
+          "settings": {
+            "wavelength": 1,
+            "wavelength_um": 0.55
+          }
+        },
+        {
+          "metric": "total_track_mm",
+          "unit": "mm",
+          "value": 65.0
+        },
+        {
+          "metric": "image_distance_mm",
+          "unit": "mm",
+          "value": 60.0
+        },
+        {
+          "metric": "rms_spot_um",
+          "field": 1,
+          "wavelength": 1,
+          "unit": "um",
+          "value": 993.4228136201618,
+          "settings": {
+            "reference": "centroid",
+            "ray_density": 16,
+            "native_analysis": "StandardSpot",
+            "ray_check_count": 17,
+            "field": 1,
+            "field_xy_deg": [
+              0.0,
+              0.0
+            ],
+            "wavelength": 1,
+            "wavelength_um": 0.55,
+            "spectral_mode": "monochromatic"
+          }
+        },
+        {
+          "metric": "mtf",
+          "field": 1,
+          "wavelength": 1,
+          "frequency": 20,
+          "axis": "tangential",
+          "unit": "1",
+          "value": 0.00040010977242531186,
+          "settings": {
+            "analysis": "FFTMTF",
+            "sampling": 128,
+            "polarization": false,
+            "frequency_interpolation": "linear; no extrapolation"
+          }
+        },
+        {
+          "metric": "mtf",
+          "field": 1,
+          "wavelength": 1,
+          "frequency": 20,
+          "axis": "sagittal",
+          "unit": "1",
+          "value": 0.00040010977242531186,
+          "settings": {
+            "analysis": "FFTMTF",
+            "sampling": 128,
+            "polarization": false,
+            "frequency_interpolation": "linear; no extrapolation"
+          }
+        }
+      ],
+      "assessment": {
+        "passes": false,
+        "requirements": [
+          {
+            "id": "focal-length",
+            "key": "efl_mm",
+            "requirement": {
+              "id": "focal-length",
+              "metric": "efl_mm",
+              "unit": "mm",
+              "min": 48,
+              "max": 51
+            },
+            "status": "pass",
+            "value": 49.05139286997028,
+            "unit": "mm"
+          },
+          {
+            "id": "track",
+            "key": "total_track_mm",
+            "requirement": {
+              "id": "track",
+              "metric": "total_track_mm",
+              "unit": "mm",
+              "max": 65
+            },
+            "status": "pass",
+            "value": 65.0,
+            "unit": "mm"
+          },
+          {
+            "id": "contrast",
+            "key": "mtf|f=1|w=1|nu=20|axis=tangential",
+            "requirement": {
+              "id": "contrast",
+              "metric": "mtf",
+              "field": 1,
+              "wavelength": 1,
+              "frequency": 20,
+              "axis": "tangential",
+              "unit": "1",
+              "min": 0.3
+            },
+            "status": "fail",
+            "value": 0.00040010977242531186,
+            "unit": "1"
+          },
+          {
+            "id": "spot",
+            "key": "rms_spot_um|f=1|w=1",
+            "requirement": {
+              "id": "spot",
+              "metric": "rms_spot_um",
+              "field": 1,
+              "wavelength": 1,
+              "unit": "um",
+              "max": 30
+            },
+            "status": "fail",
+            "value": 993.4228136201618,
+            "unit": "um"
+          }
+        ]
+      },
+      "objective_breakdown": {
+        "aggregation": "scalar",
+        "direction": "minimize",
+        "value": 993.4228136201618,
+        "unit": "um",
+        "terms": [
+          {
+            "metric": "rms_spot_um",
+            "field": 1,
+            "wavelength": 1,
+            "key": "rms_spot_um|f=1|w=1",
+            "unit": "um",
+            "value": 993.4228136201618
+          }
+        ]
+      },
+      "objective_value": 993.4228136201618
+    }
+  ],
+  "evaluations": 3,
+  "baseline_restored": true,
+  "saved_candidate_verified": false,
+  "artifacts": {
+    "baseline_model": "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-v1\\docs\\research\\full-release\\final-mcp\\mcp-jobs\\7ad0f2e60d734f68958834857dfac5fb\\output\\baseline-model.zmx",
+    "baseline_sha256": "217526648ca75334c9dc49e32992b24a4f4a73edcb90d6835c83d3b59bf78eba",
+    "source_snapshot": "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-v1\\docs\\research\\full-release\\final-mcp\\mcp-jobs\\7ad0f2e60d734f68958834857dfac5fb\\output\\source_snapshot.zmx",
+    "source_snapshot_sha256": "217526648ca75334c9dc49e32992b24a4f4a73edcb90d6835c83d3b59bf78eba",
+    "rejected_candidate_model": "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-v1\\docs\\research\\full-release\\final-mcp\\mcp-jobs\\7ad0f2e60d734f68958834857dfac5fb\\output\\rejected-candidate-model.zmx",
+    "rejected_candidate_sha256": "56022c7795f39df41d6b1b6b82da881e281f2a1325d43316c7b4e24125749a9e"
+  },
+  "python_version": "3.11.15",
+  "time_budget_policy": "cooperative_between_engine_calls; recovery outside budget",
+  "spec": {
+    "schema": "1",
+    "name": "Synthetic 50 mm singlet: bounded refocus demonstration",
+    "fields": [
+      1
+    ],
+    "wavelengths": [
+      1
+    ],
+    "frequencies_cyc_per_mm": [
+      20
+    ],
+    "requirements": [
+      {
+        "id": "focal-length",
+        "metric": "efl_mm",
+        "unit": "mm",
+        "min": 48,
+        "max": 51
+      },
+      {
+        "id": "track",
+        "metric": "total_track_mm",
+        "unit": "mm",
+        "max": 65
+      },
+      {
+        "id": "contrast",
+        "metric": "mtf",
+        "field": 1,
+        "wavelength": 1,
+        "frequency": 20,
+        "axis": "tangential",
+        "unit": "1",
+        "min": 0.3
+      },
+      {
+        "id": "spot",
+        "metric": "rms_spot_um",
+        "field": 1,
+        "wavelength": 1,
+        "unit": "um",
+        "max": 30
+      }
+    ],
+    "objective": {
+      "metric": "rms_spot_um",
+      "field": 1,
+      "wavelength": 1,
+      "direction": "minimize"
+    },
+    "focus": {
+      "min_mm": 44,
+      "max_mm": 51
+    },
+    "budget": {
+      "max_evaluations": 25,
+      "timeout_s": 300
+    },
+    "analysis": {
+      "sampling": 128,
+      "use_polarization": false
+    },
+    "minimum_gain": 0.001
+  },
+  "spec_sha256": "da3cef163a4dc9872aaab67aa95ab82937d80a87f5451967ae91a552b92b4b81",
+  "changes": {
+    "schema": "1",
+    "changes": [
+      {
+        "surface": 2,
+        "parameter": "thickness_mm",
+        "expected_mm": 46.7694746245767,
+        "value_mm": 60
+      }
+    ]
+  },
+  "changes_sha256": "9ad7dad630d542153937b62d5e3787d0f737a5d6b9d95c38dd22b50c65aeaede",
+  "rejected_candidate": {
+    "kind": "saved_reload_verification",
+    "parameters_mm": [
+      60.0
+    ],
+    "inspection": {
+      "engine": {
+        "name": "OpticStudio",
+        "version": "24.1.0",
+        "zospy_version": "2.1.5",
+        "pythonnet_version": "3.1.0",
+        "license": "PremiumEdition"
+      },
+      "focus_mm": 60.0,
+      "image_surface": 3,
+      "surfaces": [
+        {
+          "index": 0,
+          "is_image": false,
+          "is_stop": false,
+          "type": "Standard",
+          "radius_mm": "Infinity",
+          "thickness_mm": "Infinity",
+          "material": "",
+          "conic": 0.0,
+          "coating": "",
+          "tilts": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "aperture": "None",
+          "semi_diameter_solve": "Automatic",
+          "asphere_coefficients": []
+        },
+        {
+          "index": 1,
+          "is_image": false,
+          "is_stop": true,
+          "type": "EvenAspheric",
+          "radius_mm": 50.0,
+          "thickness_mm": 5.0,
+          "material": "N-BK7",
+          "conic": -0.5,
+          "coating": "",
+          "tilts": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "aperture": "None",
+          "semi_diameter_solve": "Automatic",
+          "asphere_coefficients": [
+            {
+              "order": 2,
+              "value": 0.0,
+              "unit": "mm^-1"
+            },
+            {
+              "order": 4,
+              "value": 1e-06,
+              "unit": "mm^-3"
+            },
+            {
+              "order": 6,
+              "value": -1e-09,
+              "unit": "mm^-5"
+            },
+            {
+              "order": 8,
+              "value": 0.0,
+              "unit": "mm^-7"
+            },
+            {
+              "order": 10,
+              "value": 0.0,
+              "unit": "mm^-9"
+            },
+            {
+              "order": 12,
+              "value": 0.0,
+              "unit": "mm^-11"
+            },
+            {
+              "order": 14,
+              "value": 0.0,
+              "unit": "mm^-13"
+            },
+            {
+              "order": 16,
+              "value": 1e-20,
+              "unit": "mm^-15"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "is_image": false,
+          "is_stop": false,
+          "type": "Standard",
+          "radius_mm": -50.0,
+          "thickness_mm": 60.0,
+          "material": "",
+          "conic": 0.0,
+          "coating": "",
+          "tilts": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "aperture": "None",
+          "semi_diameter_solve": "Automatic",
+          "asphere_coefficients": []
+        },
+        {
+          "index": 3,
+          "is_image": true,
+          "is_stop": false,
+          "type": "Standard",
+          "radius_mm": "Infinity",
+          "thickness_mm": "Infinity",
+          "material": "",
+          "conic": 0.0,
+          "coating": "",
+          "tilts": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "aperture": "None",
+          "semi_diameter_solve": "Automatic",
+          "asphere_coefficients": []
+        }
+      ],
+      "invariants": {
+        "surfaces": [
+          {
+            "index": 0,
+            "is_image": false,
+            "is_stop": false,
+            "type": "Standard",
+            "radius_mm": "Infinity",
+            "thickness_mm": "Infinity",
+            "material": "",
+            "conic": 0.0,
+            "coating": "",
+            "tilts": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "aperture": "None",
+            "semi_diameter_solve": "Automatic",
+            "asphere_coefficients": []
+          },
+          {
+            "index": 1,
+            "is_image": false,
+            "is_stop": true,
+            "type": "EvenAspheric",
+            "radius_mm": 50.0,
+            "thickness_mm": 5.0,
+            "material": "N-BK7",
+            "conic": -0.5,
+            "coating": "",
+            "tilts": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "aperture": "None",
+            "semi_diameter_solve": "Automatic",
+            "asphere_coefficients": [
+              {
+                "order": 2,
+                "value": 0.0,
+                "unit": "mm^-1"
+              },
+              {
+                "order": 4,
+                "value": 1e-06,
+                "unit": "mm^-3"
+              },
+              {
+                "order": 6,
+                "value": -1e-09,
+                "unit": "mm^-5"
+              },
+              {
+                "order": 8,
+                "value": 0.0,
+                "unit": "mm^-7"
+              },
+              {
+                "order": 10,
+                "value": 0.0,
+                "unit": "mm^-9"
+              },
+              {
+                "order": 12,
+                "value": 0.0,
+                "unit": "mm^-11"
+              },
+              {
+                "order": 14,
+                "value": 0.0,
+                "unit": "mm^-13"
+              },
+              {
+                "order": 16,
+                "value": 1e-20,
+                "unit": "mm^-15"
+              }
+            ]
+          },
+          {
+            "index": 2,
+            "is_image": false,
+            "is_stop": false,
+            "type": "Standard",
+            "radius_mm": -50.0,
+            "material": "",
+            "conic": 0.0,
+            "coating": "",
+            "tilts": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "aperture": "None",
+            "semi_diameter_solve": "Automatic",
+            "asphere_coefficients": []
+          },
+          {
+            "index": 3,
+            "is_image": true,
+            "is_stop": false,
+            "type": "Standard",
+            "radius_mm": "Infinity",
+            "thickness_mm": "Infinity",
+            "material": "",
+            "conic": 0.0,
+            "coating": "",
+            "tilts": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "aperture": "None",
+            "semi_diameter_solve": "Automatic",
+            "asphere_coefficients": []
+          }
+        ],
+        "fields": [
+          {
+            "index": 1,
+            "x_deg": 0.0,
+            "y_deg": 0.0,
+            "weight": 1.0
+          }
+        ],
+        "wavelengths": [
+          {
+            "index": 1,
+            "um": 0.55,
+            "weight": 1.0,
+            "primary": true
+          }
+        ],
+        "aperture_type": "EntrancePupilDiameter",
+        "aperture_mm": 10.0,
+        "lens_units": "mm"
+      },
+      "limits": [
+        "Sequential centered Standard conic/EvenAspheric refractive systems; fixed shape coefficients; angle fields; mm; EPD.",
+        "Geometric centroid RMS spot and scalar FFT MTF are distinct metrics.",
+        "A sparse pupil ray check detects gross failures; it is not a full vignetting analysis."
+      ]
+    },
+    "measurements": [
+      {
+        "metric": "efl_mm",
+        "unit": "mm",
+        "value": 49.05139286997028,
+        "settings": {
+          "wavelength": 1,
+          "wavelength_um": 0.55
+        }
+      },
+      {
+        "metric": "f_number",
+        "unit": "1",
+        "value": 4.905139,
+        "settings": {
+          "wavelength": 1,
+          "wavelength_um": 0.55
+        }
+      },
+      {
+        "metric": "total_track_mm",
+        "unit": "mm",
+        "value": 65.0
+      },
+      {
+        "metric": "image_distance_mm",
+        "unit": "mm",
+        "value": 60.0
+      },
+      {
+        "metric": "rms_spot_um",
+        "field": 1,
+        "wavelength": 1,
+        "unit": "um",
+        "value": 993.4228136201618,
+        "settings": {
+          "reference": "centroid",
+          "ray_density": 16,
+          "native_analysis": "StandardSpot",
+          "ray_check_count": 17,
+          "field": 1,
+          "field_xy_deg": [
+            0.0,
+            0.0
+          ],
+          "wavelength": 1,
+          "wavelength_um": 0.55,
+          "spectral_mode": "monochromatic"
+        }
+      },
+      {
+        "metric": "mtf",
+        "field": 1,
+        "wavelength": 1,
+        "frequency": 20,
+        "axis": "tangential",
+        "unit": "1",
+        "value": 0.00040010977242531186,
+        "settings": {
+          "analysis": "FFTMTF",
+          "sampling": 128,
+          "polarization": false,
+          "frequency_interpolation": "linear; no extrapolation"
+        }
+      },
+      {
+        "metric": "mtf",
+        "field": 1,
+        "wavelength": 1,
+        "frequency": 20,
+        "axis": "sagittal",
+        "unit": "1",
+        "value": 0.00040010977242531186,
+        "settings": {
+          "analysis": "FFTMTF",
+          "sampling": 128,
+          "polarization": false,
+          "frequency_interpolation": "linear; no extrapolation"
+        }
+      }
+    ],
+    "assessment": {
+      "passes": false,
+      "requirements": [
+        {
+          "id": "focal-length",
+          "key": "efl_mm",
+          "requirement": {
+            "id": "focal-length",
+            "metric": "efl_mm",
+            "unit": "mm",
+            "min": 48,
+            "max": 51
+          },
+          "status": "pass",
+          "value": 49.05139286997028,
+          "unit": "mm"
+        },
+        {
+          "id": "track",
+          "key": "total_track_mm",
+          "requirement": {
+            "id": "track",
+            "metric": "total_track_mm",
+            "unit": "mm",
+            "max": 65
+          },
+          "status": "pass",
+          "value": 65.0,
+          "unit": "mm"
+        },
+        {
+          "id": "contrast",
+          "key": "mtf|f=1|w=1|nu=20|axis=tangential",
+          "requirement": {
+            "id": "contrast",
+            "metric": "mtf",
+            "field": 1,
+            "wavelength": 1,
+            "frequency": 20,
+            "axis": "tangential",
+            "unit": "1",
+            "min": 0.3
+          },
+          "status": "fail",
+          "value": 0.00040010977242531186,
+          "unit": "1"
+        },
+        {
+          "id": "spot",
+          "key": "rms_spot_um|f=1|w=1",
+          "requirement": {
+            "id": "spot",
+            "metric": "rms_spot_um",
+            "field": 1,
+            "wavelength": 1,
+            "unit": "um",
+            "max": 30
+          },
+          "status": "fail",
+          "value": 993.4228136201618,
+          "unit": "um"
+        }
+      ]
+    },
+    "objective_breakdown": {
+      "aggregation": "scalar",
+      "direction": "minimize",
+      "value": 993.4228136201618,
+      "unit": "um",
+      "terms": [
+        {
+          "metric": "rms_spot_um",
+          "field": 1,
+          "wavelength": 1,
+          "key": "rms_spot_um|f=1|w=1",
+          "unit": "um",
+          "value": 993.4228136201618
+        }
+      ]
+    },
+    "objective_value": 993.4228136201618
+  },
+  "parameter_readback_tolerance": {
+    "relative": 1e-12,
+    "absolute_mm": 1e-12,
+    "nonzero_delta_requires_actual_change": true
+  }
+}

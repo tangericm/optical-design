@@ -1,6 +1,24 @@
 # Compatibility
 
-Development evidence recorded September 12, 2026.
+Stable workflow evidence recorded September 13, 2026. Historical development records follow.
+
+The 1.0.0 release adds inspect/edit, composite merit, local sensitivity and review packages
+to the complete saved-prescription workflow. Native centered Standard conics and
+EvenAspheric A2–A16 terms are retained, with independent native/analytic sag anchors and
+saved-reload regression checks. These terms remain fixed during optimization. Portable
+coverage remains its documented spherical/plane subset. New model types and API versions
+still require explicit verification.
+
+The final local suite passed **837 tests**, with one Windows symbolic-link capability skip,
+using Optiland 0.6.2, MCP 2.2.0 and enabled native OpticStudio tests. Seven npm tests, Ruff,
+skill lint and tarball install checks passed. Isolated project-scoped `npx skills` installations
+exercise the shipped workflow and compare every installed file hash with the release source.
+These are scripted installed-workflow checks, not autonomous external-client benchmarks.
+
+See [full-release receipts and limitations](research/full-release/README.md), including
+two-engine composite searches, actual MCP actions, failures retained as rejections and
+source/artifact integrity checks. HTML has structural/escaping tests; browser visual review
+was unavailable because local-file navigation was blocked by the browser policy.
 
 | Surface | Evidence | Boundary |
 |---|---|---|

@@ -1,0 +1,350 @@
+{
+  "optiland-inspect": {
+    "job_id": "96ddf9a33d064e65a092a43a16b670ef",
+    "status": "inspected",
+    "optical_accepted": false,
+    "report": "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-v1\\docs\\research\\full-release\\mcp-jobs\\96ddf9a33d064e65a092a43a16b670ef\\output\\report.json",
+    "review": {
+      "job_id": "96ddf9a33d064e65a092a43a16b670ef",
+      "directory": "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-v1\\docs\\research\\full-release\\mcp-jobs\\96ddf9a33d064e65a092a43a16b670ef\\review-58d621fe619f41f7aa270e4c8c76b632",
+      "manifest": {
+        "schema": "1",
+        "tool": "optical-design-review",
+        "action": "inspect",
+        "status": "inspected",
+        "accepted_candidate": false,
+        "receipt_sha256": "0d44ce849360d98f4291e4b8c554b70bffd6fb422b4c6f332fe4ddc3b61abcf9",
+        "verified_local_artifacts": {
+          "baseline-model.json": "3758f736982111e1e9f05f4442bd50d920c04f2bba274f09299f221dc8ac694d",
+          "source_snapshot.json": "73d813dea1ad75db10d87d5023b3608740c652a6ccc38b999eec38599aa803ca"
+        },
+        "verification": "offline receipt consistency and local hashes; no optical engine or source reopen",
+        "files": {
+          "report.html": {
+            "sha256": "a5b36fedcd12312bcfedc93dce1c7d9159cbb82c8b622d1d8ef9f26b9c33384a",
+            "bytes": 13196
+          },
+          "report.md": {
+            "sha256": "5a9751ca03c9b6c21cc2738ba30178eab1293175e45024034877c5f696d8f4b0",
+            "bytes": 8636
+          }
+        }
+      }
+    }
+  },
+  "optiland-refocus": {
+    "job_id": "fb20d80c9dff41f5ba8e91b87c803125",
+    "status": "improved",
+    "optical_accepted": true,
+    "report": "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-v1\\docs\\research\\full-release\\mcp-jobs\\fb20d80c9dff41f5ba8e91b87c803125\\output\\report.json",
+    "review": {
+      "job_id": "fb20d80c9dff41f5ba8e91b87c803125",
+      "directory": "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-v1\\docs\\research\\full-release\\mcp-jobs\\fb20d80c9dff41f5ba8e91b87c803125\\review-4499f35aae654905aff9369d1a38200c",
+      "manifest": {
+        "schema": "1",
+        "tool": "optical-design-review",
+        "action": "refocus",
+        "status": "improved",
+        "accepted_candidate": true,
+        "receipt_sha256": "4c6eabc7f0e96ac88542b65295ff7aab9674d99ccd26339d17c506a9c928b5cb",
+        "verified_local_artifacts": {
+          "baseline-model.json": "3758f736982111e1e9f05f4442bd50d920c04f2bba274f09299f221dc8ac694d",
+          "candidate-model.json": "a910db4a1dc27b10e638d9fbaaced32563b433af04a5e4be442b508826e325da",
+          "spec.json": "da3cef163a4dc9872aaab67aa95ab82937d80a87f5451967ae91a552b92b4b81"
+        },
+        "verification": "offline receipt consistency and local hashes; no optical engine or source reopen",
+        "files": {
+          "report.html": {
+            "sha256": "6d60d051c4ad99b7cc48ac05e44e9fdc0d3a5d9d62a2f3445df85c25ca7529f7",
+            "bytes": 30638
+          },
+          "report.md": {
+            "sha256": "ab2ffeea358d7b53119f99601ca2e9fa965758799f5fd7fc1a15dec44b444789",
+            "bytes": 20407
+          }
+        }
+      }
+    }
+  },
+  "optiland-edit": {
+    "job_id": "bdefdfa5249d4f50a7261b660b7beb75",
+    "status": "applied",
+    "optical_accepted": true,
+    "report": "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-v1\\docs\\research\\full-release\\mcp-jobs\\bdefdfa5249d4f50a7261b660b7beb75\\output\\report.json",
+    "review": {
+      "job_id": "bdefdfa5249d4f50a7261b660b7beb75",
+      "directory": "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-v1\\docs\\research\\full-release\\mcp-jobs\\bdefdfa5249d4f50a7261b660b7beb75\\review-58c32b681c6a49cbab6e31322b5cc6ea",
+      "manifest": {
+        "schema": "1",
+        "tool": "optical-design-review",
+        "action": "edit",
+        "status": "applied",
+        "accepted_candidate": true,
+        "receipt_sha256": "0d19f8a8d250c6dcddc3bd20cf5910a65f9bb836c0c6813dc016a73ec1762080",
+        "verified_local_artifacts": {
+          "baseline-model.json": "3758f736982111e1e9f05f4442bd50d920c04f2bba274f09299f221dc8ac694d",
+          "candidate-model.json": "a910db4a1dc27b10e638d9fbaaced32563b433af04a5e4be442b508826e325da",
+          "changes.json": "6541847fb5a3f4821edb2505eed4381ad95dd2147e77032d7a019c35707c4545",
+          "source_snapshot.json": "73d813dea1ad75db10d87d5023b3608740c652a6ccc38b999eec38599aa803ca",
+          "spec.json": "da3cef163a4dc9872aaab67aa95ab82937d80a87f5451967ae91a552b92b4b81"
+        },
+        "verification": "offline receipt consistency and local hashes; no optical engine or source reopen",
+        "files": {
+          "report.html": {
+            "sha256": "ed7da671a41fc88a51dd53bc9933b82c3f1ff1760a814ad3b1d94bb21eb92745",
+            "bytes": 30633
+          },
+          "report.md": {
+            "sha256": "c250fd4f9c54c40e661cb511ded70594986a9bfeedc9f7c7836c7fe27f868a6d",
+            "bytes": 20402
+          }
+        }
+      }
+    }
+  },
+  "optiland-sensitivity": {
+    "job_id": "4888293e06784bd4a6c0fa7ab7676fea",
+    "status": "completed",
+    "optical_accepted": false,
+    "report": "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-v1\\docs\\research\\full-release\\mcp-jobs\\4888293e06784bd4a6c0fa7ab7676fea\\output\\report.json",
+    "review": {
+      "job_id": "4888293e06784bd4a6c0fa7ab7676fea",
+      "directory": "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-v1\\docs\\research\\full-release\\mcp-jobs\\4888293e06784bd4a6c0fa7ab7676fea\\review-ba3519cbc2a846baa26a7f74bc54d4c7",
+      "manifest": {
+        "schema": "1",
+        "tool": "optical-design-review",
+        "action": "sensitivity",
+        "status": "completed",
+        "accepted_candidate": false,
+        "receipt_sha256": "3708bff535f35010d3d0d062d007e07077dc6f9a804ff3e2b3b77762fd4e693f",
+        "verified_local_artifacts": {
+          "baseline-model.json": "a910db4a1dc27b10e638d9fbaaced32563b433af04a5e4be442b508826e325da",
+          "perturbations.json": "ede327fc57b343518e9c785277d24adf1afc6e86a465d8d4fe732dd41ff81291",
+          "source_snapshot.json": "a910db4a1dc27b10e638d9fbaaced32563b433af04a5e4be442b508826e325da",
+          "spec.json": "da3cef163a4dc9872aaab67aa95ab82937d80a87f5451967ae91a552b92b4b81"
+        },
+        "verification": "offline receipt consistency and local hashes; no optical engine or source reopen",
+        "files": {
+          "report.html": {
+            "sha256": "28fbda2702ca5785076e00444cdb1e55a11dfa6ef97b723399ae4df87dc48028",
+            "bytes": 89885
+          },
+          "report.md": {
+            "sha256": "52224cb6cbcf0abcbcdfbccce9b81a6b62b5d4e86ca88076e65f825102c880db",
+            "bytes": 64636
+          }
+        }
+      }
+    }
+  },
+  "optiland-edit-rejected": {
+    "job_id": "d6bda74251ef4b93a9cd797b3b07c43c",
+    "status": "requirements_not_met",
+    "optical_accepted": false,
+    "report": "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-v1\\docs\\research\\full-release\\mcp-jobs\\d6bda74251ef4b93a9cd797b3b07c43c\\output\\report.json",
+    "review": {
+      "job_id": "d6bda74251ef4b93a9cd797b3b07c43c",
+      "directory": "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-v1\\docs\\research\\full-release\\mcp-jobs\\d6bda74251ef4b93a9cd797b3b07c43c\\review-f26d1edbd0b0452986d27648c0b97933",
+      "manifest": {
+        "schema": "1",
+        "tool": "optical-design-review",
+        "action": "edit",
+        "status": "requirements_not_met",
+        "accepted_candidate": false,
+        "receipt_sha256": "8930d8e0d10b049bc2d31babe4c48e5f1400a59cd8361cbe55f1b07a21f5209f",
+        "verified_local_artifacts": {
+          "baseline-model.json": "a910db4a1dc27b10e638d9fbaaced32563b433af04a5e4be442b508826e325da",
+          "changes.json": "73cf17e8300759c7ee505f9dec299e11c54f04a9c9674f8d4d652bde87ffeaa9",
+          "rejected-candidate-model.json": "0ba19cd80e32867a4df845f20e4bcee1d10d3e2d948f5485875d6001877220c8",
+          "source_snapshot.json": "a910db4a1dc27b10e638d9fbaaced32563b433af04a5e4be442b508826e325da",
+          "spec.json": "da3cef163a4dc9872aaab67aa95ab82937d80a87f5451967ae91a552b92b4b81"
+        },
+        "verification": "offline receipt consistency and local hashes; no optical engine or source reopen",
+        "files": {
+          "report.html": {
+            "sha256": "69f2b9785250018a3c146ea631a86d37dac6cc6ae8e5b81cf26d6f3271d551a9",
+            "bytes": 30883
+          },
+          "report.md": {
+            "sha256": "ee6ef5dd4f6e07bd3ba800c2e14e3b18450a8bb693216c916a900df0f14916e4",
+            "bytes": 20608
+          }
+        }
+      }
+    }
+  },
+  "zos-inspect": {
+    "job_id": "09ba63c5253a435e95c7f6ac417316e8",
+    "status": "inspected",
+    "optical_accepted": false,
+    "report": "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-v1\\docs\\research\\full-release\\mcp-jobs\\09ba63c5253a435e95c7f6ac417316e8\\output\\report.json",
+    "review": {
+      "job_id": "09ba63c5253a435e95c7f6ac417316e8",
+      "directory": "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-v1\\docs\\research\\full-release\\mcp-jobs\\09ba63c5253a435e95c7f6ac417316e8\\review-5347edff5c044bdfb30f0d3dc577e515",
+      "manifest": {
+        "schema": "1",
+        "tool": "optical-design-review",
+        "action": "inspect",
+        "status": "inspected",
+        "accepted_candidate": false,
+        "receipt_sha256": "8fda8fb7df828eeb4bf85fd56bc5c24cf6ee5918c58a862a892b7a86693bf806",
+        "verified_local_artifacts": {
+          "baseline-model.zmx": "4fe32615eac8c57b2d80c6745c99f0e3235f7586a2917e62dffe0aba2b9f7cf8",
+          "source_snapshot.zmx": "4fe32615eac8c57b2d80c6745c99f0e3235f7586a2917e62dffe0aba2b9f7cf8"
+        },
+        "verification": "offline receipt consistency and local hashes; no optical engine or source reopen",
+        "files": {
+          "report.html": {
+            "sha256": "9c6382315b7b71ead423551cee2f72a81300d743b62627984ecee4dc419491a5",
+            "bytes": 14112
+          },
+          "report.md": {
+            "sha256": "f35f751b13f0fbe4593cf3b55c7ce97bcef49c1c97d55bc456a53ef194514c95",
+            "bytes": 9270
+          }
+        }
+      }
+    }
+  },
+  "zos-refocus": {
+    "job_id": "9add0c94af524d729051c878b200e0f0",
+    "status": "improved",
+    "optical_accepted": true,
+    "report": "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-v1\\docs\\research\\full-release\\mcp-jobs\\9add0c94af524d729051c878b200e0f0\\output\\report.json",
+    "review": {
+      "job_id": "9add0c94af524d729051c878b200e0f0",
+      "directory": "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-v1\\docs\\research\\full-release\\mcp-jobs\\9add0c94af524d729051c878b200e0f0\\review-7aabce27d29c44ccba6b3dca3a78dbd0",
+      "manifest": {
+        "schema": "1",
+        "tool": "optical-design-review",
+        "action": "refocus",
+        "status": "improved",
+        "accepted_candidate": true,
+        "receipt_sha256": "ed431adf2e92049f33f8451c40bbfd53e0de41d75e23edf4b85eb53246f7e5cb",
+        "verified_local_artifacts": {
+          "baseline-model.zmx": "4fe32615eac8c57b2d80c6745c99f0e3235f7586a2917e62dffe0aba2b9f7cf8",
+          "candidate-model.zmx": "60520fbcbab43ae84d381af2eb9832e19025ac206c4a9b6a0d37857ef39edefb",
+          "spec.json": "da3cef163a4dc9872aaab67aa95ab82937d80a87f5451967ae91a552b92b4b81"
+        },
+        "verification": "offline receipt consistency and local hashes; no optical engine or source reopen",
+        "files": {
+          "report.html": {
+            "sha256": "62e056aa690000e8aa527ca82014b6f1fc0857066ae588ec69ae332850a6184a",
+            "bytes": 33035
+          },
+          "report.md": {
+            "sha256": "2c911c7fb6d2d7c7ba8f6d0ce0d135b805b8aeb22e4ec6c2ff656e629b37fb4b",
+            "bytes": 21826
+          }
+        }
+      }
+    }
+  },
+  "zos-edit": {
+    "job_id": "ae826de0954e4ad08d275980a5ada68e",
+    "status": "applied",
+    "optical_accepted": true,
+    "report": "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-v1\\docs\\research\\full-release\\mcp-jobs\\ae826de0954e4ad08d275980a5ada68e\\output\\report.json",
+    "review": {
+      "job_id": "ae826de0954e4ad08d275980a5ada68e",
+      "directory": "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-v1\\docs\\research\\full-release\\mcp-jobs\\ae826de0954e4ad08d275980a5ada68e\\review-78c648d89e5b45ad8dd5e914a2f163ba",
+      "manifest": {
+        "schema": "1",
+        "tool": "optical-design-review",
+        "action": "edit",
+        "status": "applied",
+        "accepted_candidate": true,
+        "receipt_sha256": "dbb600c7cd66484895c7c2020cff7a5007617045ec621882ab620edce92068e7",
+        "verified_local_artifacts": {
+          "baseline-model.zmx": "4fe32615eac8c57b2d80c6745c99f0e3235f7586a2917e62dffe0aba2b9f7cf8",
+          "candidate-model.zmx": "217526648ca75334c9dc49e32992b24a4f4a73edcb90d6835c83d3b59bf78eba",
+          "changes.json": "5429430ce401cba866c69c3ec6fe74dd658260c37106f8ce1354dd8f735f9a7a",
+          "source_snapshot.zmx": "4fe32615eac8c57b2d80c6745c99f0e3235f7586a2917e62dffe0aba2b9f7cf8",
+          "spec.json": "da3cef163a4dc9872aaab67aa95ab82937d80a87f5451967ae91a552b92b4b81"
+        },
+        "verification": "offline receipt consistency and local hashes; no optical engine or source reopen",
+        "files": {
+          "report.html": {
+            "sha256": "897cb81bf7bb026c2501586142cd49c8ecbf92d17d28d30d64f86377d1db298c",
+            "bytes": 33030
+          },
+          "report.md": {
+            "sha256": "8a5229317503fd29814b1f7b337c157be88c90c3b41dcb1fb1ce427c8616716f",
+            "bytes": 21821
+          }
+        }
+      }
+    }
+  },
+  "zos-sensitivity": {
+    "job_id": "81f3d9fe4c31409bbdd1dfe12d35681b",
+    "status": "completed",
+    "optical_accepted": false,
+    "report": "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-v1\\docs\\research\\full-release\\mcp-jobs\\81f3d9fe4c31409bbdd1dfe12d35681b\\output\\report.json",
+    "review": {
+      "job_id": "81f3d9fe4c31409bbdd1dfe12d35681b",
+      "directory": "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-v1\\docs\\research\\full-release\\mcp-jobs\\81f3d9fe4c31409bbdd1dfe12d35681b\\review-a67657aa09964d6bb816501a77b92b44",
+      "manifest": {
+        "schema": "1",
+        "tool": "optical-design-review",
+        "action": "sensitivity",
+        "status": "completed",
+        "accepted_candidate": false,
+        "receipt_sha256": "36b546f847d9469709339e47a422578bb828a89f6bdfb834235acec288c707c3",
+        "verified_local_artifacts": {
+          "baseline-model.zmx": "217526648ca75334c9dc49e32992b24a4f4a73edcb90d6835c83d3b59bf78eba",
+          "perturbations.json": "ede327fc57b343518e9c785277d24adf1afc6e86a465d8d4fe732dd41ff81291",
+          "source_snapshot.zmx": "217526648ca75334c9dc49e32992b24a4f4a73edcb90d6835c83d3b59bf78eba",
+          "spec.json": "da3cef163a4dc9872aaab67aa95ab82937d80a87f5451967ae91a552b92b4b81"
+        },
+        "verification": "offline receipt consistency and local hashes; no optical engine or source reopen",
+        "files": {
+          "report.html": {
+            "sha256": "bb4ba9528dead477ffd81dfde50daf3f3db925bbddc1bba75d0ddc1d908471ab",
+            "bytes": 105351
+          },
+          "report.md": {
+            "sha256": "2f96a7c785ad9d15ff5543f7cc2d4940071c9faaf0bf025526b3efe59007a3a5",
+            "bytes": 75699
+          }
+        }
+      }
+    }
+  },
+  "zos-edit-rejected": {
+    "job_id": "8152d406066f4ca2afc047b2901fa625",
+    "status": "requirements_not_met",
+    "optical_accepted": false,
+    "report": "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-v1\\docs\\research\\full-release\\mcp-jobs\\8152d406066f4ca2afc047b2901fa625\\output\\report.json",
+    "review": {
+      "job_id": "8152d406066f4ca2afc047b2901fa625",
+      "directory": "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-v1\\docs\\research\\full-release\\mcp-jobs\\8152d406066f4ca2afc047b2901fa625\\review-91c8693932a94379ac2aed7b83f8966c",
+      "manifest": {
+        "schema": "1",
+        "tool": "optical-design-review",
+        "action": "edit",
+        "status": "requirements_not_met",
+        "accepted_candidate": false,
+        "receipt_sha256": "14b8c7cffbd982f92d0772bd6bb4df3041a989a6a3a47eb0ff334b432f75a982",
+        "verified_local_artifacts": {
+          "baseline-model.zmx": "217526648ca75334c9dc49e32992b24a4f4a73edcb90d6835c83d3b59bf78eba",
+          "changes.json": "9ad7dad630d542153937b62d5e3787d0f737a5d6b9d95c38dd22b50c65aeaede",
+          "rejected-candidate-model.zmx": "56022c7795f39df41d6b1b6b82da881e281f2a1325d43316c7b4e24125749a9e",
+          "source_snapshot.zmx": "217526648ca75334c9dc49e32992b24a4f4a73edcb90d6835c83d3b59bf78eba",
+          "spec.json": "da3cef163a4dc9872aaab67aa95ab82937d80a87f5451967ae91a552b92b4b81"
+        },
+        "verification": "offline receipt consistency and local hashes; no optical engine or source reopen",
+        "files": {
+          "report.html": {
+            "sha256": "04e2443b12e9d64b610b6128f42376a9ca93dacba7cb6d217d7a8e14c359f54c",
+            "bytes": 33318
+          },
+          "report.md": {
+            "sha256": "c08d33d03cc452c866dbbe1d60d65c233cb23aaceb6ea3762af8ce3082ae9a05",
+            "bytes": 22043
+          }
+        }
+      }
+    }
+  }
+}

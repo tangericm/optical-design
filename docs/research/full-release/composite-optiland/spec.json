@@ -1,0 +1,198 @@
+{
+  "schema": "1",
+  "name": "Full-release nine-condition weighted spot merit",
+  "fields": [
+    1,
+    2,
+    3
+  ],
+  "wavelengths": [
+    1,
+    2,
+    3
+  ],
+  "frequencies_cyc_per_mm": [],
+  "requirements": [
+    {
+      "id": "focal-length",
+      "metric": "efl_mm",
+      "unit": "mm",
+      "min": 48,
+      "max": 52
+    },
+    {
+      "id": "track",
+      "metric": "total_track_mm",
+      "unit": "mm",
+      "max": 65
+    },
+    {
+      "metric": "rms_spot_um",
+      "field": 1,
+      "wavelength": 1,
+      "unit": "um",
+      "id": "spot-1-1",
+      "max": 120
+    },
+    {
+      "metric": "rms_spot_um",
+      "field": 1,
+      "wavelength": 2,
+      "unit": "um",
+      "id": "spot-1-2",
+      "max": 120
+    },
+    {
+      "metric": "rms_spot_um",
+      "field": 1,
+      "wavelength": 3,
+      "unit": "um",
+      "id": "spot-1-3",
+      "max": 120
+    },
+    {
+      "metric": "rms_spot_um",
+      "field": 2,
+      "wavelength": 1,
+      "unit": "um",
+      "id": "spot-2-1",
+      "max": 120
+    },
+    {
+      "metric": "rms_spot_um",
+      "field": 2,
+      "wavelength": 2,
+      "unit": "um",
+      "id": "spot-2-2",
+      "max": 120
+    },
+    {
+      "metric": "rms_spot_um",
+      "field": 2,
+      "wavelength": 3,
+      "unit": "um",
+      "id": "spot-2-3",
+      "max": 120
+    },
+    {
+      "metric": "rms_spot_um",
+      "field": 3,
+      "wavelength": 1,
+      "unit": "um",
+      "id": "spot-3-1",
+      "max": 120
+    },
+    {
+      "metric": "rms_spot_um",
+      "field": 3,
+      "wavelength": 2,
+      "unit": "um",
+      "id": "spot-3-2",
+      "max": 120
+    },
+    {
+      "metric": "rms_spot_um",
+      "field": 3,
+      "wavelength": 3,
+      "unit": "um",
+      "id": "spot-3-3",
+      "max": 120
+    }
+  ],
+  "objective": {
+    "direction": "minimize",
+    "aggregation": "weighted_rms",
+    "terms": [
+      {
+        "metric": "rms_spot_um",
+        "field": 1,
+        "wavelength": 1,
+        "unit": "um",
+        "target": 0,
+        "scale": 30,
+        "weight": 1
+      },
+      {
+        "metric": "rms_spot_um",
+        "field": 1,
+        "wavelength": 2,
+        "unit": "um",
+        "target": 0,
+        "scale": 30,
+        "weight": 1
+      },
+      {
+        "metric": "rms_spot_um",
+        "field": 1,
+        "wavelength": 3,
+        "unit": "um",
+        "target": 0,
+        "scale": 30,
+        "weight": 1
+      },
+      {
+        "metric": "rms_spot_um",
+        "field": 2,
+        "wavelength": 1,
+        "unit": "um",
+        "target": 0,
+        "scale": 30,
+        "weight": 1
+      },
+      {
+        "metric": "rms_spot_um",
+        "field": 2,
+        "wavelength": 2,
+        "unit": "um",
+        "target": 0,
+        "scale": 30,
+        "weight": 1
+      },
+      {
+        "metric": "rms_spot_um",
+        "field": 2,
+        "wavelength": 3,
+        "unit": "um",
+        "target": 0,
+        "scale": 30,
+        "weight": 1
+      },
+      {
+        "metric": "rms_spot_um",
+        "field": 3,
+        "wavelength": 1,
+        "unit": "um",
+        "target": 0,
+        "scale": 30,
+        "weight": 1
+      },
+      {
+        "metric": "rms_spot_um",
+        "field": 3,
+        "wavelength": 2,
+        "unit": "um",
+        "target": 0,
+        "scale": 30,
+        "weight": 1
+      },
+      {
+        "metric": "rms_spot_um",
+        "field": 3,
+        "wavelength": 3,
+        "unit": "um",
+        "target": 0,
+        "scale": 30,
+        "weight": 1
+      }
+    ]
+  },
+  "budget": {
+    "max_evaluations": 41,
+    "timeout_s": 600
+  },
+  "analysis": {
+    "sampling": 64,
+    "use_polarization": false
+  },
+  "minimum_gain": 0.001
+}

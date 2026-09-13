@@ -1,0 +1,791 @@
+{
+  "kind": "baseline",
+  "parameters_mm": [
+    50.0,
+    60.0
+  ],
+  "inspection": {
+    "engine": {
+      "name": "OpticStudio",
+      "version": "24.1.0",
+      "zospy_version": "2.1.5",
+      "pythonnet_version": "3.1.0",
+      "license": "PremiumEdition"
+    },
+    "focus_mm": 60.0,
+    "image_surface": 3,
+    "surfaces": [
+      {
+        "index": 0,
+        "is_image": false,
+        "is_stop": false,
+        "type": "Standard",
+        "radius_mm": "Infinity",
+        "thickness_mm": "Infinity",
+        "material": "",
+        "conic": 0.0,
+        "coating": "",
+        "tilts": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "aperture": "None",
+        "semi_diameter_solve": "Automatic",
+        "asphere_coefficients": []
+      },
+      {
+        "index": 1,
+        "is_image": false,
+        "is_stop": true,
+        "type": "Standard",
+        "radius_mm": 50.0,
+        "thickness_mm": 5.0,
+        "material": "N-BK7",
+        "conic": 0.0,
+        "coating": "",
+        "tilts": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "aperture": "None",
+        "semi_diameter_solve": "Automatic",
+        "asphere_coefficients": []
+      },
+      {
+        "index": 2,
+        "is_image": false,
+        "is_stop": false,
+        "type": "Standard",
+        "radius_mm": -50.0,
+        "thickness_mm": 60.0,
+        "material": "",
+        "conic": 0.0,
+        "coating": "",
+        "tilts": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "aperture": "None",
+        "semi_diameter_solve": "Automatic",
+        "asphere_coefficients": []
+      },
+      {
+        "index": 3,
+        "is_image": true,
+        "is_stop": false,
+        "type": "Standard",
+        "radius_mm": "Infinity",
+        "thickness_mm": "Infinity",
+        "material": "",
+        "conic": 0.0,
+        "coating": "",
+        "tilts": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "aperture": "None",
+        "semi_diameter_solve": "Automatic",
+        "asphere_coefficients": []
+      }
+    ],
+    "invariants": {
+      "surfaces": [
+        {
+          "index": 0,
+          "is_image": false,
+          "is_stop": false,
+          "type": "Standard",
+          "radius_mm": "Infinity",
+          "thickness_mm": "Infinity",
+          "material": "",
+          "conic": 0.0,
+          "coating": "",
+          "tilts": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "aperture": "None",
+          "semi_diameter_solve": "Automatic",
+          "asphere_coefficients": []
+        },
+        {
+          "index": 1,
+          "is_image": false,
+          "is_stop": true,
+          "type": "Standard",
+          "radius_mm": 50.0,
+          "thickness_mm": 5.0,
+          "material": "N-BK7",
+          "conic": 0.0,
+          "coating": "",
+          "tilts": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "aperture": "None",
+          "semi_diameter_solve": "Automatic",
+          "asphere_coefficients": []
+        },
+        {
+          "index": 2,
+          "is_image": false,
+          "is_stop": false,
+          "type": "Standard",
+          "radius_mm": -50.0,
+          "material": "",
+          "conic": 0.0,
+          "coating": "",
+          "tilts": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "aperture": "None",
+          "semi_diameter_solve": "Automatic",
+          "asphere_coefficients": []
+        },
+        {
+          "index": 3,
+          "is_image": true,
+          "is_stop": false,
+          "type": "Standard",
+          "radius_mm": "Infinity",
+          "thickness_mm": "Infinity",
+          "material": "",
+          "conic": 0.0,
+          "coating": "",
+          "tilts": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "aperture": "None",
+          "semi_diameter_solve": "Automatic",
+          "asphere_coefficients": []
+        }
+      ],
+      "fields": [
+        {
+          "index": 1,
+          "x_deg": 0.0,
+          "y_deg": 0.0,
+          "weight": 1.0
+        },
+        {
+          "index": 2,
+          "x_deg": 0.0,
+          "y_deg": 3.0,
+          "weight": 1.0
+        },
+        {
+          "index": 3,
+          "x_deg": 0.0,
+          "y_deg": 6.0,
+          "weight": 1.0
+        }
+      ],
+      "wavelengths": [
+        {
+          "index": 1,
+          "um": 0.4861327,
+          "weight": 1.0,
+          "primary": false
+        },
+        {
+          "index": 2,
+          "um": 0.55,
+          "weight": 1.0,
+          "primary": true
+        },
+        {
+          "index": 3,
+          "um": 0.6562725,
+          "weight": 1.0,
+          "primary": false
+        }
+      ],
+      "aperture_type": "EntrancePupilDiameter",
+      "aperture_mm": 10.0,
+      "lens_units": "mm"
+    },
+    "limits": [
+      "Sequential centered Standard conic/EvenAspheric refractive systems; fixed shape coefficients; angle fields; mm; EPD.",
+      "Geometric centroid RMS spot and scalar FFT MTF are distinct metrics.",
+      "A sparse pupil ray check detects gross failures; it is not a full vignetting analysis."
+    ]
+  },
+  "measurements": [
+    {
+      "metric": "efl_mm",
+      "unit": "mm",
+      "value": 49.05139286997028,
+      "settings": {
+        "wavelength": 2,
+        "wavelength_um": 0.55
+      }
+    },
+    {
+      "metric": "f_number",
+      "unit": "1",
+      "value": 4.905139,
+      "settings": {
+        "wavelength": 2,
+        "wavelength_um": 0.55
+      }
+    },
+    {
+      "metric": "total_track_mm",
+      "unit": "mm",
+      "value": 65.0
+    },
+    {
+      "metric": "image_distance_mm",
+      "unit": "mm",
+      "value": 60.0
+    },
+    {
+      "metric": "rms_spot_um",
+      "field": 1,
+      "wavelength": 1,
+      "unit": "um",
+      "value": 1054.5131394052605,
+      "settings": {
+        "reference": "centroid",
+        "ray_density": 8,
+        "native_analysis": "StandardSpot",
+        "ray_check_count": 17,
+        "field": 1,
+        "field_xy_deg": [
+          0.0,
+          0.0
+        ],
+        "wavelength": 1,
+        "wavelength_um": 0.4861327,
+        "spectral_mode": "monochromatic"
+      }
+    },
+    {
+      "metric": "rms_spot_um",
+      "field": 1,
+      "wavelength": 2,
+      "unit": "um",
+      "value": 1019.4358098139644,
+      "settings": {
+        "reference": "centroid",
+        "ray_density": 8,
+        "native_analysis": "StandardSpot",
+        "ray_check_count": 17,
+        "field": 1,
+        "field_xy_deg": [
+          0.0,
+          0.0
+        ],
+        "wavelength": 2,
+        "wavelength_um": 0.55,
+        "spectral_mode": "monochromatic"
+      }
+    },
+    {
+      "metric": "rms_spot_um",
+      "field": 1,
+      "wavelength": 3,
+      "unit": "um",
+      "value": 981.2093888548225,
+      "settings": {
+        "reference": "centroid",
+        "ray_density": 8,
+        "native_analysis": "StandardSpot",
+        "ray_check_count": 17,
+        "field": 1,
+        "field_xy_deg": [
+          0.0,
+          0.0
+        ],
+        "wavelength": 3,
+        "wavelength_um": 0.6562725,
+        "spectral_mode": "monochromatic"
+      }
+    },
+    {
+      "metric": "rms_spot_um",
+      "field": 2,
+      "wavelength": 1,
+      "unit": "um",
+      "value": 1070.3894447065509,
+      "settings": {
+        "reference": "centroid",
+        "ray_density": 8,
+        "native_analysis": "StandardSpot",
+        "ray_check_count": 17,
+        "field": 2,
+        "field_xy_deg": [
+          0.0,
+          3.0
+        ],
+        "wavelength": 1,
+        "wavelength_um": 0.4861327,
+        "spectral_mode": "monochromatic"
+      }
+    },
+    {
+      "metric": "rms_spot_um",
+      "field": 2,
+      "wavelength": 2,
+      "unit": "um",
+      "value": 1035.208364534405,
+      "settings": {
+        "reference": "centroid",
+        "ray_density": 8,
+        "native_analysis": "StandardSpot",
+        "ray_check_count": 17,
+        "field": 2,
+        "field_xy_deg": [
+          0.0,
+          3.0
+        ],
+        "wavelength": 2,
+        "wavelength_um": 0.55,
+        "spectral_mode": "monochromatic"
+      }
+    },
+    {
+      "metric": "rms_spot_um",
+      "field": 2,
+      "wavelength": 3,
+      "unit": "um",
+      "value": 996.8690022737399,
+      "settings": {
+        "reference": "centroid",
+        "ray_density": 8,
+        "native_analysis": "StandardSpot",
+        "ray_check_count": 17,
+        "field": 2,
+        "field_xy_deg": [
+          0.0,
+          3.0
+        ],
+        "wavelength": 3,
+        "wavelength_um": 0.6562725,
+        "spectral_mode": "monochromatic"
+      }
+    },
+    {
+      "metric": "rms_spot_um",
+      "field": 3,
+      "wavelength": 1,
+      "unit": "um",
+      "value": 1118.5871261645332,
+      "settings": {
+        "reference": "centroid",
+        "ray_density": 8,
+        "native_analysis": "StandardSpot",
+        "ray_check_count": 17,
+        "field": 3,
+        "field_xy_deg": [
+          0.0,
+          6.0
+        ],
+        "wavelength": 1,
+        "wavelength_um": 0.4861327,
+        "spectral_mode": "monochromatic"
+      }
+    },
+    {
+      "metric": "rms_spot_um",
+      "field": 3,
+      "wavelength": 2,
+      "unit": "um",
+      "value": 1083.0945611444138,
+      "settings": {
+        "reference": "centroid",
+        "ray_density": 8,
+        "native_analysis": "StandardSpot",
+        "ray_check_count": 17,
+        "field": 3,
+        "field_xy_deg": [
+          0.0,
+          6.0
+        ],
+        "wavelength": 2,
+        "wavelength_um": 0.55,
+        "spectral_mode": "monochromatic"
+      }
+    },
+    {
+      "metric": "rms_spot_um",
+      "field": 3,
+      "wavelength": 3,
+      "unit": "um",
+      "value": 1044.4163090912377,
+      "settings": {
+        "reference": "centroid",
+        "ray_density": 8,
+        "native_analysis": "StandardSpot",
+        "ray_check_count": 17,
+        "field": 3,
+        "field_xy_deg": [
+          0.0,
+          6.0
+        ],
+        "wavelength": 3,
+        "wavelength_um": 0.6562725,
+        "spectral_mode": "monochromatic"
+      }
+    }
+  ],
+  "assessment": {
+    "passes": false,
+    "requirements": [
+      {
+        "id": "focal-length",
+        "key": "efl_mm",
+        "requirement": {
+          "id": "focal-length",
+          "metric": "efl_mm",
+          "unit": "mm",
+          "min": 48,
+          "max": 52
+        },
+        "status": "pass",
+        "value": 49.05139286997028,
+        "unit": "mm"
+      },
+      {
+        "id": "track",
+        "key": "total_track_mm",
+        "requirement": {
+          "id": "track",
+          "metric": "total_track_mm",
+          "unit": "mm",
+          "max": 65
+        },
+        "status": "pass",
+        "value": 65.0,
+        "unit": "mm"
+      },
+      {
+        "id": "spot-1-1",
+        "key": "rms_spot_um|f=1|w=1",
+        "requirement": {
+          "metric": "rms_spot_um",
+          "field": 1,
+          "wavelength": 1,
+          "unit": "um",
+          "id": "spot-1-1",
+          "max": 120
+        },
+        "status": "fail",
+        "value": 1054.5131394052605,
+        "unit": "um"
+      },
+      {
+        "id": "spot-1-2",
+        "key": "rms_spot_um|f=1|w=2",
+        "requirement": {
+          "metric": "rms_spot_um",
+          "field": 1,
+          "wavelength": 2,
+          "unit": "um",
+          "id": "spot-1-2",
+          "max": 120
+        },
+        "status": "fail",
+        "value": 1019.4358098139644,
+        "unit": "um"
+      },
+      {
+        "id": "spot-1-3",
+        "key": "rms_spot_um|f=1|w=3",
+        "requirement": {
+          "metric": "rms_spot_um",
+          "field": 1,
+          "wavelength": 3,
+          "unit": "um",
+          "id": "spot-1-3",
+          "max": 120
+        },
+        "status": "fail",
+        "value": 981.2093888548225,
+        "unit": "um"
+      },
+      {
+        "id": "spot-2-1",
+        "key": "rms_spot_um|f=2|w=1",
+        "requirement": {
+          "metric": "rms_spot_um",
+          "field": 2,
+          "wavelength": 1,
+          "unit": "um",
+          "id": "spot-2-1",
+          "max": 120
+        },
+        "status": "fail",
+        "value": 1070.3894447065509,
+        "unit": "um"
+      },
+      {
+        "id": "spot-2-2",
+        "key": "rms_spot_um|f=2|w=2",
+        "requirement": {
+          "metric": "rms_spot_um",
+          "field": 2,
+          "wavelength": 2,
+          "unit": "um",
+          "id": "spot-2-2",
+          "max": 120
+        },
+        "status": "fail",
+        "value": 1035.208364534405,
+        "unit": "um"
+      },
+      {
+        "id": "spot-2-3",
+        "key": "rms_spot_um|f=2|w=3",
+        "requirement": {
+          "metric": "rms_spot_um",
+          "field": 2,
+          "wavelength": 3,
+          "unit": "um",
+          "id": "spot-2-3",
+          "max": 120
+        },
+        "status": "fail",
+        "value": 996.8690022737399,
+        "unit": "um"
+      },
+      {
+        "id": "spot-3-1",
+        "key": "rms_spot_um|f=3|w=1",
+        "requirement": {
+          "metric": "rms_spot_um",
+          "field": 3,
+          "wavelength": 1,
+          "unit": "um",
+          "id": "spot-3-1",
+          "max": 120
+        },
+        "status": "fail",
+        "value": 1118.5871261645332,
+        "unit": "um"
+      },
+      {
+        "id": "spot-3-2",
+        "key": "rms_spot_um|f=3|w=2",
+        "requirement": {
+          "metric": "rms_spot_um",
+          "field": 3,
+          "wavelength": 2,
+          "unit": "um",
+          "id": "spot-3-2",
+          "max": 120
+        },
+        "status": "fail",
+        "value": 1083.0945611444138,
+        "unit": "um"
+      },
+      {
+        "id": "spot-3-3",
+        "key": "rms_spot_um|f=3|w=3",
+        "requirement": {
+          "metric": "rms_spot_um",
+          "field": 3,
+          "wavelength": 3,
+          "unit": "um",
+          "id": "spot-3-3",
+          "max": 120
+        },
+        "status": "fail",
+        "value": 1044.4163090912377,
+        "unit": "um"
+      }
+    ]
+  },
+  "objective_breakdown": {
+    "aggregation": "weighted_rms",
+    "direction": "minimize",
+    "value": 34.85471316096606,
+    "unit": "1",
+    "terms": [
+      {
+        "metric": "rms_spot_um",
+        "field": 1,
+        "wavelength": 1,
+        "key": "rms_spot_um|f=1|w=1",
+        "unit": "um",
+        "value": 1054.5131394052605,
+        "target": 0,
+        "scale": 30,
+        "weight": 1,
+        "normalized_residual": 35.15043798017535,
+        "weighted_residual": 11.716812660058448
+      },
+      {
+        "metric": "rms_spot_um",
+        "field": 1,
+        "wavelength": 2,
+        "key": "rms_spot_um|f=1|w=2",
+        "unit": "um",
+        "value": 1019.4358098139644,
+        "target": 0,
+        "scale": 30,
+        "weight": 1,
+        "normalized_residual": 33.98119366046548,
+        "weighted_residual": 11.327064553488492
+      },
+      {
+        "metric": "rms_spot_um",
+        "field": 1,
+        "wavelength": 3,
+        "key": "rms_spot_um|f=1|w=3",
+        "unit": "um",
+        "value": 981.2093888548225,
+        "target": 0,
+        "scale": 30,
+        "weight": 1,
+        "normalized_residual": 32.70697962849408,
+        "weighted_residual": 10.90232654283136
+      },
+      {
+        "metric": "rms_spot_um",
+        "field": 2,
+        "wavelength": 1,
+        "key": "rms_spot_um|f=2|w=1",
+        "unit": "um",
+        "value": 1070.3894447065509,
+        "target": 0,
+        "scale": 30,
+        "weight": 1,
+        "normalized_residual": 35.67964815688503,
+        "weighted_residual": 11.89321605229501
+      },
+      {
+        "metric": "rms_spot_um",
+        "field": 2,
+        "wavelength": 2,
+        "key": "rms_spot_um|f=2|w=2",
+        "unit": "um",
+        "value": 1035.208364534405,
+        "target": 0,
+        "scale": 30,
+        "weight": 1,
+        "normalized_residual": 34.50694548448017,
+        "weighted_residual": 11.502315161493389
+      },
+      {
+        "metric": "rms_spot_um",
+        "field": 2,
+        "wavelength": 3,
+        "key": "rms_spot_um|f=2|w=3",
+        "unit": "um",
+        "value": 996.8690022737399,
+        "target": 0,
+        "scale": 30,
+        "weight": 1,
+        "normalized_residual": 33.22896674245799,
+        "weighted_residual": 11.076322247485997
+      },
+      {
+        "metric": "rms_spot_um",
+        "field": 3,
+        "wavelength": 1,
+        "key": "rms_spot_um|f=3|w=1",
+        "unit": "um",
+        "value": 1118.5871261645332,
+        "target": 0,
+        "scale": 30,
+        "weight": 1,
+        "normalized_residual": 37.28623753881777,
+        "weighted_residual": 12.42874584627259
+      },
+      {
+        "metric": "rms_spot_um",
+        "field": 3,
+        "wavelength": 2,
+        "key": "rms_spot_um|f=3|w=2",
+        "unit": "um",
+        "value": 1083.0945611444138,
+        "target": 0,
+        "scale": 30,
+        "weight": 1,
+        "normalized_residual": 36.10315203814712,
+        "weighted_residual": 12.034384012715707
+      },
+      {
+        "metric": "rms_spot_um",
+        "field": 3,
+        "wavelength": 3,
+        "key": "rms_spot_um|f=3|w=3",
+        "unit": "um",
+        "value": 1044.4163090912377,
+        "target": 0,
+        "scale": 30,
+        "weight": 1,
+        "normalized_residual": 34.81387696970793,
+        "weighted_residual": 11.604625656569308
+      }
+    ]
+  },
+  "objective_value": 34.85471316096606
+}

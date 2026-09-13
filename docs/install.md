@@ -10,7 +10,10 @@ Prerequisite for the scripts: Python 3.11+ and [uv](https://docs.astral.sh/uv/).
 | Cursor | copy into `.cursor/skills/` or install as a local plugin from `plugin.json` |
 | Hermes | copy into `.hermes/skills/` or `~/.hermes/skills/` |
 | OpenCode | copy into `.opencode/skills/` |
-| npm | `npm install optical-design`; skill lives at `node_modules/optical-design/skills/optical-design` |
+
+The release installs through GitHub with `npx skills add`; no `optical-design` npm registry
+package or `npx optical-design` executable is published. Local npm tarballs are packaging
+verification artifacts. Use the release tag in a Git checkout for a fixed revision.
 
 Verify: `uv run <skill-dir>/scripts/resolve.py airy --wavelength-um 0.55 --fnum 4`
 

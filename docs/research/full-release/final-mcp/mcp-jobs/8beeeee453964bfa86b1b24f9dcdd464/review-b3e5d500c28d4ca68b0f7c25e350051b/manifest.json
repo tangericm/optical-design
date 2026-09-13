@@ -1,0 +1,25 @@
+{
+  "accepted_candidate": false,
+  "action": "tolerance",
+  "files": {
+    "report.html": {
+      "bytes": 37204,
+      "sha256": "a92859e8acdbfa7a73f07d46710d5d35dd775efec7b6df1d25d576cea7f0483f"
+    },
+    "report.md": {
+      "bytes": 24406,
+      "sha256": "6019c7e1dc8fd35ef8814b566a326a353160cce248ee7951156f50ab6fcc10b7"
+    }
+  },
+  "receipt_sha256": "f7132abc3b9dfd7a07f588ee9988b79d61d21501c733b3e53623ec08d837a7cf",
+  "schema": "1",
+  "status": "completed",
+  "tool": "optical-design-review",
+  "verification": "offline receipt consistency and local hashes; no optical engine or source reopen",
+  "verified_local_artifacts": {
+    "baseline.zmx": "217526648ca75334c9dc49e32992b24a4f4a73edcb90d6835c83d3b59bf78eba",
+    "source_snapshot.zmx": "217526648ca75334c9dc49e32992b24a4f4a73edcb90d6835c83d3b59bf78eba",
+    "spec.json": "da3cef163a4dc9872aaab67aa95ab82937d80a87f5451967ae91a552b92b4b81",
+    "tolerance.json": "92cbb031a4043eadee150ec9b8e3216e0de9898c5f44e743fdeb3b18d53638c9"
+  }
+}

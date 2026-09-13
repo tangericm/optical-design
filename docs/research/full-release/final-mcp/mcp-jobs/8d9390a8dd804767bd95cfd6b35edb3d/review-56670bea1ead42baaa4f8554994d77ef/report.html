@@ -1,0 +1,382 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'"><title>Optical design review</title><style>body{max-width:1100px;margin:40px auto;padding:0 24px;color:#172b3a;background:#f7f8fa;font:16px/1.55 system-ui,sans-serif}h1{font-size:2.3rem}h2{border-top:1px solid #ccd5dd;padding-top:28px;margin-top:40px}h3{margin-top:28px}p,td{overflow-wrap:anywhere}table{border-collapse:collapse;width:100%;background:white;font-size:14px}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:13px/1.5 ui-monospace,monospace;background:white;padding:16px}summary{cursor:pointer;color:#155e75}td,th{border:1px solid #d4dce2;padding:10px;text-align:left;vertical-align:top}th{background:#e8eef2}.table-scroll{overflow-x:auto}svg{display:block;width:100%;max-height:330px;background:white;margin:16px 0;font:13px system-ui}.legend{font-size:14px} @media print{body{margin:0;background:white}h2{break-after:avoid}tr,svg{break-inside:avoid}}</style></head><body><h1>Optical design review</h1>
+<p>Action: inspect. Outcome: inspected.</p>
+<p>Local receipt consistency and recorded artifact hashes verified.</p>
+<p>No accepted candidate. Rejected or partial results remain diagnostic evidence.</p>
+<p>This review runs no optical analyses. The source file was not reopened; source preservation and model readbacks are recorded job claims. Artifact hashes verify local bytes, not optical performance.</p>
+<h2>Provenance</h2>
+<div class="table-scroll"><table><thead><tr><th>Item</th><th>Recorded value</th></tr></thead><tbody>
+<tr><td>source</td><td>{&quot;path&quot;: &quot;C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-v1\\docs\\research\\full-release\\final-mcp\\mcp-jobs\\8d9390a8dd804767bd95cfd6b35edb3d\\inputs\\model.zmx&quot;, &quot;sha256&quot;: &quot;4fe32615eac8c57b2d80c6745c99f0e3235f7586a2917e62dffe0aba2b9f7cf8&quot;}</td></tr>
+<tr><td>source_unchanged</td><td>True</td></tr>
+<tr><td>baseline_restored</td><td>True</td></tr>
+<tr><td>saved_candidate_verified</td><td>False</td></tr>
+<tr><td>evaluations</td><td>0</td></tr>
+<tr><td>python_version</td><td>3.11.15</td></tr>
+<tr><td>error</td><td>unavailable</td></tr>
+</tbody></table></div>
+<p>Independent validation: not recorded</p>
+<h2>Engine and model inspection</h2>
+<details><summary>Show recorded structured evidence</summary><pre>{
+  &quot;license&quot;: &quot;PremiumEdition&quot;,
+  &quot;name&quot;: &quot;OpticStudio&quot;,
+  &quot;pythonnet_version&quot;: &quot;3.1.0&quot;,
+  &quot;version&quot;: &quot;24.1.0&quot;,
+  &quot;zospy_version&quot;: &quot;2.1.5&quot;
+}</pre></details>
+<h2>Requirements and measurements</h2>
+<p>Requirements: not supplied. No requirement pass is inferred.</p>
+<h3>Baseline requirements</h3>
+<p>Data unavailable.</p>
+<h3>Metric comparison</h3>
+<p>Data unavailable.</p>
+<h2>Physical fields and wavelengths</h2>
+<p>Indices are 1-based engine selections. Physical field coordinates and wavelength values are shown only when recorded; unavailable coordinates are not inferred from indices.</p>
+<p>Data unavailable.</p>
+<h2>Declared analysis coverage</h2>
+<p>Data unavailable.</p>
+<h2>Recorded MTF and spot samples</h2>
+<p>Charts show only recorded samples. No fitted curve, inferred ray intercepts, or unmeasured frequency coverage is supplied. Exact values and full identities appear above.</p>
+<h2>Prescription changes</h2>
+<p>Data unavailable.</p>
+<p>No change table does not certify unchanged geometry when inspection data are missing.</p>
+<h2>Axial schematic</h2>
+<p>Axial schematic only — surface vertices along the optical axis. No traced rays, lens sag, clear apertures, or imaging performance are depicted.</p>
+<p>Axial positions derived from recorded thicknesses; first real surface = 0 mm.</p>
+<svg viewBox="0 0 760 180" role="img" aria-label="Axial surface vertex schematic"><path d="M30 80H730" stroke="#64748b"/><path d="M40.000 45V115" stroke="#155e75"/><text x="40.000" y="155" text-anchor="middle">S1</text><path d="M92.308 45V115" stroke="#155e75"/><text x="92.308" y="135" text-anchor="middle">S2</text><path d="M720.000 45V115" stroke="#155e75"/><text x="720.000" y="155" text-anchor="middle">S3</text></svg>
+<div class="table-scroll"><table><thead><tr><th>Surface index</th><th>Axial vertex (mm)</th></tr></thead><tbody>
+<tr><td>1</td><td>0.0</td></tr>
+<tr><td>2</td><td>5.0</td></tr>
+<tr><td>3</td><td>65.0</td></tr>
+</tbody></table></div>
+<h2>Baseline physical model inventory</h2>
+<details><summary>Show recorded structured evidence</summary><pre>{
+  &quot;engine&quot;: {
+    &quot;license&quot;: &quot;PremiumEdition&quot;,
+    &quot;name&quot;: &quot;OpticStudio&quot;,
+    &quot;pythonnet_version&quot;: &quot;3.1.0&quot;,
+    &quot;version&quot;: &quot;24.1.0&quot;,
+    &quot;zospy_version&quot;: &quot;2.1.5&quot;
+  },
+  &quot;focus_mm&quot;: 60.0,
+  &quot;image_surface&quot;: 3,
+  &quot;invariants&quot;: {
+    &quot;aperture_mm&quot;: 10.0,
+    &quot;aperture_type&quot;: &quot;EntrancePupilDiameter&quot;,
+    &quot;fields&quot;: [
+      {
+        &quot;index&quot;: 1,
+        &quot;weight&quot;: 1.0,
+        &quot;x_deg&quot;: 0.0,
+        &quot;y_deg&quot;: 0.0
+      }
+    ],
+    &quot;lens_units&quot;: &quot;mm&quot;,
+    &quot;surfaces&quot;: [
+      {
+        &quot;aperture&quot;: &quot;None&quot;,
+        &quot;asphere_coefficients&quot;: [],
+        &quot;coating&quot;: &quot;&quot;,
+        &quot;conic&quot;: 0.0,
+        &quot;index&quot;: 0,
+        &quot;is_image&quot;: false,
+        &quot;is_stop&quot;: false,
+        &quot;material&quot;: &quot;&quot;,
+        &quot;radius_mm&quot;: &quot;Infinity&quot;,
+        &quot;semi_diameter_solve&quot;: &quot;Automatic&quot;,
+        &quot;thickness_mm&quot;: &quot;Infinity&quot;,
+        &quot;tilts&quot;: [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        &quot;type&quot;: &quot;Standard&quot;
+      },
+      {
+        &quot;aperture&quot;: &quot;None&quot;,
+        &quot;asphere_coefficients&quot;: [
+          {
+            &quot;order&quot;: 2,
+            &quot;unit&quot;: &quot;mm^-1&quot;,
+            &quot;value&quot;: 0.0
+          },
+          {
+            &quot;order&quot;: 4,
+            &quot;unit&quot;: &quot;mm^-3&quot;,
+            &quot;value&quot;: 1e-06
+          },
+          {
+            &quot;order&quot;: 6,
+            &quot;unit&quot;: &quot;mm^-5&quot;,
+            &quot;value&quot;: -1e-09
+          },
+          {
+            &quot;order&quot;: 8,
+            &quot;unit&quot;: &quot;mm^-7&quot;,
+            &quot;value&quot;: 0.0
+          },
+          {
+            &quot;order&quot;: 10,
+            &quot;unit&quot;: &quot;mm^-9&quot;,
+            &quot;value&quot;: 0.0
+          },
+          {
+            &quot;order&quot;: 12,
+            &quot;unit&quot;: &quot;mm^-11&quot;,
+            &quot;value&quot;: 0.0
+          },
+          {
+            &quot;order&quot;: 14,
+            &quot;unit&quot;: &quot;mm^-13&quot;,
+            &quot;value&quot;: 0.0
+          },
+          {
+            &quot;order&quot;: 16,
+            &quot;unit&quot;: &quot;mm^-15&quot;,
+            &quot;value&quot;: 1e-20
+          }
+        ],
+        &quot;coating&quot;: &quot;&quot;,
+        &quot;conic&quot;: -0.5,
+        &quot;index&quot;: 1,
+        &quot;is_image&quot;: false,
+        &quot;is_stop&quot;: true,
+        &quot;material&quot;: &quot;N-BK7&quot;,
+        &quot;radius_mm&quot;: 50.0,
+        &quot;semi_diameter_solve&quot;: &quot;Automatic&quot;,
+        &quot;thickness_mm&quot;: 5.0,
+        &quot;tilts&quot;: [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        &quot;type&quot;: &quot;EvenAspheric&quot;
+      },
+      {
+        &quot;aperture&quot;: &quot;None&quot;,
+        &quot;asphere_coefficients&quot;: [],
+        &quot;coating&quot;: &quot;&quot;,
+        &quot;conic&quot;: 0.0,
+        &quot;index&quot;: 2,
+        &quot;is_image&quot;: false,
+        &quot;is_stop&quot;: false,
+        &quot;material&quot;: &quot;&quot;,
+        &quot;radius_mm&quot;: -50.0,
+        &quot;semi_diameter_solve&quot;: &quot;Automatic&quot;,
+        &quot;tilts&quot;: [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        &quot;type&quot;: &quot;Standard&quot;
+      },
+      {
+        &quot;aperture&quot;: &quot;None&quot;,
+        &quot;asphere_coefficients&quot;: [],
+        &quot;coating&quot;: &quot;&quot;,
+        &quot;conic&quot;: 0.0,
+        &quot;index&quot;: 3,
+        &quot;is_image&quot;: true,
+        &quot;is_stop&quot;: false,
+        &quot;material&quot;: &quot;&quot;,
+        &quot;radius_mm&quot;: &quot;Infinity&quot;,
+        &quot;semi_diameter_solve&quot;: &quot;Automatic&quot;,
+        &quot;thickness_mm&quot;: &quot;Infinity&quot;,
+        &quot;tilts&quot;: [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        &quot;type&quot;: &quot;Standard&quot;
+      }
+    ],
+    &quot;wavelengths&quot;: [
+      {
+        &quot;index&quot;: 1,
+        &quot;primary&quot;: true,
+        &quot;um&quot;: 0.55,
+        &quot;weight&quot;: 1.0
+      }
+    ]
+  },
+  &quot;limits&quot;: [
+    &quot;Sequential centered Standard conic/EvenAspheric refractive systems; fixed shape coefficients; angle fields; mm; EPD.&quot;,
+    &quot;Geometric centroid RMS spot and scalar FFT MTF are distinct metrics.&quot;,
+    &quot;A sparse pupil ray check detects gross failures; it is not a full vignetting analysis.&quot;
+  ],
+  &quot;surfaces&quot;: [
+    {
+      &quot;aperture&quot;: &quot;None&quot;,
+      &quot;asphere_coefficients&quot;: [],
+      &quot;coating&quot;: &quot;&quot;,
+      &quot;conic&quot;: 0.0,
+      &quot;index&quot;: 0,
+      &quot;is_image&quot;: false,
+      &quot;is_stop&quot;: false,
+      &quot;material&quot;: &quot;&quot;,
+      &quot;radius_mm&quot;: &quot;Infinity&quot;,
+      &quot;semi_diameter_solve&quot;: &quot;Automatic&quot;,
+      &quot;thickness_mm&quot;: &quot;Infinity&quot;,
+      &quot;tilts&quot;: [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      &quot;type&quot;: &quot;Standard&quot;
+    },
+    {
+      &quot;aperture&quot;: &quot;None&quot;,
+      &quot;asphere_coefficients&quot;: [
+        {
+          &quot;order&quot;: 2,
+          &quot;unit&quot;: &quot;mm^-1&quot;,
+          &quot;value&quot;: 0.0
+        },
+        {
+          &quot;order&quot;: 4,
+          &quot;unit&quot;: &quot;mm^-3&quot;,
+          &quot;value&quot;: 1e-06
+        },
+        {
+          &quot;order&quot;: 6,
+          &quot;unit&quot;: &quot;mm^-5&quot;,
+          &quot;value&quot;: -1e-09
+        },
+        {
+          &quot;order&quot;: 8,
+          &quot;unit&quot;: &quot;mm^-7&quot;,
+          &quot;value&quot;: 0.0
+        },
+        {
+          &quot;order&quot;: 10,
+          &quot;unit&quot;: &quot;mm^-9&quot;,
+          &quot;value&quot;: 0.0
+        },
+        {
+          &quot;order&quot;: 12,
+          &quot;unit&quot;: &quot;mm^-11&quot;,
+          &quot;value&quot;: 0.0
+        },
+        {
+          &quot;order&quot;: 14,
+          &quot;unit&quot;: &quot;mm^-13&quot;,
+          &quot;value&quot;: 0.0
+        },
+        {
+          &quot;order&quot;: 16,
+          &quot;unit&quot;: &quot;mm^-15&quot;,
+          &quot;value&quot;: 1e-20
+        }
+      ],
+      &quot;coating&quot;: &quot;&quot;,
+      &quot;conic&quot;: -0.5,
+      &quot;index&quot;: 1,
+      &quot;is_image&quot;: false,
+      &quot;is_stop&quot;: true,
+      &quot;material&quot;: &quot;N-BK7&quot;,
+      &quot;radius_mm&quot;: 50.0,
+      &quot;semi_diameter_solve&quot;: &quot;Automatic&quot;,
+      &quot;thickness_mm&quot;: 5.0,
+      &quot;tilts&quot;: [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      &quot;type&quot;: &quot;EvenAspheric&quot;
+    },
+    {
+      &quot;aperture&quot;: &quot;None&quot;,
+      &quot;asphere_coefficients&quot;: [],
+      &quot;coating&quot;: &quot;&quot;,
+      &quot;conic&quot;: 0.0,
+      &quot;index&quot;: 2,
+      &quot;is_image&quot;: false,
+      &quot;is_stop&quot;: false,
+      &quot;material&quot;: &quot;&quot;,
+      &quot;radius_mm&quot;: -50.0,
+      &quot;semi_diameter_solve&quot;: &quot;Automatic&quot;,
+      &quot;thickness_mm&quot;: 60.0,
+      &quot;tilts&quot;: [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      &quot;type&quot;: &quot;Standard&quot;
+    },
+    {
+      &quot;aperture&quot;: &quot;None&quot;,
+      &quot;asphere_coefficients&quot;: [],
+      &quot;coating&quot;: &quot;&quot;,
+      &quot;conic&quot;: 0.0,
+      &quot;index&quot;: 3,
+      &quot;is_image&quot;: true,
+      &quot;is_stop&quot;: false,
+      &quot;material&quot;: &quot;&quot;,
+      &quot;radius_mm&quot;: &quot;Infinity&quot;,
+      &quot;semi_diameter_solve&quot;: &quot;Automatic&quot;,
+      &quot;thickness_mm&quot;: &quot;Infinity&quot;,
+      &quot;tilts&quot;: [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      &quot;type&quot;: &quot;Standard&quot;
+    }
+  ]
+}</pre></details>
+<h2>Evidence boundary</h2>
+<p>Missing data remain unavailable. A failed requirement remains failed. Sensitivity describes local finite steps; it is not a manufacturing yield estimate. Optimizer results do not prove a global optimum. Separate validation is reported only when present.</p></body></html>
