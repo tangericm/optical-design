@@ -1,0 +1,34 @@
+Installed 38 packages in 7.62s
+..F                                                                      [100%]
+================================== FAILURES ===================================
+___ test_grid_measurements_match_isolated_nonprimary_offaxis_selection[zos] ___
+
+engine = 'zos'
+
+    @pytest.mark.parametrize('engine', [pytest.param('optiland', marks=pytest.mark.tier1),
+        pytest.param('zos', marks=[pytest.mark.zos, pytest.mark.skipif(not LIVE, reason='explicit live ZOS opt-in required')])])
+    def test_grid_measurements_match_isolated_nonprimary_offaxis_selection(engine):
+        if engine == 'optiland':
+            pytest.importorskip('optiland')
+            from _lib.optiland_backend import OptilandBackend as Backend
+            model = ASSETS/'portable.json'
+        else:
+            from _lib.zos_backend import ZOSBackend as Backend
+            model = ASSETS/'native.zmx'
+        raw = json.loads((ASSETS/'validation.json').read_text())
+        before = hashlib.sha256(model.read_bytes()).hexdigest()
+        with Backend(model) as backend:
+            backend.set_focus(47.5)
+            grid = {metric_key(row): row for row in backend.evaluate(DesignSpec.from_dict(raw))}
+            scoped = [row for row in grid.values() if 'field' in row]
+            assert len(scoped) == 27
+            assert all(row['value'] is not None for row in grid.values())
+            efl = grid['efl_mm']
+            settings = efl.get('settings', efl.get('analysis'))
+>           assert settings['wavelength'] == 2 and settings['wavelength_um'] == .55
+E           assert (1 == 2)
+
+tests\python\test_field_validation_example.py:48: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/python/test_field_validation_example.py::test_grid_measurements_match_isolated_nonprimary_offaxis_selection[zos]
+1 failed, 2 passed in 28.29s

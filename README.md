@@ -27,6 +27,7 @@ Synthetic native/portable singlets and example specifications are included under
 `skills/optical-design/assets/`.
 
 For validation beyond the search settings, see [separate validation](skills/optical-design/references/validation.md).
+For complete field/spectral requirements, run the [three-field, three-wavelength example](skills/optical-design/references/field-validation-example.md).
 For interactive jobs, see [the MCP interface](skills/optical-design/references/interactive.md).
 For bounded multivariable jobs, see [optimization](skills/optical-design/references/optimization.md).
 

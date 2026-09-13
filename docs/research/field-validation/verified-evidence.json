@@ -1,0 +1,675 @@
+{
+  "release": "0.1.0-dev.5",
+  "date": "2026-09-13",
+  "runs": {
+    "optiland-control": {
+      "status": "improved",
+      "optical_accepted": true,
+      "evaluations": 81,
+      "validation_evaluations": 2,
+      "parameters_mm": [
+        51.39892578125,
+        47.50341796875
+      ],
+      "failed_requirements": [],
+      "measurements": [
+        {
+          "metric": "efl_mm",
+          "value": 49.716204646978454,
+          "unit": "mm"
+        },
+        {
+          "metric": "total_track_mm",
+          "value": 52.50341796875,
+          "unit": "mm"
+        },
+        {
+          "metric": "mtf",
+          "field": 1,
+          "wavelength": 2,
+          "frequency": 20,
+          "axis": "tangential",
+          "value": 0.47484959241553243,
+          "unit": "1"
+        },
+        {
+          "metric": "rms_spot_um",
+          "field": 1,
+          "wavelength": 2,
+          "value": 14.62793732647819,
+          "unit": "um"
+        }
+      ],
+      "report_sha256": "6c5a03139449f1d4e1f09b559649880b077f5d51f5febf676e78888819909e46"
+    },
+    "optiland-validation": {
+      "status": "validation_failed",
+      "optical_accepted": false,
+      "evaluations": 81,
+      "validation_evaluations": 2,
+      "parameters_mm": [
+        51.39892578125,
+        47.50341796875
+      ],
+      "failed_requirements": [
+        "spot-f1-w1",
+        "spot-f1-w3",
+        "mtf-tangential-f1-w3",
+        "mtf-sagittal-f1-w3",
+        "spot-f2-w1",
+        "mtf-tangential-f2-w1",
+        "mtf-tangential-f2-w3",
+        "mtf-sagittal-f2-w3",
+        "spot-f3-w1",
+        "mtf-tangential-f3-w1",
+        "mtf-sagittal-f3-w1",
+        "spot-f3-w2",
+        "spot-f3-w3",
+        "mtf-sagittal-f3-w3"
+      ],
+      "measurements": [
+        {
+          "metric": "efl_mm",
+          "value": 49.716204646978454,
+          "unit": "mm"
+        },
+        {
+          "metric": "total_track_mm",
+          "value": 52.50341796875,
+          "unit": "mm"
+        },
+        {
+          "metric": "rms_spot_um",
+          "field": 1,
+          "wavelength": 1,
+          "value": 30.53334209647857,
+          "unit": "um"
+        },
+        {
+          "metric": "mtf",
+          "field": 1,
+          "wavelength": 1,
+          "frequency": 20,
+          "axis": "tangential",
+          "value": 0.38875832265267907,
+          "unit": "1"
+        },
+        {
+          "metric": "mtf",
+          "field": 1,
+          "wavelength": 1,
+          "frequency": 20,
+          "axis": "sagittal",
+          "value": 0.388758322652679,
+          "unit": "1"
+        },
+        {
+          "metric": "rms_spot_um",
+          "field": 1,
+          "wavelength": 2,
+          "value": 14.62793732647819,
+          "unit": "um"
+        },
+        {
+          "metric": "mtf",
+          "field": 1,
+          "wavelength": 2,
+          "frequency": 20,
+          "axis": "tangential",
+          "value": 0.47484959241553243,
+          "unit": "1"
+        },
+        {
+          "metric": "mtf",
+          "field": 1,
+          "wavelength": 2,
+          "frequency": 20,
+          "axis": "sagittal",
+          "value": 0.47484959241553243,
+          "unit": "1"
+        },
+        {
+          "metric": "rms_spot_um",
+          "field": 1,
+          "wavelength": 3,
+          "value": 32.595862709107905,
+          "unit": "um"
+        },
+        {
+          "metric": "mtf",
+          "field": 1,
+          "wavelength": 3,
+          "frequency": 20,
+          "axis": "tangential",
+          "value": 0.15664963286287356,
+          "unit": "1"
+        },
+        {
+          "metric": "mtf",
+          "field": 1,
+          "wavelength": 3,
+          "frequency": 20,
+          "axis": "sagittal",
+          "value": 0.1566496328628736,
+          "unit": "1"
+        },
+        {
+          "metric": "rms_spot_um",
+          "field": 2,
+          "wavelength": 1,
+          "value": 43.78282164639142,
+          "unit": "um"
+        },
+        {
+          "metric": "mtf",
+          "field": 2,
+          "wavelength": 1,
+          "frequency": 20,
+          "axis": "tangential",
+          "value": 0.2973416745450396,
+          "unit": "1"
+        },
+        {
+          "metric": "mtf",
+          "field": 2,
+          "wavelength": 1,
+          "frequency": 20,
+          "axis": "sagittal",
+          "value": 0.3533365481841558,
+          "unit": "1"
+        },
+        {
+          "metric": "rms_spot_um",
+          "field": 2,
+          "wavelength": 2,
+          "value": 23.486030637296082,
+          "unit": "um"
+        },
+        {
+          "metric": "mtf",
+          "field": 2,
+          "wavelength": 2,
+          "frequency": 20,
+          "axis": "tangential",
+          "value": 0.5185425038463266,
+          "unit": "1"
+        },
+        {
+          "metric": "mtf",
+          "field": 2,
+          "wavelength": 2,
+          "frequency": 20,
+          "axis": "sagittal",
+          "value": 0.4620397602992525,
+          "unit": "1"
+        },
+        {
+          "metric": "rms_spot_um",
+          "field": 2,
+          "wavelength": 3,
+          "value": 26.547264206030547,
+          "unit": "um"
+        },
+        {
+          "metric": "mtf",
+          "field": 2,
+          "wavelength": 3,
+          "frequency": 20,
+          "axis": "tangential",
+          "value": 0.10749571739996021,
+          "unit": "1"
+        },
+        {
+          "metric": "mtf",
+          "field": 2,
+          "wavelength": 3,
+          "frequency": 20,
+          "axis": "sagittal",
+          "value": 0.11470158064120861,
+          "unit": "1"
+        },
+        {
+          "metric": "rms_spot_um",
+          "field": 3,
+          "wavelength": 1,
+          "value": 82.97170569390964,
+          "unit": "um"
+        },
+        {
+          "metric": "mtf",
+          "field": 3,
+          "wavelength": 1,
+          "frequency": 20,
+          "axis": "tangential",
+          "value": 0.05155389212622112,
+          "unit": "1"
+        },
+        {
+          "metric": "mtf",
+          "field": 3,
+          "wavelength": 1,
+          "frequency": 20,
+          "axis": "sagittal",
+          "value": 0.1472645493760869,
+          "unit": "1"
+        },
+        {
+          "metric": "rms_spot_um",
+          "field": 3,
+          "wavelength": 2,
+          "value": 59.452471988402046,
+          "unit": "um"
+        },
+        {
+          "metric": "mtf",
+          "field": 3,
+          "wavelength": 2,
+          "frequency": 20,
+          "axis": "tangential",
+          "value": 0.3117077543696642,
+          "unit": "1"
+        },
+        {
+          "metric": "mtf",
+          "field": 3,
+          "wavelength": 2,
+          "frequency": 20,
+          "axis": "sagittal",
+          "value": 0.4319485436557232,
+          "unit": "1"
+        },
+        {
+          "metric": "rms_spot_um",
+          "field": 3,
+          "wavelength": 3,
+          "value": 39.433444211507656,
+          "unit": "um"
+        },
+        {
+          "metric": "mtf",
+          "field": 3,
+          "wavelength": 3,
+          "frequency": 20,
+          "axis": "tangential",
+          "value": 0.41847445616329915,
+          "unit": "1"
+        },
+        {
+          "metric": "mtf",
+          "field": 3,
+          "wavelength": 3,
+          "frequency": 20,
+          "axis": "sagittal",
+          "value": 0.11428701261452989,
+          "unit": "1"
+        }
+      ],
+      "report_sha256": "b7e7cafc677b1a23decdb17921966f3ae0e30669727c1247916a72d59644dac9"
+    },
+    "zos-control": {
+      "status": "improved",
+      "optical_accepted": true,
+      "evaluations": 81,
+      "validation_evaluations": 2,
+      "parameters_mm": [
+        51.46240234375,
+        47.5042724609375
+      ],
+      "failed_requirements": [],
+      "measurements": [
+        {
+          "metric": "efl_mm",
+          "unit": "mm",
+          "value": 49.74592839527278
+        },
+        {
+          "metric": "f_number",
+          "unit": "1",
+          "value": 4.974593
+        },
+        {
+          "metric": "total_track_mm",
+          "unit": "mm",
+          "value": 52.50427
+        },
+        {
+          "metric": "image_distance_mm",
+          "unit": "mm",
+          "value": 47.5042724609375
+        },
+        {
+          "metric": "rms_spot_um",
+          "field": 1,
+          "wavelength": 2,
+          "unit": "um",
+          "value": 15.587729417539157
+        },
+        {
+          "metric": "mtf",
+          "field": 1,
+          "wavelength": 2,
+          "frequency": 20,
+          "axis": "tangential",
+          "unit": "1",
+          "value": 0.41027343686689816
+        },
+        {
+          "metric": "mtf",
+          "field": 1,
+          "wavelength": 2,
+          "frequency": 20,
+          "axis": "sagittal",
+          "unit": "1",
+          "value": 0.41027343686689816
+        }
+      ],
+      "report_sha256": "3dc703fffc8458413a2522c5d73a1fc527340486485e2c44cb890d324fcd75fe"
+    },
+    "zos-validation": {
+      "status": "validation_failed",
+      "optical_accepted": false,
+      "evaluations": 81,
+      "validation_evaluations": 2,
+      "parameters_mm": [
+        51.46240234375,
+        47.5042724609375
+      ],
+      "failed_requirements": [
+        "spot-f1-w1",
+        "spot-f1-w3",
+        "mtf-tangential-f1-w3",
+        "mtf-sagittal-f1-w3",
+        "spot-f2-w1",
+        "mtf-tangential-f2-w3",
+        "mtf-sagittal-f2-w3",
+        "spot-f3-w1",
+        "mtf-tangential-f3-w1",
+        "mtf-sagittal-f3-w1",
+        "spot-f3-w2",
+        "spot-f3-w3",
+        "mtf-sagittal-f3-w3"
+      ],
+      "measurements": [
+        {
+          "metric": "efl_mm",
+          "unit": "mm",
+          "value": 49.74592839527278
+        },
+        {
+          "metric": "f_number",
+          "unit": "1",
+          "value": 4.974593
+        },
+        {
+          "metric": "total_track_mm",
+          "unit": "mm",
+          "value": 52.50427
+        },
+        {
+          "metric": "image_distance_mm",
+          "unit": "mm",
+          "value": 47.5042724609375
+        },
+        {
+          "metric": "rms_spot_um",
+          "field": 1,
+          "wavelength": 1,
+          "unit": "um",
+          "value": 31.686117532470533
+        },
+        {
+          "metric": "mtf",
+          "field": 1,
+          "wavelength": 1,
+          "frequency": 20,
+          "axis": "tangential",
+          "unit": "1",
+          "value": 0.4079039720519534
+        },
+        {
+          "metric": "mtf",
+          "field": 1,
+          "wavelength": 1,
+          "frequency": 20,
+          "axis": "sagittal",
+          "unit": "1",
+          "value": 0.4079039720519534
+        },
+        {
+          "metric": "rms_spot_um",
+          "field": 1,
+          "wavelength": 2,
+          "unit": "um",
+          "value": 15.587729417539157
+        },
+        {
+          "metric": "mtf",
+          "field": 1,
+          "wavelength": 2,
+          "frequency": 20,
+          "axis": "tangential",
+          "unit": "1",
+          "value": 0.41027343686689816
+        },
+        {
+          "metric": "mtf",
+          "field": 1,
+          "wavelength": 2,
+          "frequency": 20,
+          "axis": "sagittal",
+          "unit": "1",
+          "value": 0.41027343686689816
+        },
+        {
+          "metric": "rms_spot_um",
+          "field": 1,
+          "wavelength": 3,
+          "unit": "um",
+          "value": 33.72240735624993
+        },
+        {
+          "metric": "mtf",
+          "field": 1,
+          "wavelength": 3,
+          "frequency": 20,
+          "axis": "tangential",
+          "unit": "1",
+          "value": 0.14355478356237542
+        },
+        {
+          "metric": "mtf",
+          "field": 1,
+          "wavelength": 3,
+          "frequency": 20,
+          "axis": "sagittal",
+          "unit": "1",
+          "value": 0.14355478356237542
+        },
+        {
+          "metric": "rms_spot_um",
+          "field": 2,
+          "wavelength": 1,
+          "unit": "um",
+          "value": 45.342162914034596
+        },
+        {
+          "metric": "mtf",
+          "field": 2,
+          "wavelength": 1,
+          "frequency": 20,
+          "axis": "tangential",
+          "unit": "1",
+          "value": 0.32873512929272836
+        },
+        {
+          "metric": "mtf",
+          "field": 2,
+          "wavelength": 1,
+          "frequency": 20,
+          "axis": "sagittal",
+          "unit": "1",
+          "value": 0.38179829216107347
+        },
+        {
+          "metric": "rms_spot_um",
+          "field": 2,
+          "wavelength": 2,
+          "unit": "um",
+          "value": 24.711915870932714
+        },
+        {
+          "metric": "mtf",
+          "field": 2,
+          "wavelength": 2,
+          "frequency": 20,
+          "axis": "tangential",
+          "unit": "1",
+          "value": 0.49180286499513653
+        },
+        {
+          "metric": "mtf",
+          "field": 2,
+          "wavelength": 2,
+          "frequency": 20,
+          "axis": "sagittal",
+          "unit": "1",
+          "value": 0.42092364908282304
+        },
+        {
+          "metric": "rms_spot_um",
+          "field": 2,
+          "wavelength": 3,
+          "unit": "um",
+          "value": 27.742465523734662
+        },
+        {
+          "metric": "mtf",
+          "field": 2,
+          "wavelength": 3,
+          "frequency": 20,
+          "axis": "tangential",
+          "unit": "1",
+          "value": 0.11210355634942196
+        },
+        {
+          "metric": "mtf",
+          "field": 2,
+          "wavelength": 3,
+          "frequency": 20,
+          "axis": "sagittal",
+          "unit": "1",
+          "value": 0.12924422248251866
+        },
+        {
+          "metric": "rms_spot_um",
+          "field": 3,
+          "wavelength": 1,
+          "unit": "um",
+          "value": 85.6875951740215
+        },
+        {
+          "metric": "mtf",
+          "field": 3,
+          "wavelength": 1,
+          "frequency": 20,
+          "axis": "tangential",
+          "unit": "1",
+          "value": 0.05668563300826217
+        },
+        {
+          "metric": "mtf",
+          "field": 3,
+          "wavelength": 1,
+          "frequency": 20,
+          "axis": "sagittal",
+          "unit": "1",
+          "value": 0.16465114405347672
+        },
+        {
+          "metric": "rms_spot_um",
+          "field": 3,
+          "wavelength": 2,
+          "unit": "um",
+          "value": 61.6331171619331
+        },
+        {
+          "metric": "mtf",
+          "field": 3,
+          "wavelength": 2,
+          "frequency": 20,
+          "axis": "tangential",
+          "unit": "1",
+          "value": 0.3270883714644516
+        },
+        {
+          "metric": "mtf",
+          "field": 3,
+          "wavelength": 2,
+          "frequency": 20,
+          "axis": "sagittal",
+          "unit": "1",
+          "value": 0.4517952975934776
+        },
+        {
+          "metric": "rms_spot_um",
+          "field": 3,
+          "wavelength": 3,
+          "unit": "um",
+          "value": 41.25883685191415
+        },
+        {
+          "metric": "mtf",
+          "field": 3,
+          "wavelength": 3,
+          "frequency": 20,
+          "axis": "tangential",
+          "unit": "1",
+          "value": 0.3855408574298399
+        },
+        {
+          "metric": "mtf",
+          "field": 3,
+          "wavelength": 3,
+          "frequency": 20,
+          "axis": "sagittal",
+          "unit": "1",
+          "value": 0.04959201250438874
+        }
+      ],
+      "report_sha256": "5f1b6dd56c5ae6919d0170d60c1c8e564f24fc0ed9521434f93492cf313034bd"
+    }
+  },
+  "implementation_sha256": {
+    "skills/optical-design/scripts/_lib/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "skills/optical-design/scripts/_lib/backends.py": "f656e70a42f4f53de98f225ca2af988dcb5f9eb33ef60fd5f6d8b4aee177a455",
+    "skills/optical-design/scripts/_lib/catalog.py": "151ec4495a20eeb96118e790e710077f2312b953f937757aa5175321140e3fe9",
+    "skills/optical-design/scripts/_lib/cli.py": "721b16b85574a4530f2f354782af42d46a2395ede2cd6e687834245aa519beea",
+    "skills/optical-design/scripts/_lib/comparison.py": "10e2d8a59e075f0b14aa13b7e0e2b1e5ac3672b1a8c8a5d3ceff49a77e17fa6c",
+    "skills/optical-design/scripts/_lib/compensation.py": "5f7e14e6f6ef7199b8e09752833e22e859bea05b2d747ee4267db7922ee5899f",
+    "skills/optical-design/scripts/_lib/design_contract.py": "6007b73cae0c680eba3b84ef0fe80e041faad741cc10c84dc5395988bec4223a",
+    "skills/optical-design/scripts/_lib/design_jobs.py": "25384c96b2222d95237c861c699bd8cf9cbed5c6aea29d546030f58f76607458",
+    "skills/optical-design/scripts/_lib/fourier.py": "7e7a2a6e24d50232eae97fc3b66fb7141785c23a83ab5afca61baf9991153dce",
+    "skills/optical-design/scripts/_lib/native_profiles.py": "311618cd834f5b00ef5c4f8ed0f8e98c36059fffb43d178e89706c65e08c1ce3",
+    "skills/optical-design/scripts/_lib/native_worker.py": "5c6d4a5fa44b3f0d254110a214cfd2da0942a9f63f7ac83d60cae9877bbd0778",
+    "skills/optical-design/scripts/_lib/optics.py": "9b5adbec9d1a4c8fc027f740757440da2169cbd01f4e8b0ad035e6597ff3e553",
+    "skills/optical-design/scripts/_lib/optiland_backend.py": "5383694db012622444a67bbba09387617f05489793baf7bd467245d7fd2889fe",
+    "skills/optical-design/scripts/_lib/optimization.py": "b29274ca90dd2dd7054e78d116fcf57fff0825e501e033678e3e5c625c6531cb",
+    "skills/optical-design/scripts/_lib/profile_benchmark.py": "f153856c5f3b2e4d22d111738df26b91a1b83dcb7b1010a98fb4de71e8ea2943",
+    "skills/optical-design/scripts/_lib/profiles.py": "07b85c38a63df9574cfcd2ef5ce5918706fe691966eba897d37395690f53b07e",
+    "skills/optical-design/scripts/_lib/tolerancing.py": "14b9ede67e619a37bdc9792330509e2ed5b1e5bd369772a333508d2e60509a82",
+    "skills/optical-design/scripts/_lib/tool_jobs.py": "04f5a3b5f5f58b8368aa4bd23264e2e9559b06e7b6ca072b31a50ae0222fb6ba",
+    "skills/optical-design/scripts/_lib/wfmap.py": "b929428b036415d1e75ad1eddefa7170dd6d85d71805c77b5640d6fa4b4cbe83",
+    "skills/optical-design/scripts/_lib/zernike.py": "762b66d328d7b18c3315c03c88c05aceae826a4ae618c1c3c8445394f165a486",
+    "skills/optical-design/scripts/_lib/zos_backend.py": "d0409c0020c2aa238e95fab9af1cccce89fa8f6c53ab31ae8f3ad44bb76c9090",
+    "skills/optical-design/scripts/benchmark.py": "cfc595c00b46a0fbdb95e357a0018be515d4e50c162d2485339307811306cb47",
+    "skills/optical-design/scripts/catalog.py": "9715631c3aabba9a649c8d1c38de27eae5cc15dc930663038cb1a31bc2296f2a",
+    "skills/optical-design/scripts/compare.py": "943d68bbb51d6902a030763a0fe3dc20d6ee5444314f4ea9643b859a67021ccb",
+    "skills/optical-design/scripts/design.py": "fa841e9a5f7b29c720ab58ab018b3d9c658e67a16a6f7bbb6d35d2bdb65320e7",
+    "skills/optical-design/scripts/interfero.py": "cff7996af8844db24469ceb457e5e4953ddedc25da74bd0398dbf5fb7629b0c3",
+    "skills/optical-design/scripts/resolve.py": "8c6053753569e206fd44d55fe7745e8934522b99ab14ec37e3150ec04e649a82",
+    "skills/optical-design/scripts/server.py": "d25a02be7001143c7a8a5937f287220ed8ab47b2ef8c8dd3825c2b4632a1ec82",
+    "skills/optical-design/scripts/wavefront.py": "f594f4bc907ca3040311ec6d3067592ad172325e91450c5f3cc28e938bd619bc",
+    "skills/optical-design/scripts/zernike.py": "b5f9f0f30baaa42e340be677bfd688d22f574c4595bafd75bbd430fb11354f38",
+    "skills/optical-design/scripts/zos.py": "da9a6245cc64d90e69ced009cfb7bea6c431bb0a84254cf7ae6e291d94ade4b6"
+  }
+}

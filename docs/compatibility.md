@@ -55,3 +55,14 @@ claim. See `docs/research/validation-release/` for retained receipts and rejecti
 The final suite reports 610 passed and one Windows symbolic-link capability skip; seven
 package tests and lint/package-install checks also pass. The earlier real OCT method
 discrepancy remains unresolved.
+
+The 0.1.0-dev.5 prescription adapter corrects native RMS spot selection on multi-wavelength
+models. StandardSpot now selects each field/wavelength explicitly and records its physical
+identity; the regression oracle checks all nine cells against single-wavelength models.
+Prior multi-wavelength RMS spot results from this adapter need rerunning. Its separate
+Huygens/POP profile backend is unaffected. The shipped three-field/three-wavelength example
+passes its search-condition control but fails the fixed expanded requirements on both
+engines, with native CLI and portable MCP evidence in `docs/research/field-validation/`.
+The final live-enabled suite reports 614 passed and one platform capability skip; seven
+package tests and lint/package-install checks pass. Native analysis caches are explicitly
+excluded from distribution even after running the live example in the checkout.

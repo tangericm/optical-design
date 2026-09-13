@@ -1,0 +1,264 @@
+{
+  "engine": {
+    "name": "OpticStudio",
+    "version": "24.1.0",
+    "zospy_version": "2.1.5",
+    "pythonnet_version": "3.1.0",
+    "license": "PremiumEdition"
+  },
+  "focus_mm": 60.0,
+  "image_surface": 3,
+  "surfaces": [
+    {
+      "index": 0,
+      "is_image": false,
+      "is_stop": false,
+      "type": "Standard",
+      "radius_mm": "Infinity",
+      "thickness_mm": "Infinity",
+      "material": "",
+      "conic": 0.0,
+      "coating": "",
+      "tilts": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "aperture": "None",
+      "semi_diameter_solve": "Automatic"
+    },
+    {
+      "index": 1,
+      "is_image": false,
+      "is_stop": true,
+      "type": "Standard",
+      "radius_mm": 50.0,
+      "thickness_mm": 5.0,
+      "material": "N-BK7",
+      "conic": 0.0,
+      "coating": "",
+      "tilts": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "aperture": "None",
+      "semi_diameter_solve": "Automatic"
+    },
+    {
+      "index": 2,
+      "is_image": false,
+      "is_stop": false,
+      "type": "Standard",
+      "radius_mm": -50.0,
+      "thickness_mm": 60.0,
+      "material": "",
+      "conic": 0.0,
+      "coating": "",
+      "tilts": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "aperture": "None",
+      "semi_diameter_solve": "Automatic"
+    },
+    {
+      "index": 3,
+      "is_image": true,
+      "is_stop": false,
+      "type": "Standard",
+      "radius_mm": "Infinity",
+      "thickness_mm": "Infinity",
+      "material": "",
+      "conic": 0.0,
+      "coating": "",
+      "tilts": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "aperture": "None",
+      "semi_diameter_solve": "Automatic"
+    }
+  ],
+  "invariants": {
+    "surfaces": [
+      {
+        "index": 0,
+        "is_image": false,
+        "is_stop": false,
+        "type": "Standard",
+        "radius_mm": "Infinity",
+        "thickness_mm": "Infinity",
+        "material": "",
+        "conic": 0.0,
+        "coating": "",
+        "tilts": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "aperture": "None",
+        "semi_diameter_solve": "Automatic"
+      },
+      {
+        "index": 1,
+        "is_image": false,
+        "is_stop": true,
+        "type": "Standard",
+        "radius_mm": 50.0,
+        "thickness_mm": 5.0,
+        "material": "N-BK7",
+        "conic": 0.0,
+        "coating": "",
+        "tilts": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "aperture": "None",
+        "semi_diameter_solve": "Automatic"
+      },
+      {
+        "index": 2,
+        "is_image": false,
+        "is_stop": false,
+        "type": "Standard",
+        "radius_mm": -50.0,
+        "material": "",
+        "conic": 0.0,
+        "coating": "",
+        "tilts": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "aperture": "None",
+        "semi_diameter_solve": "Automatic"
+      },
+      {
+        "index": 3,
+        "is_image": true,
+        "is_stop": false,
+        "type": "Standard",
+        "radius_mm": "Infinity",
+        "thickness_mm": "Infinity",
+        "material": "",
+        "conic": 0.0,
+        "coating": "",
+        "tilts": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "aperture": "None",
+        "semi_diameter_solve": "Automatic"
+      }
+    ],
+    "fields": [
+      {
+        "index": 1,
+        "x_deg": 0.0,
+        "y_deg": 0.0,
+        "weight": 1.0
+      },
+      {
+        "index": 2,
+        "x_deg": 0.0,
+        "y_deg": 3.0,
+        "weight": 1.0
+      },
+      {
+        "index": 3,
+        "x_deg": 0.0,
+        "y_deg": 6.0,
+        "weight": 1.0
+      }
+    ],
+    "wavelengths": [
+      {
+        "index": 1,
+        "um": 0.4861327,
+        "weight": 1.0,
+        "primary": false
+      },
+      {
+        "index": 2,
+        "um": 0.55,
+        "weight": 1.0,
+        "primary": true
+      },
+      {
+        "index": 3,
+        "um": 0.6562725,
+        "weight": 1.0,
+        "primary": false
+      }
+    ],
+    "aperture_type": "EntrancePupilDiameter",
+    "aperture_mm": 10.0,
+    "lens_units": "mm"
+  },
+  "limits": [
+    "Sequential centered spherical refractive systems; angle fields; mm; EPD.",
+    "Geometric centroid RMS spot and scalar FFT MTF are distinct metrics.",
+    "A sparse pupil ray check detects gross failures; it is not a full vignetting analysis."
+  ]
+}

@@ -36,6 +36,10 @@ try {
     "skills/optical-design/references/optimization.md",
     "skills/optical-design/assets/compensation-spec.json", "skills/optical-design/assets/compensated-tolerances-example.json",
     "skills/optical-design/assets/validation-spec.json", "skills/optical-design/references/validation.md",
+    "skills/optical-design/references/field-validation-example.md",
+    "skills/optical-design/assets/field-validation/native.zmx", "skills/optical-design/assets/field-validation/portable.json",
+    "skills/optical-design/assets/field-validation/search.json", "skills/optical-design/assets/field-validation/control.json",
+    "skills/optical-design/assets/field-validation/validation.json",
     "skills/optical-design/assets/optimization-spec.json", "skills/optical-design/assets/variables-example.json",
     "skills/optical-design/assets/refocus-spec.json", "skills/optical-design/assets/portable-singlet.json",
     "docs/tiers.md", "docs/install.md", "LICENSE", "README.md", "SECURITY.md"]) {

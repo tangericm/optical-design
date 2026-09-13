@@ -9,7 +9,7 @@ compatibility: Python 3.11+ and uv. Portable prescription jobs require Optiland 
 metadata:
   author: Eric Tang
   repo: https://github.com/tangericm/optical-design
-  version: "0.1.0-dev.4"
+  version: "0.1.0-dev.5"
 ---
 
 # optical-design
@@ -115,6 +115,10 @@ width or flatness. See [profile units and limitations](references/profile-benchm
   covered flatness ROI cannot support the full-ROI requirement.
 
 ## Representative start
+
+When an on-axis design passes but full-field or spectral performance matters, use the
+[multi-field validation example](references/field-validation-example.md). Require each
+intended field/wavelength/axis explicitly and preserve failed conditions in the report.
 
 For a camera/objective sampling question, run `resolve.py micro` with the stated wavelength,
 NA, magnification and pixel pitch; explain its scalar model limit. For an authorized lens

@@ -1,0 +1,47 @@
+...F                                                                     [100%]
+================================== FAILURES ===================================
+_____ test_native_wavelength_rows_match_models_with_only_that_wavelength ______
+
+    @pytest.mark.zos
+    @pytest.mark.skipif(not LIVE, reason='explicit live ZOS opt-in required')
+    def test_native_wavelength_rows_match_models_with_only_that_wavelength():
+        from _lib.zos_backend import ZOSBackend
+        model = ASSETS/'native.zmx'
+        raw = json.loads((ASSETS/'validation.json').read_text())
+        raw['frequencies_cyc_per_mm'] = []
+        raw['requirements'] = [r for r in raw['requirements'] if r['metric'] == 'rms_spot_um']
+        with ZOSBackend(model) as backend:
+            backend.set_focus(47.5)
+            grid = {metric_key(r): r['value'] for r in backend.evaluate(DesignSpec.from_dict(raw))}
+            # Independent oracle: retain all physical fields but remove the other wavelengths.
+            # An all-wavelength spot analysis is then unambiguously monochromatic.
+            for wave, value in enumerate([.4861327, .55, .6562725], start=1):
+                backend.load(model)
+                backend.set_focus(47.5)
+                wavelengths = backend.s.SystemData.Wavelengths
+                wavelengths.GetWavelength(1).MakePrimary()
+                wavelengths.RemoveWavelength(3)
+                wavelengths.RemoveWavelength(2)
+                wavelengths.GetWavelength(1).Wavelength = value
+                single = copy.deepcopy(raw)
+                single['wavelengths'] = [1]
+                single['requirements'] = [r for r in single['requirements'] if r['wavelength'] == wave]
+                for req in single['requirements']:
+                    req['wavelength'] = 1
+                for row in backend.evaluate(DesignSpec.from_dict(single)):
+                    if row['metric'] == 'rms_spot_um':
+                        lookup = dict(row, wavelength=wave)
+>                       assert row['value'] == pytest.approx(grid[metric_key(lookup)], rel=1e-10, abs=1e-10)
+E                       assert 84.51878768313068 == 61.32484140682874 � 6.1e-09
+E                         
+E                         comparison failed
+E                         Obtained: 84.51878768313068
+E                         Expected: 61.32484140682874 � 6.1e-09
+
+tests\python\test_field_validation_example.py:97: AssertionError
+---------------------------- Captured stdout call -----------------------------
+*** FRU__delta_init(): Attempt to start when running!
+
+=========================== short test summary info ===========================
+FAILED tests/python/test_field_validation_example.py::test_native_wavelength_rows_match_models_with_only_that_wavelength
+1 failed, 3 passed in 27.71s

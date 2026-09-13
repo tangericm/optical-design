@@ -14,3 +14,11 @@ docs/research/validation-release/**/*.json -text whitespace=cr-at-eol
 docs/research/validation-release/*.json -text whitespace=cr-at-eol
 docs/research/validation-release/**/*.log -text whitespace=cr-at-eol
 docs/research/validation-release/*.log -text whitespace=cr-at-eol
+skills/optical-design/assets/field-validation/*.json -text whitespace=cr-at-eol
+docs/research/field-validation/**/*.json -text whitespace=cr-at-eol
+docs/research/field-validation/*.json -text whitespace=cr-at-eol
+docs/research/field-validation/**/*.log -text whitespace=cr-at-eol
+docs/research/field-validation/*.log -text whitespace=cr-at-eol
+docs/research/field-validation/*.csv -text whitespace=cr-at-eol
+# Preserve the exact failing pytest diagnostic, including its whitespace-only error line.
+docs/research/field-validation/wavelength-red.log -whitespace

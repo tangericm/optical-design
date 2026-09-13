@@ -1,0 +1,46 @@
+{
+  "control": {
+    "argv": [
+      "C:\\Users\\erict\\AppData\\Local\\uv\\cache\\builds-v0\\.tmp2SGoAX\\Scripts\\python.exe",
+      "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-field-validation\\skills\\optical-design\\scripts\\design.py",
+      "optimize",
+      "--backend",
+      "zos",
+      "--model",
+      "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-field-validation\\skills\\optical-design\\assets\\field-validation\\native.zmx",
+      "--spec",
+      "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-field-validation\\skills\\optical-design\\assets\\field-validation\\search.json",
+      "--variables",
+      "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-field-validation\\skills\\optical-design\\assets\\variables-example.json",
+      "--validation-spec",
+      "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-field-validation\\skills\\optical-design\\assets\\field-validation\\control.json",
+      "--out",
+      "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-field-validation\\docs\\research\\field-validation\\corrected-native\\native-control",
+      "--json"
+    ],
+    "returncode": 0,
+    "output": "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-field-validation\\docs\\research\\field-validation\\corrected-native\\native-control"
+  },
+  "validation": {
+    "argv": [
+      "C:\\Users\\erict\\AppData\\Local\\uv\\cache\\builds-v0\\.tmp2SGoAX\\Scripts\\python.exe",
+      "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-field-validation\\skills\\optical-design\\scripts\\design.py",
+      "optimize",
+      "--backend",
+      "zos",
+      "--model",
+      "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-field-validation\\skills\\optical-design\\assets\\field-validation\\native.zmx",
+      "--spec",
+      "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-field-validation\\skills\\optical-design\\assets\\field-validation\\search.json",
+      "--variables",
+      "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-field-validation\\skills\\optical-design\\assets\\variables-example.json",
+      "--validation-spec",
+      "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-field-validation\\skills\\optical-design\\assets\\field-validation\\validation.json",
+      "--out",
+      "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-field-validation\\docs\\research\\field-validation\\corrected-native\\native-validation",
+      "--json"
+    ],
+    "returncode": 1,
+    "output": "C:\\Users\\erict\\OneDrive\\Desktop\\Projects\\optical-design-field-validation\\docs\\research\\field-validation\\corrected-native\\native-validation"
+  }
+}

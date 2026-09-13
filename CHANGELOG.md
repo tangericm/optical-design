@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+### 0.1.0-dev.5
+
+- Fix native RMS spot measurements on multi-wavelength models: explicitly select each
+  field/wavelength instead of labeling an all-wavelength result as monochromatic.
+  Retain selection readback and physical condition metadata in spot measurements.
+- Add a shipped three-field, three-wavelength validation example and fixed acceptance
+  limits, with native/portable control and rejection evidence.
+- Verify native spectral results against models containing only the selected wavelength;
+  retain the failed pre-fix evidence and fixture setup diagnostics.
+
 ### 0.1.0-dev.4
 
 - Add optional predeclared validation specifications to bounded optimization, with shared

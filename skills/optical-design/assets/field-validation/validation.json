@@ -1,0 +1,293 @@
+{
+  "schema": "1",
+  "name": "Separate validation: same limits over all nine field/wavelength pairs",
+  "fields": [
+    1,
+    2,
+    3
+  ],
+  "wavelengths": [
+    1,
+    2,
+    3
+  ],
+  "frequencies_cyc_per_mm": [
+    20
+  ],
+  "requirements": [
+    {
+      "id": "focal-length",
+      "metric": "efl_mm",
+      "unit": "mm",
+      "min": 48,
+      "max": 51
+    },
+    {
+      "id": "track",
+      "metric": "total_track_mm",
+      "unit": "mm",
+      "max": 65
+    },
+    {
+      "id": "spot-f1-w1",
+      "metric": "rms_spot_um",
+      "unit": "um",
+      "field": 1,
+      "wavelength": 1,
+      "max": 30
+    },
+    {
+      "id": "mtf-tangential-f1-w1",
+      "metric": "mtf",
+      "unit": "1",
+      "field": 1,
+      "wavelength": 1,
+      "frequency": 20,
+      "axis": "tangential",
+      "min": 0.3
+    },
+    {
+      "id": "mtf-sagittal-f1-w1",
+      "metric": "mtf",
+      "unit": "1",
+      "field": 1,
+      "wavelength": 1,
+      "frequency": 20,
+      "axis": "sagittal",
+      "min": 0.3
+    },
+    {
+      "id": "spot-f1-w2",
+      "metric": "rms_spot_um",
+      "unit": "um",
+      "field": 1,
+      "wavelength": 2,
+      "max": 30
+    },
+    {
+      "id": "mtf-tangential-f1-w2",
+      "metric": "mtf",
+      "unit": "1",
+      "field": 1,
+      "wavelength": 2,
+      "frequency": 20,
+      "axis": "tangential",
+      "min": 0.3
+    },
+    {
+      "id": "mtf-sagittal-f1-w2",
+      "metric": "mtf",
+      "unit": "1",
+      "field": 1,
+      "wavelength": 2,
+      "frequency": 20,
+      "axis": "sagittal",
+      "min": 0.3
+    },
+    {
+      "id": "spot-f1-w3",
+      "metric": "rms_spot_um",
+      "unit": "um",
+      "field": 1,
+      "wavelength": 3,
+      "max": 30
+    },
+    {
+      "id": "mtf-tangential-f1-w3",
+      "metric": "mtf",
+      "unit": "1",
+      "field": 1,
+      "wavelength": 3,
+      "frequency": 20,
+      "axis": "tangential",
+      "min": 0.3
+    },
+    {
+      "id": "mtf-sagittal-f1-w3",
+      "metric": "mtf",
+      "unit": "1",
+      "field": 1,
+      "wavelength": 3,
+      "frequency": 20,
+      "axis": "sagittal",
+      "min": 0.3
+    },
+    {
+      "id": "spot-f2-w1",
+      "metric": "rms_spot_um",
+      "unit": "um",
+      "field": 2,
+      "wavelength": 1,
+      "max": 30
+    },
+    {
+      "id": "mtf-tangential-f2-w1",
+      "metric": "mtf",
+      "unit": "1",
+      "field": 2,
+      "wavelength": 1,
+      "frequency": 20,
+      "axis": "tangential",
+      "min": 0.3
+    },
+    {
+      "id": "mtf-sagittal-f2-w1",
+      "metric": "mtf",
+      "unit": "1",
+      "field": 2,
+      "wavelength": 1,
+      "frequency": 20,
+      "axis": "sagittal",
+      "min": 0.3
+    },
+    {
+      "id": "spot-f2-w2",
+      "metric": "rms_spot_um",
+      "unit": "um",
+      "field": 2,
+      "wavelength": 2,
+      "max": 30
+    },
+    {
+      "id": "mtf-tangential-f2-w2",
+      "metric": "mtf",
+      "unit": "1",
+      "field": 2,
+      "wavelength": 2,
+      "frequency": 20,
+      "axis": "tangential",
+      "min": 0.3
+    },
+    {
+      "id": "mtf-sagittal-f2-w2",
+      "metric": "mtf",
+      "unit": "1",
+      "field": 2,
+      "wavelength": 2,
+      "frequency": 20,
+      "axis": "sagittal",
+      "min": 0.3
+    },
+    {
+      "id": "spot-f2-w3",
+      "metric": "rms_spot_um",
+      "unit": "um",
+      "field": 2,
+      "wavelength": 3,
+      "max": 30
+    },
+    {
+      "id": "mtf-tangential-f2-w3",
+      "metric": "mtf",
+      "unit": "1",
+      "field": 2,
+      "wavelength": 3,
+      "frequency": 20,
+      "axis": "tangential",
+      "min": 0.3
+    },
+    {
+      "id": "mtf-sagittal-f2-w3",
+      "metric": "mtf",
+      "unit": "1",
+      "field": 2,
+      "wavelength": 3,
+      "frequency": 20,
+      "axis": "sagittal",
+      "min": 0.3
+    },
+    {
+      "id": "spot-f3-w1",
+      "metric": "rms_spot_um",
+      "unit": "um",
+      "field": 3,
+      "wavelength": 1,
+      "max": 30
+    },
+    {
+      "id": "mtf-tangential-f3-w1",
+      "metric": "mtf",
+      "unit": "1",
+      "field": 3,
+      "wavelength": 1,
+      "frequency": 20,
+      "axis": "tangential",
+      "min": 0.3
+    },
+    {
+      "id": "mtf-sagittal-f3-w1",
+      "metric": "mtf",
+      "unit": "1",
+      "field": 3,
+      "wavelength": 1,
+      "frequency": 20,
+      "axis": "sagittal",
+      "min": 0.3
+    },
+    {
+      "id": "spot-f3-w2",
+      "metric": "rms_spot_um",
+      "unit": "um",
+      "field": 3,
+      "wavelength": 2,
+      "max": 30
+    },
+    {
+      "id": "mtf-tangential-f3-w2",
+      "metric": "mtf",
+      "unit": "1",
+      "field": 3,
+      "wavelength": 2,
+      "frequency": 20,
+      "axis": "tangential",
+      "min": 0.3
+    },
+    {
+      "id": "mtf-sagittal-f3-w2",
+      "metric": "mtf",
+      "unit": "1",
+      "field": 3,
+      "wavelength": 2,
+      "frequency": 20,
+      "axis": "sagittal",
+      "min": 0.3
+    },
+    {
+      "id": "spot-f3-w3",
+      "metric": "rms_spot_um",
+      "unit": "um",
+      "field": 3,
+      "wavelength": 3,
+      "max": 30
+    },
+    {
+      "id": "mtf-tangential-f3-w3",
+      "metric": "mtf",
+      "unit": "1",
+      "field": 3,
+      "wavelength": 3,
+      "frequency": 20,
+      "axis": "tangential",
+      "min": 0.3
+    },
+    {
+      "id": "mtf-sagittal-f3-w3",
+      "metric": "mtf",
+      "unit": "1",
+      "field": 3,
+      "wavelength": 3,
+      "frequency": 20,
+      "axis": "sagittal",
+      "min": 0.3
+    }
+  ],
+  "budget": {
+    "max_evaluations": 7,
+    "timeout_s": 300
+  },
+  "analysis": {
+    "sampling": 64,
+    "use_polarization": false
+  },
+  "minimum_gain": 0.001
+}

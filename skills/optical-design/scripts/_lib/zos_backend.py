@@ -255,12 +255,17 @@ class ZOSBackend:
                 analysis = s.Analyses.New_StandardSpot()
                 try:
                     settings = analysis.GetSettings()
-                    settings.Field.SetFieldNumber(0)
-                    settings.Wavelength.SetWavelengthNumber(0)
+                    # StandardSpot with wavelength 0 returns a combined result even
+                    # when GetRMSSpotSizeFor is called with different wavelength indices.
+                    settings.Field.SetFieldNumber(field)
+                    settings.Wavelength.SetWavelengthNumber(wave)
                     settings.ReferTo = Enum.Parse(settings.ReferTo.GetType(), 'Centroid')
                     settings.RayDensity = max(6, sampling // 8)
                     settings.UsePolarization = False
                     analysis.ApplyAndWaitForCompletion()
+                    if (settings.Field.GetFieldNumber() != field or
+                            settings.Wavelength.GetWavelengthNumber() != wave):
+                        raise ValueError('native spot field/wavelength selection did not persist')
                     spot = finite(float(analysis.GetResults().SpotData.GetRMSSpotSizeFor(field, wave)), 'RMS spot')
                     if spot < 0:
                         raise ValueError('negative native RMS spot')
@@ -268,7 +273,11 @@ class ZOSBackend:
                     analysis.Close()
                 rows.append({'metric': 'rms_spot_um', 'field': field, 'wavelength': wave, 'unit': 'um', 'value': spot,
                              'settings': {'reference': 'centroid', 'ray_density': max(6, sampling // 8),
-                                          'native_analysis': 'StandardSpot', 'ray_check_count': 17}})
+                                          'native_analysis': 'StandardSpot', 'ray_check_count': 17,
+                                          'field': field, 'field_xy_deg': [float(s.SystemData.Fields.GetField(field).X),
+                                                                         float(s.SystemData.Fields.GetField(field).Y)],
+                                          'wavelength': wave, 'wavelength_um': float(s.SystemData.Wavelengths.GetWavelength(wave).Wavelength),
+                                          'spectral_mode': 'monochromatic'}})
                 frequencies = spec.data['frequencies_cyc_per_mm']
                 if not frequencies:
                     continue

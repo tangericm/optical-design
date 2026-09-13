@@ -21,6 +21,8 @@ The validation file uses the same strict schema as the search specification, wit
 budget. Omit `objective` and `focus`; they are rejected because this stage performs
 no optimization or compensation. Indices must already exist in the unchanged model.
 The bundled example repeats the requirements at sampling 256 after searching at 64.
+For explicit requirements across additional physical conditions, use the
+[multi-field, three-wavelength example](field-validation-example.md).
 
 The validation specification is copied and hashed before opening the backend. The
 optimizer uses only the search specification for ranking and selecting its winner.
