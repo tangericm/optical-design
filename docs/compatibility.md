@@ -9,13 +9,17 @@ ran the portable demo through saved-candidate acceptance and HTML review generat
 The Codex manifest validator and skill lint passed.
 
 Claude Code 2.1.260 installed and removed the local 1.1.0 plugin in a temporary
-configuration. Codex 0.140.0 exercised the repository marketplace lifecycle; the final
-published source must be checked separately. Cursor's manifest is checked structurally;
+configuration. Codex 0.140.0 installed and removed version 1.1.0 from the published GitHub
+marketplace; all 76 installed skill files matched the release source. Cursor's manifest is checked structurally;
 this is not a verified Cursor UI installation or an accepted public catalog listing.
 
-See the [CI history](https://github.com/tangericm/optical-design/actions/workflows/ci.yml)
-for Windows, macOS, and Linux release checks, and [releases](https://github.com/tangericm/optical-design/releases)
-for publication receipts. Local test results do not imply those external milestones passed.
+[All 11 release CI jobs passed](https://github.com/tangericm/optical-design/actions/runs/34789239224)
+at commit `82c7ef735c881b2d178e1786f719605989c0d0c4`, including packed demo checks on
+Windows, macOS, and Linux. npm 1.1.0 was published with integrity matching the verified
+tarball. Fresh public npm installs passed for all five targets, and the downloaded package
+completed the optical demo with saved-candidate verification. The
+[1.1.0 release](https://github.com/tangericm/optical-design/releases/tag/v1.1.0) includes
+the tarball, checksums, and a machine-readable verification receipt.
 
 ## 1.0.0 optical workflow evidence
 

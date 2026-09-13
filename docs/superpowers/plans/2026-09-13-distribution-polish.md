@@ -50,9 +50,9 @@ existing manifests, package.json/lock, README.md, docs/*, .github/ISSUE_TEMPLATE
 
 - [x] Review combined installer, manifests, ownership safety, and public claims independently.
 - [x] Run local Node tests, packed clean installation, and the optical demo. Cross-platform Python and Node checks follow in CI.
-- [ ] Push reviewed commit and require cross-platform CI success.
-- [ ] Publish npm 1.1.0 after npm authentication; verify registry integrity and fresh npx use.
-- [ ] Publish GitHub release and record native marketplace availability accurately.
+- [x] Push reviewed commit and require cross-platform CI success.
+- [x] Publish npm 1.1.0 after npm authentication; verify registry integrity and fresh npx use.
+- [x] Publish GitHub release and record native marketplace availability accurately.
 
 ## Execution ledger
 
@@ -74,3 +74,16 @@ existing manifests, package.json/lock, README.md, docs/*, .github/ISSUE_TEMPLATE
   two optical repositories, MecAgent positioning, and official distribution guidance.
   Applied task-based navigation, relative owned images, observable results, direct support
   links, and a real synthetic-model figure. No student/course product scope was added.
+
+- Released commit `82c7ef735c881b2d178e1786f719605989c0d0c4` as GitHub v1.1.0 and npm
+  optical-design@1.1.0. All 11 jobs in CI run 34789239224 passed. The user completed npm's
+  separate publish authorization. Registry integrity matched the tested tarball.
+- Fresh public npm installs passed for all five agents; the downloaded demo passed optical
+  acceptance and saved-model checks. Codex installed native 1.1.0 from GitHub, with all 76
+  skill files matching, and removed it successfully in isolated configuration.
+- GitHub and npm README image loading and documentation routing were verified in Chrome.
+  GitHub About, homepage, and ten topics were updated. The social-preview asset is ready,
+  but upload remains blocked by the browser extension's file access setting. No public
+  curated catalog acceptance or Cursor UI installation is claimed.
+- Publication receipt and checksums are attached to the GitHub release. This ledger update
+  follows publication; it does not alter the tagged/published package bytes.
