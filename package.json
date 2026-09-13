@@ -11,9 +11,14 @@
     "!skills/**/*.zda",
     "!skills/**/*.bak",
     "docs/install.md",
+    "docs/README.md",
+    "docs/quickstart.md",
+    "docs/capabilities.md",
+    "docs/deployment.md",
     "docs/tiers.md",
     "docs/compatibility.md",
     "SECURITY.md",
+    "CHANGELOG.md",
     "CONTRIBUTING.md"
   ],
   "scripts": {

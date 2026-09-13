@@ -1,10 +1,15 @@
 # Compute tiers
 
+[Documentation](README.md) / Compute tiers
+
+Start with Tier 0 for calculations or Tier 1 for the portable [quickstart](quickstart.md).
+Tier 2 adds native OpticStudio execution when you have a compatible licensed installation.
+
 | Tier | Needs | Scripts | Status |
 |---|---|---|---|
 | 0 | Python 3.11+, uv; declared numerical dependencies | resolve, zernike, wavefront, interfero, compare, catalog | shipped |
-| 1 | Optiland 0.6.2 through `uv run --with optiland==0.6.2` | design audit/refocus/optimize/tolerance --backend optiland | bounded sequential subset |
-| 2 | Windows, valid OpticStudio API license; ZOSPy 2.1.5, pythonnet 3.1.0 | zos check; design audit/refocus/optimize/tolerance --backend zos | owned standalone session |
+| 1 | Optiland 0.6.2 through `uv run --with optiland==0.6.2` | design inspect/audit/edit/refocus/optimize/sensitivity/tolerance --backend optiland | bounded sequential subset |
+| 2 | Windows, valid OpticStudio API license; ZOSPy 2.1.5, pythonnet 3.1.0 | zos check; the same design actions --backend zos | owned standalone session |
 
 Tier 0 calculator envelopes include inputs, results, units, method, warnings and provenance.
 Design/tolerance reports use a separate schema with explicit requirement assessment,

@@ -1,83 +1,96 @@
 # optical-design
 
-An optical-design copilot for the saved sequential-imaging prescription workflow:
-inspect a model, define requirements and composite merit, make controlled edits, optimize,
-measure sensitivity, validate separately, and produce a design-review package.
-Includes a portable Optiland adapter and OpticStudio standalone adapters.
+**Give your AI assistant an optical-design workflow you can inspect.**
 
-The job workflow copies a model, measures a baseline, searches explicit parameter bounds,
-checks every hard requirement, and verifies the saved/reloaded candidate. It records engine
-versions, settings, search history and file hashes. The source model stays unchanged.
+Calculate optical performance, work on saved sequential lens models, and turn results
+into a review package. Includes numerical tools, a portable Optiland backend, and a
+licensed OpticStudio backend.
 
-| Capability | Shipped scope |
-|---|---|
-| Numerical optics | Resolution, Gaussian beams, Zernike/Seidel math, pupil PSF/MTF, interferometry |
-| Inspection and edits | Physical prescription inspection; explicit radius/thickness edits with expected-value checks, fixed-state verification and saved reload |
-| Prescription audit | Explicit fields, wavelengths, metric identities, units and hard requirements |
-| Refocus | Final air gap only; bounded search; fixed prescription invariants; native save/reload verification |
-| Optimization | Up to four explicit radius/thickness variables; bounded search, hard requirements and saved-candidate verification |
-| Composite merit | Dimensionless weighted RMS across explicit metrics, fields and wavelengths; target, scale, weight and residual evidence for each term |
-| Local sensitivity | Central differences at declared radius/thickness steps; derivatives, finite-step effects and nonlinearity; rankings within a metric and unit |
-| Separate validation | Predeclared requirements at extra fields/wavelengths or finer sampling; saved winner checked after search; failure rejects candidate |
-| Tolerance evidence | Seeded independent radius/thickness perturbations, optional bounded focus compensation, paired pass rates and Wilson intervals |
-| Review package | Standalone HTML and Markdown; verified artifact hashes, metric comparisons, parameter changes, sampled charts and an axial vertex schematic |
-| Interactive MCP tools | Local stdio capabilities/start/status/cancel/results/review; owned jobs and confined input/output paths |
-| Catalog shortlist | Local declared records, identity/provenance validation, unit-aware constraints and ranking |
-| Native profile benchmark | Copied-model Huygens/POP central intensity cuts, explicit settings and hashes, native sampling diagnostics, optional same-method reference comparison |
-| Guidance | Specifications, microscopy, OCT, interferometry, optimization, PSF/MTF and tolerancing references |
-
-Start with [the executable workflow and specification](skills/optical-design/references/design-workflow.md).
-Synthetic native/portable singlets and example specifications are included under
-`skills/optical-design/assets/`.
-
-For validation beyond the search settings, see [separate validation](skills/optical-design/references/validation.md).
-For complete field/spectral requirements, run the [three-field, three-wavelength example](skills/optical-design/references/field-validation-example.md).
-For interactive jobs, see [the MCP interface](skills/optical-design/references/interactive.md).
-For bounded multivariable jobs, see [optimization](skills/optical-design/references/optimization.md).
-For a complete runnable example, see [workflow scenarios](skills/optical-design/evals/README.md).
-
-For unchanged-model profile reproduction, use the [profile benchmark workflow](skills/optical-design/references/profile-benchmark.md).
-The [real-design reference audit](docs/research/real-benchmark/reference-audit.md) documents
-the saved OCT evidence, exact model hashes, spectrum, units and uncertainty. Its 75 saved
-model/case records are reference inputs; their existence does not establish a successful
-fresh native run or physical design acceptance. The completed run and later controlled
-experiments are documented in [the dev.3 evidence](docs/research/next-roadmap/README.md).
+[Get started](docs/quickstart.md) · [Documentation](docs/README.md) · [Releases](https://github.com/tangericm/optical-design/releases) · [Report an issue](https://github.com/tangericm/optical-design/issues)
 
 ## Install
 
-Install from the GitHub repository:
+For **Claude Code, Codex, Cursor, and other supported agents**, run this in a terminal
+and choose your agent and installation scope:
 
-- Agent Skills: `npx skills add tangericm/optical-design`
-- Claude Code: `claude plugin marketplace add tangericm/optical-design`, then `claude plugin install optical-design@optical-design`
+```sh
+npx skills add tangericm/optical-design
+```
 
-`npx skills add` uses the GitHub skill. The `optical-design` npm package is not published;
-`npx optical-design` is not this project's installation command.
+Prefer **Claude Code's plugin manager**? Run these inside Claude Code:
 
-Scripts need Python 3.11+ and uv. Tier 0 dependencies are declared in scripts.
-Prescription commands use pinned optional engines; see [tiers](docs/tiers.md) and
-[compatibility evidence](docs/compatibility.md).
+```text
+/plugin marketplace add tangericm/optical-design
+/plugin install optical-design@optical-design
+```
+
+This installs the skill: instructions, scripts, examples, and references your assistant
+can use. Running the scripts needs **Python 3.11+ and [uv](https://docs.astral.sh/uv/getting-started/installation/)**.
+Start with the portable example; **OpticStudio is optional**.
+
+[Installation by client, updates, and troubleshooting →](docs/install.md)
+
+## Try it
+
+Start a new conversation in your agent and ask:
+
+> Use optical-design to calculate the Airy first-zero radius and diameter at 550 nm
+> and f/4. Run the calculator, show the units, and explain the assumptions.
+
+Then try a complete workflow on the included synthetic lens:
+
+> Use optical-design's bundled portable singlet and refocus specification. Run a
+> bounded refocus, check the saved candidate and requirements, and create an HTML
+> review. Preserve the source model and put the outputs in a new folder.
+
+Want to run the commands yourself? [Follow the quickstart](docs/quickstart.md).
+It takes you from a calculator result to a saved lens and readable report.
+
+## From a model to a decision
+
+**Inspect → Set requirements → Edit or optimize → Validate → Review**
+
+Every design job works on a copy. Reports record settings, engine versions, file hashes,
+requirements, and saved-model checks so you can see what changed and why it passed or failed.
+
+| Your task | Start here |
+|---|---|
+| Calculate resolution, Gaussian beams, PSF/MTF, or aberrations | [Numerical tools and compute tiers](docs/tiers.md) |
+| Inspect a prescription or make an explicit edit | [Model inspection and edits](skills/optical-design/references/model-actions.md) |
+| Refocus or optimize a saved lens | [Design workflow](skills/optical-design/references/design-workflow.md) and [optimization](skills/optical-design/references/optimization.md) |
+| Evaluate sensitivity, tolerances, or extra fields and wavelengths | [Sensitivity](skills/optical-design/references/sensitivity.md), [tolerancing](skills/optical-design/references/tolerancing.md), and [validation](skills/optical-design/references/validation.md) |
+| Share results or control jobs interactively | [Review packages](skills/optical-design/references/review-reports.md) and [optional MCP setup](skills/optical-design/references/interactive.md) |
 
 ## Current boundaries
 
-The native prescription adapter supports centered Standard conic and EvenAspheric
-sequential refractive systems in mm with angle fields and entrance-pupil diameter.
-Conics and all eight even-asphere coefficients remain fixed during edits and optimization.
-The portable adapter supports its documented spherical/plane contract. Analyses are scalar.
-Coatings, coordinate breaks, multiple configurations and unsupported surface types reject.
-The separate native profile backend analyzes mm,
-single-configuration sequential models with complex surfaces and explicit native polarization
-settings. POP currently supports a declared Gaussian-waist launch; this is not generalized
-validation of arbitrary models, source fields or polarization assumptions.
+The design workflow supports a **bounded subset of centered sequential imaging systems**.
+The portable backend handles spherical/plane prescriptions; the native backend also
+supports fixed Standard conics and EvenAspheric coefficients. Optimization changes up
+to four declared radius/thickness variables. Analyses are scalar.
 
-Topology changes, glass selection during optimization, live GUI attachment, arbitrary portable Zemax imports,
-non-sequential/stray-light analysis and manufacturing release are not shipped. The restricted
-portable ZMX importer rejects unsupported directives instead of silently dropping them.
-Tolerance pass rates depend on the declared perturbation model. Profile reference agreement
-means same-method numerical reproduction; illumination cuts are not point-image PSFs,
-integrated marginals or measured OCT performance.
+New-lens synthesis, glass selection during optimization, non-sequential/stray-light
+design, and live OpticStudio GUI attachment are outside the shipped scope. A passing
+numerical report is evidence for its stated conditions, not manufacturing certification.
 
-See [CHANGELOG](CHANGELOG.md) for changes and [SECURITY](SECURITY.md) for execution behavior.
+[Full capabilities and model limits](docs/capabilities.md) · [Compatibility and verification evidence](docs/compatibility.md)
+
+## How it is distributed
+
+**v1.0.0 is released on GitHub.** The command above runs the npm-hosted `skills`
+installer, which downloads this repository. An `optical-design` npm package and
+`npx optical-design` command have not been published. Native marketplace listings
+are separate from a GitHub release or npm publication.
+
+[Understand skills, plugins, npm, and marketplaces →](docs/deployment.md)
+
+## Contribute or get help
+
+[Report a bug or request a feature](https://github.com/tangericm/optical-design/issues).
+Include your agent, operating system, command, engine version, and error. Use a
+synthetic example when reporting a problem with a private prescription.
+
+[Contributing](CONTRIBUTING.md) · [Changelog](CHANGELOG.md) · [Security](SECURITY.md)
 
 ## License
 
-MIT.
+[MIT](LICENSE).
