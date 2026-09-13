@@ -9,7 +9,8 @@ saved-reload regression checks. These terms remain fixed during optimization. Po
 coverage remains its documented spherical/plane subset. New model types and API versions
 still require explicit verification.
 
-The final local suite passed **837 tests**, with one Windows symbolic-link capability skip,
+The final local suite passed **837 tests**, with two platform skips (Windows symbolic-link
+capability and the POSIX-only process observer),
 using Optiland 0.6.2, MCP 2.2.0 and enabled native OpticStudio tests. Seven npm tests, Ruff,
 skill lint and tarball install checks passed. Isolated project-scoped `npx skills` installations
 exercise the shipped workflow and compare every installed file hash with the release source.

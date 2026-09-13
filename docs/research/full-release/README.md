@@ -5,10 +5,12 @@ This directory retains actual engine/CLI/MCP receipts, including rejected attemp
 fixtures demonstrate the supported workflow; they do not establish arbitrary prescription
 coverage, a global optimum or physical validation of a manufactured system.
 
-The final local suite passed 837 tests with one Windows symbolic-link capability skip.
+The final local suite passed 837 tests with two platform skips (Windows symbolic-link
+capability and the POSIX-only process observer).
 Optiland 0.6.2, MCP 2.2.0 and native OpticStudio checks were enabled. The seven npm tests,
 Ruff, skill lint and local package installation also passed. Hosted CI and public installation
-are separate publication gates recorded after this local evidence.
+are separate publication gates. [The source CI gate](ci-source-gate.json) passed all nine
+jobs after the POSIX test observer fix; [the initial CI failure](ci-initial.json) is retained.
 
 ## Composite merit across nine conditions
 
