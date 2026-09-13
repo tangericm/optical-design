@@ -1,0 +1,13 @@
+{
+  "schema": "1",
+  "run_id": 34769895503,
+  "url": "https://github.com/tangericm/optical-design/actions/runs/34769895503",
+  "head_sha": "f3a1e5a8c49f52a6fafdeb81b17b6b001ca78ee1",
+  "conclusion": "failure",
+  "passed_jobs": 8,
+  "failed_job": "portable engine and MCP (ubuntu-latest)",
+  "failed_test": "test_cancel_kills_only_owned_tree",
+  "failure": "PID-existence observer returned false for process_stopped after owned-tree cancellation",
+  "diagnosis": "The original POSIX test equated an existing PID with a running process and did not wait for asynchronous signal delivery or distinguish a zombie. Exact transient process state was not captured in the original run.",
+  "correction": "Bounded POSIX state observation treats only a missing PID or zombie as exited, and adds a live-process versus unreaped-exit regression. Product cancellation implementation remains unchanged."
+}

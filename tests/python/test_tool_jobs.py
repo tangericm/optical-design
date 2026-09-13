@@ -31,7 +31,7 @@ def action_config(action):
         {'surface': 1, 'parameter': 'radius_mm', 'distribution': 'uniform', 'half_width_mm': .1}]}
 
 
-def process_stopped(pid):
+def process_stopped(pid, timeout=5):
     if os.name == 'nt':
         import ctypes
         from ctypes import wintypes
@@ -47,11 +47,35 @@ def process_stopped(pid):
             return kernel.WaitForSingleObject(handle, 5000) == 0
         finally:
             kernel.CloseHandle(handle)
+    deadline = time.monotonic() + timeout
+    while True:
+        try:
+            os.kill(pid, 0)
+        except ProcessLookupError:
+            return True
+        # SIGKILL delivery/reaping is asynchronous on POSIX. A zombie has exited
+        # but still owns a PID until its parent/init reaps the process table entry.
+        status = subprocess.run(['ps', '-o', 'stat=', '-p', str(pid)],
+                                capture_output=True, text=True, check=False)
+        if status.returncode == 0 and status.stdout.strip().startswith('Z'):
+            return True
+        if time.monotonic() >= deadline:
+            return False
+        time.sleep(.03)
+
+
+@pytest.mark.skipif(os.name == 'nt', reason='POSIX process-state observer')
+def test_process_observer_distinguishes_live_process_and_unreaped_exit():
+    child = subprocess.Popen([sys.executable, '-c', 'import time; time.sleep(90)'])
     try:
-        os.kill(pid, 0)
-        return False
-    except ProcessLookupError:
-        return True
+        assert not process_stopped(child.pid, timeout=.05)
+        child.kill()
+        # Deliberately observe before Popen.wait reaps the direct child.
+        assert process_stopped(child.pid)
+    finally:
+        if child.poll() is None:
+            child.kill()
+        child.wait(timeout=5)
 
 
 @pytest.fixture
