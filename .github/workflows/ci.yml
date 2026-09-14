@@ -66,6 +66,7 @@ jobs:
         with:
           python-version: "3.11"
       - run: npm ci
+      - run: npm run typecheck
       - run: npm test
       - run: npm run verify:package -- --demo
       - run: npx skillcrit lint . --fail-on error

@@ -1,18 +1,5 @@
 # Changelog
 
-## 1.1.0
-
-- Add the `optical-design` npm command: managed install/update/uninstall, prerequisite
-  checks, and a portable demo for Claude Code, Codex, Cursor, OpenCode, and Hermes.
-- Preserve changed and unmanaged installations; retain an update backup and report
-  recovery paths. Normalize verified macOS system aliases while rejecting user symlinks.
-- Add Codex and Cursor plugin metadata, a Codex repository marketplace, and original
-  light/dark logo assets. Keep the same shared optical skill across distribution routes.
-- Reorganize the README around installation, example output, and task-based references.
-  Add concise setup, terminology, command, and prescription-workflow guides.
-- Verify the packed command and portable demo in Windows, macOS, and Linux CI.
-- Preserve the v1.0.0 optical algorithms and supported-model boundaries.
-
 ## 2.0.0 — 2026-09-14
 
 The skill now guides the coding agent instead of wrapping it: knowledge, recipes and
@@ -34,6 +21,19 @@ OpticStudio. The audited job runner remains as an optional mode with unchanged a
   explainer from the main branch. Evidence stays available at the v1.0.0 and v1.1.0 tags.
 - Move the brand guide to `assets/brand/README.md`; merge the example page into the quickstart.
 - Add `docs/roadmap/2026-09-14-adoption-review.md`: an audit with a prioritized plan.
+
+## 1.1.0
+
+- Add the `optical-design` npm command: managed install/update/uninstall, prerequisite
+  checks, and a portable demo for Claude Code, Codex, Cursor, OpenCode, and Hermes.
+- Preserve changed and unmanaged installations; retain an update backup and report
+  recovery paths. Normalize verified macOS system aliases while rejecting user symlinks.
+- Add Codex and Cursor plugin metadata, a Codex repository marketplace, and original
+  light/dark logo assets. Keep the same shared optical skill across distribution routes.
+- Reorganize the README around installation, example output, and task-based references.
+  Add concise setup, terminology, command, and prescription-workflow guides.
+- Verify the packed command and portable demo in Windows, macOS, and Linux CI.
+- Preserve the v1.0.0 optical algorithms and supported-model boundaries.
 
 ## 1.0.0 — 2026-09-13
 

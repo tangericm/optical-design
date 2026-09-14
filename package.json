@@ -38,6 +38,7 @@
   ],
   "scripts": {
     "test": "vitest run",
+    "typecheck": "tsc --noEmit",
     "lint:skills": "skillcrit lint . --fail-on error",
     "verify:package": "node scripts/verify-package.mjs"
   },
