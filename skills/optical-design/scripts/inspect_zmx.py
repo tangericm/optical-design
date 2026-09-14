@@ -4,13 +4,12 @@
 # ///
 """Inspect a .zmx or Optiland-native .json prescription: surfaces, fields, wavelengths,
 aperture, and (for .zmx) which Zemax directives shaped the model Optiland built versus
-which were read as cosmetic metadata.
+which were preserved, display metadata, unsupported with possible optical effect, or unknown.
 
 Loads .zmx files with Optiland's own reader (optiland.fileio.load_zemax_file), not the
-portable backend's directive allowlist -- a real OpticStudio export carries dozens of
-header lines (AUTH, ENVD, RAIM, GSTD, POLS, ...) that never reach the ray trace, and this
-tool reports them as ignored rather than refusing the file outright. Read-only: the
-input file is hashed and read, never written.
+portable backend's directive allowlist. Parsing success is not a fidelity guarantee;
+unknown and unsupported content remains visible, and non-mm files have raw length
+labels. Read-only: the input file is hashed and read, never written.
 
     uv run --python 3.11 --with optiland==0.6.2 inspect_zmx.py --model lens.zmx --json
 
@@ -25,91 +24,17 @@ import math
 import sys
 from pathlib import Path
 
+sys.dont_write_bytecode = True
+
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from _lib import cli  # noqa: E402, RUF100
 
 TOOL = "inspect_zmx"
 
-# Directives that change the optical model Optiland traces (geometry, material,
-# aperture, field, wavelength). Everything else is cosmetic or metadata that
-# Optiland's Zemax reader either never looks at, or parses only into a display-only
-# field (e.g. NAME). Kept close to Optiland 0.6.2's own operand table, but classified
-# by optical effect rather than by "does the reader tokenize this line at all" -- e.g.
-# NAME is tokenized but only sets a display string, so it is "ignored" here.
-USED_DIRECTIVES = {
-    "SURF", "TYPE", "CURV", "DISZ", "GLAS", "CONI", "PARM", "STOP", "DIAM",
-    "ENPD", "FTYP", "XFLN", "YFLN", "WAVM", "PWAV", "UNIT", "MODE",
-    "GCAT",  # resolves GLAS names to an index/Abbe pair; changes the traced glass
-    "FNUM", "OBNA",  # alternate aperture specs, same optical role as ENPD
-}
-# Explicitly cosmetic/metadata directives, plus a few mechanical/display-only ones
-# (SSID duplicates the SURF ordinal; MEMA/POPS/CLAP are mechanical or display
-# apertures, not the optical clear aperture the trace uses).
-IGNORED_DIRECTIVES = {
-    "AUTH", "NAME", "NOTE", "VERS", "ENVD", "GFAC", "RAIM", "PUSH", "SDMA", "OMMA",
-    "ROPD", "HYPR", "PICB", "FWGN", "POLS", "GLRS", "GSTD", "NSCD", "COFN", "LUID",
-    "EERA", "FIMP", "HIDE", "MIRR", "SLAB", "FLAP", "PZUP", "MNUM", "MOFF",
-    "SSID", "MEMA", "POPS", "IWDP", "PFIL", "LANG", "FLOA", "CLAP", "BLNK",
-}
-IGNORED_PREFIXES = ("VD", "VC", "VAN", "TOL")  # vignetting factors, tolerance blocks
-KNOWN_SURFACE_TYPES = {"STANDARD", "EVENASPH", "PARAXIAL", "ODDASPHE"}
+# Compatibility import for callers of the old inspection classifier.
+from _lib.import_fidelity import classify, load_assessed_model
 
-
-def _decode_zmx_text(raw: bytes) -> str:
-    for encoding in ("utf-16", "utf-8-sig", "iso-8859-1"):
-        try:
-            return raw.decode(encoding)
-        except UnicodeError:
-            continue
-    raise ValueError("could not decode as UTF-16, UTF-8 or Latin-1 text")  # pragma: no cover
-
-
-def _classify(key: str) -> str:
-    if key in USED_DIRECTIVES:
-        return "used"
-    if key in IGNORED_DIRECTIVES or key.startswith(IGNORED_PREFIXES):
-        return "ignored"
-    # Unrecognized token: Optiland's Zemax reader only acts on operands in its own
-    # dispatch table and silently skips anything outside it, so an unlisted key did
-    # not shape the model either.
-    return "ignored"
-
-
-def _scan_zmx_directives(text: str) -> dict:
-    keys_seen: list[str] = []
-    seen = set()
-    surface_types: list[tuple[int, str]] = []
-    current_surface = -1
-    mnum_configs: int | None = None
-    for line in text.splitlines():
-        tokens = line.split()
-        if not tokens:
-            continue
-        key = tokens[0]
-        if key not in seen:
-            seen.add(key)
-            keys_seen.append(key)
-        if key == "SURF":
-            try:
-                current_surface = int(tokens[1])
-            except (IndexError, ValueError):
-                current_surface += 1
-        elif key == "TYPE" and current_surface >= 0 and len(tokens) > 1:
-            surface_types.append((current_surface, tokens[1]))
-        elif key == "MNUM" and mnum_configs is None and len(tokens) > 1:
-            try:
-                mnum_configs = int(tokens[1])
-            except ValueError:
-                pass
-    return {"keys": keys_seen, "surface_types": surface_types, "mnum_configs": mnum_configs}
-
-
-def _unit_directive(text: str) -> str | None:
-    for line in text.splitlines():
-        tokens = line.split()
-        if tokens and tokens[0] == "UNIT" and len(tokens) > 1:
-            return tokens[1]
-    return None
+_classify = classify
 
 
 def _json_safe(value: float) -> float | str:
@@ -179,58 +104,29 @@ def _wavelengths_block(optic) -> dict:
 
 
 def inspect_model(model_path: str) -> tuple[dict, list[str]]:
-    from optiland.fileio import load_optiland_file, load_zemax_file
-
     path = Path(model_path)
     raw = path.read_bytes()
     sha256 = hashlib.sha256(raw).hexdigest()
     warnings: list[str] = []
     suffix = path.suffix.lower()
 
-    directives = None
+    optic, assessment = load_assessed_model(path, allow_raw_units=True, raw=raw)
+    warnings.extend(assessment["warnings"])
     if suffix == ".zmx":
         fmt = "Zemax sequential text"
-        text = _decode_zmx_text(raw)
-        scan = _scan_zmx_directives(text)
-        directives = [{"key": key, "used": _classify(key) == "used"} for key in scan["keys"]]
-
-        declared_unit = _unit_directive(text)
-        if declared_unit is not None and declared_unit.upper() != "MM":
-            warnings.append(
-                f"file declares UNIT {declared_unit}, but Optiland 0.6.2's Zemax reader does not convert "
-                "non-millimetre units -- reported lengths are the raw file values, not millimetres")
-        # MNUM's total-configurations count is what distinguishes a real multi-config file
-        # from the single boilerplate MOFF/MNUM row every Zemax export carries. Likewise,
-        # NSCD is a fixed-size default block present even in purely sequential files; only a
-        # distinct NSC* token (an actual non-sequential object row) indicates real NSC content.
-        if scan["mnum_configs"] is not None and scan["mnum_configs"] > 1:
-            warnings.append(f"file declares {scan['mnum_configs']} configurations (MOFF/MNUM); only "
-                            "the loaded default configuration is reflected here")
-        if any(key.startswith("NSC") and key != "NSCD" for key in scan["keys"]):
-            warnings.append("file contains non-sequential component data (NSC*); non-sequential "
-                            "geometry is not represented in this sequential inspection")
-        coordbrk_surfaces = [i for i, t in scan["surface_types"] if t == "COORDBRK"]
-        if coordbrk_surfaces:
-            warnings.append(f"surface(s) {coordbrk_surfaces} use TYPE COORDBRK (coordinate break); "
-                            "the system may not be centered in the usual sequential sense")
-        other_unusual = sorted({t for i, t in scan["surface_types"]
-                                if t not in KNOWN_SURFACE_TYPES and t != "COORDBRK"})
-        if other_unusual:
-            warnings.append(f"surface TYPE(s) {other_unusual} are outside STANDARD/EVENASPH/PARAXIAL/"
-                            "ODDASPHE; verify Optiland traced the intended geometry")
-        optic = load_zemax_file(str(path))
-    elif suffix == ".json":
-        fmt = "Optiland JSON"
-        optic = load_optiland_file(str(path))
     else:
-        raise ValueError(f"unsupported model file extension {suffix!r}: expected .zmx or .json")
+        fmt = "Optiland JSON"
 
     aperture = optic.aperture
     surfaces, element_count = _surface_table(optic)
+    if not assessment["numerical_analysis_allowed"]:
+        surfaces = [{key.removesuffix("_mm") + "_raw" if key.endswith("_mm") else key: value
+                     for key, value in row.items()} for row in surfaces]
     results = {
         "sha256": sha256,
         "format": fmt,
-        "units": "mm",
+        "units": assessment["source_units"],
+        "import_fidelity": assessment,
         "aperture_type": aperture.ap_type if aperture is not None else None,
         "aperture_value": float(aperture.value) if aperture is not None else None,
         "fields": _fields_block(optic),
@@ -238,8 +134,8 @@ def inspect_model(model_path: str) -> tuple[dict, list[str]]:
         "surfaces": surfaces,
         "element_count": element_count,
     }
-    if directives is not None:
-        results["directives"] = directives
+    if "directives" in assessment:
+        results["directives"] = assessment["directives"]
     return results, warnings
 
 
@@ -269,12 +165,12 @@ def main(argv: list[str] | None = None) -> int:
     env = cli.Envelope(
         TOOL, "inspect", 1,
         inputs={"model": args.model},
-        results=results, units={"aperture_value": "mm" if results["aperture_type"] == "EPD" else "1"},
+        results=results, units={"aperture_value": results["units"] if results["aperture_type"] in {"EPD", "float_by_stop_size"} else "1"},
         warnings=warnings,
         method="Optiland 0.6.2 fileio.load_zemax_file / load_optiland_file; surface semi-diameters are "
                "the paraxial marginal ray height at each surface, not a declared mechanical aperture; "
-               "directive classification reflects optical effect on the traced model, not merely whether "
-               "Optiland's reader tokenizes the line.",
+               "shared import assessment distinguishes preserved content, display metadata, unsupported "
+               "optical settings and unknown directives; parsing success does not establish fidelity.",
     )
     cli.emit(env, as_json=args.json)
     return cli.EXIT_OK

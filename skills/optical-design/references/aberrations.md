@@ -50,7 +50,8 @@ W(h, rho, theta) = W020 rho^2                      (defocus)
 ```
 
 Transverse ray error at the image is proportional to the pupil gradient of `W`:
-`(eps_x, eps_y) ~ -(R/n') (dW/d(rho_x), dW/d(rho_y))`, so each transverse term has one fewer
+`(eps_x, eps_y) ~ -(R/n') grad_pupil(W)` (use physical pupil coordinates;
+normalized coordinates require the pupil-radius scale factor), so each transverse term has one fewer
 power of `rho` than its wavefront term. That single relation explains every row below:
 spherical's wavefront is quartic in aperture so its ray error is cubic; coma's wavefront is
 cubic in aperture and linear in field so its ray error is quadratic in aperture; and so on.
@@ -60,10 +61,10 @@ cubic in aperture and linear in field so its ray error is quadratic in aperture;
 | Aberration | Wavefront term | Transverse form | Spot diagram | Ray fan | OPD fan | Primary variable |
 |---|---|---|---|---|---|---|
 | Spherical | `W040 rho^4` | `eps ~ rho^3`, field-independent | Circular blur, same at every field, grows with aperture | Symmetric S-curve, same at all fields | Symmetric bowl, same at all fields | Lens bending (shape factor), stop-independent |
-| Coma | `W131 h rho^3 cos(theta)` | `eps ~ h rho^2` | Asymmetric "comet" flare pointing toward or away from axis, worse off-axis | Odd, asymmetric about origin; tangential and sagittal fans differ | Asymmetric, one-sided tilt that grows with field | Stop position (shift), lens bending |
+| Coma | `W131 h rho^3 cos(theta)` | `eps ~ h rho^2` | Asymmetric "comet" flare pointing toward or away from axis, worse off-axis | Even quadratic tangential ray error vs signed pupil coordinate; may be offset by the reference ray | Odd cubic tangential OPD, possibly with reference tilt removed; grows with field | Stop position (shift), lens bending |
 | Astigmatism | `W222 h^2 rho^2 cos^2(theta)` | `eps ~ h^2 rho` | Elongated or crossed ellipse; tangential and sagittal foci separate | Tangential fan slopes differently from sagittal fan; equal aperture, unequal slope | Saddle shape, opposite sign in the two pupil axes | Stop shift, element splitting, meniscus bending |
 | Field curvature | `W220 h^2 rho^2` | `eps ~ h^2 rho` | Best focus shifts axially with field; sharp on-axis, soft at the edge at one focus | Fan tilts as a whole (looks like defocus) but the tilt grows with field | Whole fan shifts in piston/defocus with field | Field flattener, Petzval-reducing element, glass power split |
-| Distortion | `W311 h^3 rho cos(theta)` | `eps ~ h^3`, aperture-independent | No blur; grid lines bow in (pincushion) or out (barrel), image points stay sharp | Chief ray (edge of fan) offset from paraxial prediction; marginal rays unaffected | Not visible in OPD (distortion is a chief-ray mapping error, not a wavefront error) | Stop position relative to a lens group, especially in wide-field or telecentric designs |
+| Distortion | `W311 h^3 rho cos(theta)` | `eps ~ h^3`, aperture-independent | No blur; grid lines bow in (pincushion) or out (barrel), image points stay sharp | Constant mapping offset vs pupil coordinate; chief ray is at pupil center, not the fan edge | Linear pupil tilt relative to Gaussian image; removed when the reference follows the displaced image | Stop position relative to a lens group, especially in wide-field or telecentric designs |
 | Axial (longitudinal) color | Focus shift `Delta f(lambda)` | Blur circle whose size depends on defocus at each wavelength | Colored halo, same shape as spherical but with per-wavelength focus offset | Fans for each wavelength are offset along the defocus axis, same shape otherwise | OPD bowls for each wavelength offset in piston/defocus | Glass pair (Abbe number split), achromat power split |
 | Lateral (transverse) color | Chief-ray height difference `Delta y'(lambda)` | Image height differs by wavelength at fixed field | Color fringing that grows linearly with field, worst at the edge | Chief-ray endpoints separate by wavelength; marginal-ray shape is unaffected | Small, mostly a field-dependent piston/tilt difference between wavelengths | Stop position, achromatizing the chief ray (not just the marginal ray) |
 
@@ -74,39 +75,38 @@ astigmatism is corrected to zero (see below).
 
 ## Petzval sum and field flatness
 
-The Petzval sum is the curvature of the naturally flat-field image surface a system would
-form if all other aberrations (chiefly astigmatism) were zero:
+For centered refracting surfaces, define the Petzval sum with positive radius toward
++z and surface power `Phi_j = (n_after,j - n_before,j) / R_j`:
 
 ```
-Sum_Petzval = sum_k  phi_k / n_k
+P = sum_j Phi_j / (n_before,j * n_after,j)
+  = sum_j (n_after,j - n_before,j) / (R_j * n_before,j * n_after,j)
 ```
 
-summed over every refracting surface (or, for thin elements, every element), where `phi_k`
-is the surface (or element) power and `n_k` is the refractive index on the far side of the
-surface (image side of it) that the ray travels in. A positive-power element in a
-high-index glass contributes less field curvature per unit power than the same power in a
-low-index glass, which is why field flatteners are high-index negative elements placed near
-the image, and why a Cooke triplet or Tessar splits power among elements of different index
-rather than using one strong element. Zero astigmatism does not mean a flat field: with
-`S_III = 0` the sagittal and tangential foci coincide, but they still sit on the Petzval
-curvature. Flattening the field means driving the Petzval sum itself toward zero, not just
-balancing astigmatism at one field.
+Both adjacent indices matter. For a thin lens of index `n` in air, its two surfaces
+combine to `P = phi_element / n`; only under that thin-element-in-air approximation
+may the element formula replace the surface sum. For the usual axial image-sag
+convention the Petzval radius satisfies `1/R_P = -n_image * P`; state the convention
+when comparing signed curvature plots. See Sasián, [Theory of sixth-order wave
+aberrations, Table 3](https://wp.optics.arizona.edu/jsasian/wp-content/uploads/sites/33/2016/03/published-six-order-theory.pdf),
+whose curvature increment is `c * Delta(1/n)`.
+
+Petzval curvature describes the common image shell when astigmatism is zero, which
+need not be flat. Redistributing positive and negative element powers and indices can
+reduce the sum; a near-image negative field flattener is one possible design choice.
+A zero sum alone does not remove astigmatism or higher-order field errors. Confirm
+actual sagittal and tangential best-focus surfaces across the required field.
 
 ## Stop shift
 
-Moving the aperture stop along the axis (a "stop shift" of amount `Delta`, a fraction of
-the marginal ray height at the shifted surface) transforms the Seidel sums through the
-classic first-order-quantities identities (Kidger ch. 3; Sasián ch. 8): spherical (`S_I`)
-and the Petzval sum (`S_IV`) are stop-shift invariant, since both are pure aperture/index
-properties independent of ray geometry. Coma (`S_II`) picks up a term in `Delta * S_I`, so
-a component with residual spherical develops coma as soon as the stop moves off it, and
-conversely a stop position can be chosen to null coma against that residual spherical
-(why a symmetric stop position cancels coma and distortion in a symmetric doublet or a
-Cooke triplet). Astigmatism (`S_III`) picks up terms in `Delta * S_II` and `Delta^2 * S_I`;
-distortion (`S_V`) picks up terms in `Delta * S_III`, `Delta^2 * S_II` and `Delta^3 * S_I`.
-Stop position is a free variable for coma, astigmatism and distortion, but it cannot touch
-spherical or the Petzval sum; if a diagnosis says "spherical dominates," releasing stop
-position alone will not fix it.
+In centered third-order theory, moving the stop with fixed power distribution,
+conjugates and marginal-ray normalization leaves spherical (`S_I`) and Petzval
+(`S_IV`) unchanged. Coma acquires a term proportional to stop shift times spherical;
+astigmatism and distortion also change. A stop shift can therefore trade these terms,
+but does not remove coma "for free." Aperture changes, vignetting, high-order effects
+and altered conjugates require a new trace. Exact symmetry cancellation requires
+matching object/image conjugates and symmetric groups; a Cooke triplet is not in
+general such a symmetric system. Confirm the effect in actual fans and Seidel data.
 
 ## Scaling rules
 
@@ -187,3 +187,23 @@ a wide-field lens.
   (see [diagnosis.md](diagnosis.md) for the full misdiagnosis list).
 - ray-optics ([mjhoptics/ray-optics](https://github.com/mjhoptics/ray-optics)) for y-ybar
   first-order layout diagrams that make stop-shift and Petzval arguments visual.
+
+## Controlled signature checks
+
+For a signed meridional pupil coordinate `p`, set one normalized wavefront coefficient
+to 1 and others to zero. Differentiation gives the shape of transverse error (overall
+sign/scale and reference tilt depend on the ray-fan convention):
+
+| Isolated contribution | Wavefront section | Transverse shape | Applicability |
+|---|---|---|---|
+| Defocus | `p^2` | `2p`, odd straight line | Fixed image plane |
+| Spherical | `p^4` | `4p^3`, odd cubic | Primary spherical in a centered system |
+| Coma | `h*p^3` | `3h*p^2`, even parabola | Tangential section at nonzero field |
+| Astigmatism | `h^2*p^2` | `2h^2*p` in tangential section | Compare sagittal section and focus |
+| Distortion | `h^3*p` | `h^3`, constant offset | Gaussian-image reference; chief-ray reference removes it |
+| Axial color | `a(lambda)*p^2` | `2a(lambda)*p` | Wavelength-dependent defocus at one image plane |
+
+These are controlled low-order checks, not unique diagnoses of mixed real lenses.
+For example `p = [-1, -0.5, 0, 0.5, 1]` gives coma `[3, .75, 0, .75, 3]` at `h=1`.
+Plot against signed pupil coordinate and compare with the measured fan's reference.
+Sasián's linked paper, Eq. (2) and Table 1, supplies the polynomial convention.

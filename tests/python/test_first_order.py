@@ -25,7 +25,9 @@ def test_first_order_reports_efl_and_fnumber(run_json, model):
     assert r["epd_mm"] == pytest.approx(10.0)
     assert r["na_image"] == pytest.approx(1.0 / (2 * r["f_number"]))
     assert r["total_track_mm"] == pytest.approx(65.0)
-    assert r["bfl_mm"] == pytest.approx(60.0)
+    assert r["image_distance_mm"] == pytest.approx(60.0)
+    assert r["bfl_mm"] == r["back_focal_length_mm"]
+    assert r["na_image_paraxial"] == r["na_image"]
     assert out["units"]["efl_mm"] == "mm"
     assert out["units"]["f_number"] == "1"
     # Object is at infinity for this singlet; magnification is not meaningfully defined.
@@ -99,3 +101,79 @@ def test_input_file_bytes_are_unchanged_after_a_run(run):
     assert code == 0, err
     after = hashlib.sha256(ZMX_MODEL.read_bytes()).hexdigest()
     assert before == after
+
+
+def test_back_focus_is_independent_of_detector_position():
+    from _lib import first_order as fo
+    optic = fo.load_optic(str(ZMX_MODEL))
+    initial = fo.compute(optic)["results"]
+    # An independent parallel input ray crosses the axis at the back focal point.
+    y, u = optic.paraxial.trace_generic(1.0, 0.0, optic.surfaces.positions[1] - 1,
+                                        optic.primary_wavelength)
+    expected_bfl = float((-y[-2] / u[-2]).item())
+    optic.updater.set_thickness(10.0 + optic.surfaces.surfaces[-2].thickness, -2)
+    shifted = fo.compute(optic)["results"]
+    assert initial["back_focal_length_mm"] == pytest.approx(expected_bfl)
+    assert shifted["back_focal_length_mm"] == pytest.approx(expected_bfl)
+    assert shifted["image_distance_mm"] == pytest.approx(initial["image_distance_mm"] + 10)
+
+
+@pytest.mark.parametrize("rule", [
+    {"tol_pct": 1}, {"max": float("nan")}, {"target": float("inf")},
+    {"min": True}, {"target": 50, "tol_pct": -1}, {"min": 60, "max": 40},
+])
+def test_invalid_gate_rule_is_rejected(rule):
+    from _lib.first_order import evaluate_gate
+    with pytest.raises(ValueError):
+        evaluate_gate({"efl_mm": 50}, {"efl_mm": rule})
+
+
+@pytest.mark.parametrize("value,target,tol_pct,expected", [
+    (0, 1e308, 2, False),
+    (-1e308, 1e308, 199, False),
+    (-1e308, 1e308, 200, True),
+    (51, 50, 2, True),
+    (51.0001, 50, 2, False),
+    (0, 0, 1e308, True),
+    (1e-308, 0, 1e308, False),
+])
+def test_target_gate_avoids_overflow_and_keeps_inclusive_boundaries(value, target, tol_pct, expected):
+    from _lib.first_order import evaluate_gate
+    gate = evaluate_gate({"efl_mm": value}, {"efl_mm": {"target": target, "tol_pct": tol_pct}})
+    assert gate["pass"] is expected
+
+
+@pytest.mark.parametrize("value", [float("nan"), float("inf"), True, "50", None])
+def test_nonfinite_or_nonnumeric_measurement_cannot_pass(value):
+    from _lib.first_order import evaluate_gate
+    assert evaluate_gate({"efl_mm": value}, {"efl_mm": {"max": 100}})["pass"] is False
+
+
+def test_non_mm_model_cannot_pass_gate(run, tmp_path):
+    model = tmp_path / "inch.zmx"
+    model.write_text(ZMX_MODEL.read_text(encoding="utf-16").replace("UNIT MM", "UNIT IN"))
+    spec = tmp_path / "gate.json"
+    spec.write_text(json.dumps({"efl_mm": {"max": 100}}))
+    code, _, err = run(first_order.main, ["--model", str(model), "--spec", str(spec), "--json"])
+    assert code == 4
+    assert "convert" in err.lower() and "UNIT IN" in err
+
+
+def test_fidelity_warnings_survive_first_order(run_json, tmp_path):
+    import inspect_zmx
+    model = tmp_path / "unknown.zmx"
+    model.write_text(ZMX_MODEL.read_text(encoding="utf-16") + "\nMYSTERYOPTIC 42\n")
+    inspected = run_json(inspect_zmx.main, ["--model", str(model)])
+    summary = run_json(first_order.main, ["--model", str(model)])
+    assert summary["results"]["import_fidelity"] == inspected["results"]["import_fidelity"]
+    assert set(inspected["warnings"]).issubset(summary["warnings"])
+    assert any("MYSTERYOPTIC" in warning for warning in summary["warnings"])
+
+
+@pytest.mark.parametrize("rule", [{"max": float("nan")}, {"min": True}, {"tol_pct": 1}])
+def test_invalid_json_gate_is_a_usage_error(run, tmp_path, rule):
+    spec = tmp_path / "gate.json"
+    spec.write_text(json.dumps({"efl_mm": rule}))
+    code, _, err = run(first_order.main, ["--model", str(ZMX_MODEL), "--spec", str(spec)])
+    assert code == 2
+    assert "gate rule" in err

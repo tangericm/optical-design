@@ -12,7 +12,8 @@ prescription without a paraxial check have been measured 35-55% off on EFL (the
 OptiAgent study, arXiv:2602.23761); this is the check that catches that before an
 optimizer spends its budget chasing the wrong target.
 
-Reports EFL, BFL, F/#, image-space NA, EPD, entrance/exit pupil position and diameter,
+Reports EFL, back focal length, current image distance, F/#, paraxial NA estimate, EPD,
+entrance/exit pupil position and diameter,
 magnification (finite conjugates only), total track, the Lagrange invariant, EFL at
 each declared wavelength plus the chromatic focal shift, and, at the maximum field, the
 image-space chief ray angle (telecentricity error) and chief ray height.
@@ -31,7 +32,9 @@ gate.json:
 
 Each rule may combine "min", "max", and/or "target" with "tol_pct" (percent tolerance
 around target); every declared field must hold for that key to pass. Valid keys:
-efl_mm, bfl_mm, f_number, na_image, epd_mm, total_track_mm, telecentricity_deg,
+efl_mm, back_focal_length_mm, image_distance_mm, bfl_mm (corrected BFL alias),
+f_number, na_image_paraxial, na_image (paraxial alias), epd_mm, total_track_mm,
+chief_ray_angle_paraxial_deg, telecentricity_deg (paraxial alias), efl_spread_um,
 chromatic_shift_um, chief_ray_height_mm, magnification, lagrange_invariant.
 
 Exit codes: 0 pass (or no --spec given), 1 gate failed, 2 usage, 3 optiland missing,
@@ -43,6 +46,8 @@ import argparse
 import json
 import sys
 from pathlib import Path
+
+sys.dont_write_bytecode = True
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from _lib import cli  # noqa: E402, RUF100
@@ -100,9 +105,10 @@ def main(argv: list[str] | None = None) -> int:
         inputs={"model": args.model, "spec": args.spec},
         results=results, units=units, warnings=warnings,
         method="Optiland 0.6.2 Paraxial module (marginal/chief ray traces, f1/f2/FNO/EPD/XPL/EPL, "
-               "Lagrange invariant); NA = 1/(2 F#); telecentricity is the image-space chief ray angle "
+               "Lagrange invariant); BFL = last-vertex/image gap + F2 (image-relative back focus); "
+               "NA = 1/(2 F#) is a paraxial estimate; telecentricity is the paraxial image-space chief ray angle "
                "at the field scaled to the system's declared maximum field; chromatic shift is "
-               "max(EFL) - min(EFL) over the declared wavelengths.",
+               "max(EFL) - min(EFL) over the declared wavelengths, not a best-focus shift.",
     )
     cli.emit(env, as_json=args.json)
     if gate is not None and not gate["pass"]:

@@ -85,5 +85,62 @@ def test_unsupported_extension_is_an_analysis_failure(run, tmp_path):
 def test_directive_classification_is_json_serializable():
     """No engine needed: the classifier itself is pure and total."""
     for key in ("AUTH", "NAME", "VDXN", "VCYN", "VANN", "TOL1", "MOFF", "SURF", "GCAT", "UNKNOWNTOKEN"):
-        assert inspect_zmx._classify(key) in ("used", "ignored")
+        assert inspect_zmx._classify(key) in ("preserved", "display_metadata", "unsupported_optical", "unknown")
     assert json.dumps([inspect_zmx._classify("AUTH")])
+
+
+def test_non_mm_inspection_uses_raw_length_labels(run_json, tmp_path):
+    model = tmp_path / "inch.zmx"
+    model.write_text(ZMX_MODEL.read_text(encoding="utf-16").replace("UNIT MM", "UNIT IN"))
+    out = run_json(inspect_zmx.main, ["--model", str(model)])
+    assert out["results"]["units"] == "IN"
+    assert "radius_mm" not in out["results"]["surfaces"][1]
+    assert "radius_raw" in out["results"]["surfaces"][1]
+    assert out["results"]["import_fidelity"]["numerical_analysis_allowed"] is False
+    assert out["units"]["aperture_value"] == "IN"
+
+
+@pytest.mark.parametrize("directive,category", [
+    ("AUTH", "display_metadata"), ("CLAP", "preserved"),
+    ("VDXN", "unsupported_optical"), ("VCXN", "preserved"), ("RAIM", "unsupported_optical"),
+    ("POLS", "unsupported_optical"), ("MYSTERYOPTIC", "unknown"),
+])
+def test_directive_categories_do_not_call_optical_content_cosmetic(directive, category):
+    assert inspect_zmx._classify(directive) == category
+
+
+@pytest.mark.parametrize("extra,fragment", [
+    ("FLAP 1 0 2", "FLAP"),
+    ("SURF 3\nTYPE COORDBRK", "COORDBRK"), ("MNUM 2", "configurations"),
+])
+def test_import_assessment_marks_unrepresented_optics_partial(tmp_path, extra, fragment):
+    from _lib.import_fidelity import assess_model
+    model = tmp_path / "partial.zmx"
+    model.write_text(ZMX_MODEL.read_text(encoding="utf-16") + "\n" + extra + "\n")
+    assessment = assess_model(model)
+    assert assessment["status"] == "partial"
+    assert any(fragment in warning for warning in assessment["warnings"])
+
+
+def test_imported_clipping_and_vignetting_are_preserved(tmp_path):
+    from _lib.first_order import load_optic
+    model = tmp_path / "apertured.zmx"
+    text = ZMX_MODEL.read_text(encoding="utf-16").replace("VCXN 0", "VCXN 0.2")
+    text = text.replace("  STOP", "  STOP\n  CLAP 0 2")
+    model.write_text(text, encoding="utf-8")
+    optic = load_optic(str(model))
+    assert optic.fields.fields[0].vx == pytest.approx(0.2)
+    assert optic.surfaces.surfaces[1].aperture is not None
+    directives = {row["key"]: row["category"] for row in optic._import_fidelity["directives"]}
+    assert directives["CLAP"] == directives["VCXN"] == "preserved"
+
+
+def test_dropped_vignette_decenter_warning_is_json_safe(run_json, tmp_path):
+    import first_order
+    model = tmp_path / "decenter.zmx"
+    text = ZMX_MODEL.read_text(encoding="utf-16").replace("VDXN 0", "VDXN 0.2")
+    model.write_text(text, encoding="utf-8")
+    inspection = run_json(inspect_zmx.main, ["--model", str(model)])
+    summary = run_json(first_order.main, ["--model", str(model)])
+    assert inspection["results"]["import_fidelity"] == summary["results"]["import_fidelity"]
+    assert any("Vignette decentering is not supported" in warning for warning in summary["warnings"])

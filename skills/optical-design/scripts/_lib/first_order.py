@@ -14,22 +14,25 @@ Two Optiland API quirks worth recording, found while writing this module:
   function raises a confusing ``'numpy.float64' object is not callable``.
 - ``Paraxial.f2()`` (EFL) always reads ``optic.primary_wavelength`` internally
   and takes no wavelength argument, so a per-wavelength EFL sweep for the
-  chromatic focal shift has to redo its trace by hand (see ``_efl_at``
+  EFL spread has to redo its trace by hand (see ``_efl_at``
   below) rather than calling ``f2()`` once per wavelength.
 """
 from __future__ import annotations
 
 import math
-from pathlib import Path
+from fractions import Fraction
 from typing import Any
 
 from . import optics
+from .import_fidelity import load_assessed_model
 
 # Gate keys accepted by evaluate_gate(); kept in sync with the flat keys compute() emits.
 GATE_KEYS = {
     "efl_mm", "bfl_mm", "f_number", "na_image", "epd_mm", "total_track_mm",
     "telecentricity_deg", "chromatic_shift_um", "chief_ray_height_mm",
     "magnification", "lagrange_invariant",
+    "image_distance_mm", "back_focal_length_mm", "na_image_paraxial",
+    "efl_spread_um", "chief_ray_angle_paraxial_deg",
 }
 
 
@@ -40,15 +43,8 @@ def load_optic(model_path: str) -> Any:
     reader itself rejects -- callers should treat that as an analysis failure,
     not a usage error: the arguments were fine, the file wasn't.
     """
-    from optiland.fileio import load_optiland_file, load_zemax_file
-
-    path = Path(model_path)
-    suffix = path.suffix.lower()
-    if suffix == ".json":
-        return load_optiland_file(str(path))
-    if suffix == ".zmx":
-        return load_zemax_file(str(path))
-    raise ValueError(f"unsupported model file extension {suffix!r}: expected .zmx or .json")
+    optic, _ = load_assessed_model(model_path)
+    return optic
 
 
 def _scalar(value: Any) -> float:
@@ -94,13 +90,16 @@ def compute(optic: Any) -> dict[str, Any]:
     reported as ``None`` with an accompanying warning rather than raised.
     """
     p = optic.paraxial
-    warnings: list[str] = []
+    assessment = getattr(optic, "_import_fidelity", None)
+    warnings: list[str] = list(assessment["warnings"]) if assessment else []
 
     efl = p.f2()
     fno = p.FNO()
     epd = p.EPD()
     positions = optic.surfaces.positions
-    bfl = _scalar(positions[-1] - positions[-2])
+    image_distance = _scalar(positions[-1] - positions[-2])
+    # F2 is measured from the image plane, for parallel input rays at primary wavelength.
+    bfl = image_distance + _scalar(p.F2())
     total_track = float(optic.total_track)
     invariant = p.invariant()
 
@@ -117,6 +116,8 @@ def compute(optic: Any) -> dict[str, Any]:
     raw: dict[str, float] = {
         "efl_mm": _scalar(efl),
         "bfl_mm": bfl,
+        "back_focal_length_mm": bfl,
+        "image_distance_mm": image_distance,
         "f_number": _scalar(fno),
         "epd_mm": _scalar(epd),
         "entrance_pupil_position_mm": _scalar(p.EPL()),
@@ -130,6 +131,9 @@ def compute(optic: Any) -> dict[str, Any]:
         "chief_ray_height_mm": chief_ray_height_mm,
     }
     raw["na_image"] = optics.na_from_fnum(raw["f_number"]) if math.isfinite(raw["f_number"]) and raw["f_number"] != 0 else math.nan
+    raw["na_image_paraxial"] = raw["na_image"]
+    raw["efl_spread_um"] = chromatic_shift_um
+    raw["chief_ray_angle_paraxial_deg"] = telecentricity_deg
     if not optic.object_surface.is_infinite:
         raw["magnification"] = _scalar(p.magnification())
 
@@ -141,6 +145,19 @@ def compute(optic: Any) -> dict[str, Any]:
         results[key] = clean
     results["primary_wavelength_um"] = primary_um
     results["per_wavelength_efl_mm"] = {k: (v if math.isfinite(v) else None) for k, v in per_wavelength_efl_mm.items()}
+    if assessment:
+        results["import_fidelity"] = assessment
+    results["metric_definitions"] = {
+        "back_focal_length_mm": "Last optical vertex to paraxial back focus for parallel input rays at primary wavelength; signed along the optical axis",
+        "bfl_mm": "Compatibility alias for back_focal_length_mm (corrected from the former image-distance definition)",
+        "image_distance_mm": "Last optical vertex to current image surface, independent of its focus",
+        "na_image_paraxial": "1/(2*Optiland FNO); paraxial estimate, not a real-ray n*sin(u) measurement; verify working F/# and conjugates for finite or immersion systems",
+        "na_image": "Compatibility alias for na_image_paraxial",
+        "chief_ray_angle_paraxial_deg": "atan of paraxial image-space chief-ray slope at maximum field; signed, not a real-ray angle",
+        "telecentricity_deg": "Compatibility alias for chief_ray_angle_paraxial_deg",
+        "efl_spread_um": "max(EFL)-min(EFL) over declared wavelengths, not longitudinal best-focus shift",
+        "chromatic_shift_um": "Compatibility alias for efl_spread_um",
+    }
 
     units = {
         "efl_mm": "mm", "bfl_mm": "mm", "f_number": "1", "na_image": "1", "epd_mm": "mm",
@@ -149,6 +166,8 @@ def compute(optic: Any) -> dict[str, Any]:
         "lagrange_invariant": "mm", "chromatic_shift_um": "um", "telecentricity_deg": "deg",
         "chief_ray_height_mm": "mm", "magnification": "1", "primary_wavelength_um": "um",
         "per_wavelength_efl_mm": "mm",
+        "back_focal_length_mm": "mm", "image_distance_mm": "mm", "na_image_paraxial": "1",
+        "efl_spread_um": "um", "chief_ray_angle_paraxial_deg": "deg",
     }
     return {"results": results, "units": units, "warnings": warnings}
 
@@ -174,12 +193,20 @@ def evaluate_gate(results: dict[str, Any], spec: dict[str, Any]) -> dict[str, An
         if unknown:
             raise ValueError(f"unknown gate rule field(s) for {key!r}: {sorted(unknown)}")
         for field in ("min", "max", "target", "tol_pct"):
-            if field in rule and not isinstance(rule[field], (int, float)):
-                raise ValueError(f"gate rule {key!r}.{field} must be a number")
+            if field in rule and (isinstance(rule[field], bool)
+                                  or not isinstance(rule[field], (int, float))
+                                  or not math.isfinite(rule[field])):
+                raise ValueError(f"gate rule {key!r}.{field} must be a finite number, not a boolean")
+        if "tol_pct" in rule and "target" not in rule:
+            raise ValueError(f"gate rule {key!r}: tol_pct requires a target")
+        if rule.get("tol_pct", 0) < 0:
+            raise ValueError(f"gate rule {key!r}: tol_pct must be nonnegative")
+        if "min" in rule and "max" in rule and rule["min"] > rule["max"]:
+            raise ValueError(f"gate rule {key!r}: min must not exceed max")
         value = results.get(key)
-        if value is None:
+        if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value):
             checks.append({"key": key, "value": None, "pass": False,
-                           "reason": "not available (null) for this model"})
+                           "reason": "not available as a finite numeric measurement for this model"})
             overall = False
             continue
         ok = True
@@ -191,10 +218,12 @@ def evaluate_gate(results: dict[str, Any], spec: dict[str, Any]) -> dict[str, An
             ok = False
             reasons.append(f"{value:.6g} > max {rule['max']:.6g}")
         if "target" in rule:
-            target = float(rule["target"])
-            tol_pct = float(rule.get("tol_pct", 0.0))
-            allowed = abs(target) * tol_pct / 100.0
-            if abs(value - target) > allowed:
+            target = rule["target"]
+            tol_pct = rule.get("tol_pct", 0.0)
+            # Finite inputs can still overflow float multiplication/subtraction.
+            # Exact ratios preserve inclusive bounds without creating infinity.
+            allowed = abs(Fraction(target)) * Fraction(tol_pct) / 100
+            if abs(Fraction(value) - Fraction(target)) > allowed:
                 ok = False
                 reasons.append(f"{value:.6g} outside target {target:.6g} ± {tol_pct:g}%")
         checks.append({"key": key, "value": value, "pass": ok,

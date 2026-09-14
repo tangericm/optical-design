@@ -46,7 +46,7 @@ free continuous index/Abbe pair with no catalog constraint.
 
 ## Field and wavelength sampling
 
-Sample fields at 0, 0.5, 0.8 and 0.9 of full field, not a uniform grid. A microscope-design
+Fields at 0, 0.5, 0.8 and 0.9 of full field are one illustrative optimization grid. A microscope-design
 thread gives the reasoning directly: use non-uniform field heights "0.0, 0.5, 0.8, 0.9...
 this weights the optimization toward higher aberrations at edge fields" instead of
 diluting the merit function with redundant near-axis samples where third-order aberrations
@@ -56,30 +56,30 @@ Weight fields and wavelengths deliberately rather than leaving every sample at w
 weight the field where the requirement is tightest (often the edge) more heavily, and
 weight wavelengths by the source's actual spectral weighting, not uniformly across the band.
 
+Final acceptance must include **1.0 full field**, each required wavelength and the
+actual requirement boundary (frequency, pupil/aperture and focus convention). Increase
+sampling until results are stable enough for the stated tolerance. Optimization samples
+at 0.9 field cannot establish an edge-of-field requirement.
+
 ## Hard constraints, targets and weights
 
-Three different things get confused under "merit function": a **hard constraint** (must
-pass, no matter how good the rest of the merit is — modeled as `min_val`/`max_val` on an
-Optiland operand, or a `requirement` in a design spec), a **target** (an equality goal the
-optimizer trades off against everything else — `target` on an operand, or an objective
-term's `target`), and a **weight** (how much a target's residual counts relative to other
-targets — `weight` on an operand, or a composite term's `weight`). Do not encode a hard
-constraint as a very large weight; a large weight still trades off against other terms near
-the optimum, while a genuine hard constraint (edge thickness cannot go negative, EFL must
-be within 1% of spec) should reject a candidate outright. `scripts/design.py` keeps this
-separation explicit: hard requirements gate acceptance independently of the objective value.
+Keep acceptance separate from optimization guidance. A **hard acceptance requirement**
+must pass independently of merit. An operand **target** is a weighted equality residual;
+operand `min_val`/`max_val` are inequality penalties that contribute residual only outside
+the interval. In Optiland 0.6.2 these are soft penalties, not guaranteed feasibility
+constraints: see [`Operand.delta_ineq()` and `delta()`](https://github.com/optiland/optiland/blob/v0.6.2/optiland/optimization/operand/operand.py).
+A large weight still permits tradeoffs. Bounds on optimization **variables** constrain
+the search parameters when supported by the selected solver, a separate mechanism from
+operand penalties. Validate all physical requirements again on the final saved/reloaded
+candidate. `scripts/design.py` independently gates hard requirements on acceptance.
 
 ## The over-constraint check
 
-EFL, magnification and total track are coupled by the first-order layout: fixing all three
-as independent hard targets usually leaves no feasible point, because the paraxial relations
-already determine one from the other two once conjugates are set. A camera-lens design
-thread shows the working pattern: let EFL float as a dependent quantity, target the chief
-ray height (`REAY`-equivalent) for magnification, and use a thickness solve to hold total
-track, rather than declaring all three as independent targets
-([community.zemax.com](https://community.zemax.com/got-a-question-7/design-a-camera-lens-optics-studio-4524)).
-Before adding a third first-order operand, check whether it is actually independent of the
-two you already have.
+EFL, magnification, total track, conjugates and principal-plane locations are coupled.
+Whether three targets are inconsistent depends on the layout and its remaining degrees
+of freedom; a multi-element system can move its principal planes. Run a paraxial
+feasibility check with the actual fixed quantities and variable bounds before deciding
+which target to relax. Do not apply a universal "fix two, float the third" rule.
 
 ## Edge and center thickness
 
@@ -88,7 +88,8 @@ operands — model them as bounds, not targets. The Ansys singlet tutorial bound
 thickness between 2 and 12 mm and requires edge thickness greater than 2 mm via the glass
 boundary constraints, independent of the RMS spot objective being minimized
 ([Ansys singlet part 3](https://optics.ansys.com/hc/en-us/articles/42661700528275-How-to-design-a-singlet-lens-Part-3-Optimization)).
-Use Optiland's `edge_thickness` operand with `min_val` set and no `target`/`weight` pull.
+Use Optiland's `edge_thickness` operand with `min_val` as an inequality penalty and an
+intentional weight. Then measure and gate the final edge thickness independently.
 
 ## Telecentricity and distortion
 
@@ -125,13 +126,15 @@ problem.add_operand("f2", target=50.0, weight=10, input_data={"optic": lens})
 spot = {"optic": lens, "surface_number": -1, "num_rays": 6, "wavelength": 0.587}
 for Hy in (0.0, 0.5, 0.8, 0.9):
     problem.add_operand("rms_spot_size", target=0.0, input_data={**spot, "Hx": 0, "Hy": Hy})
-# 3. Edge thickness is a bound, not a target
+# 3. Edge thickness inequality penalty; final acceptance still needs an explicit check
 edge = {"optic": lens, "surface_number": 2}
 problem.add_operand("edge_thickness", min_val=2.0, input_data=edge)
 
 problem.add_variable(lens, "radius", surface_number=2)
 problem.add_variable(lens, "thickness", surface_number=2, min_val=2.0, max_val=12.0)
 LeastSquares(problem).optimize()
+# After saving/reloading: evaluate every requirement, including Hy=1.0 and all
+# declared wavelengths. Neither a low merit nor min_val proves acceptance.
 ```
 
 See [optiland-recipes.md](optiland-recipes.md) for the OPD/wavefront and Seidel-table
