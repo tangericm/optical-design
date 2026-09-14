@@ -1,9 +1,8 @@
 # Install optical-design
 
-**Development preview:** `walkthrough`, `prune-backups`, and `doctor --engine-check`
-below are unreleased. Use `node bin/optical-design.mjs` in this checkout in place of
-`npx optical-design` to try them, or invoke the CLI by its quoted absolute path from
-your project. npm and tag `v2.0.0` retain the previous behavior.
+This guide describes version 3. Use `npx optical-design@latest` to fetch the current
+release. Review [migration notes](compatibility.md#upgrading-from-200) when upgrading
+scripts that consume the version 2 metrics or review contract.
 
 [Documentation](README.md) / Install
 
@@ -123,7 +122,7 @@ Install/update/uninstall default to the current project. Use the same `--global`
 choice for subsequent operations. `update` uses the version bundled in the command
 you execute; it does not separately fetch a moving GitHub branch.
 
-For reproducibility, use `npx optical-design@2.0.0 install --agent codex` and retain
+For reproducibility, use `npx optical-design@3.0.0 install --agent codex` and retain
 the reported version. The install receipt is `.optical-design-install.json` inside
 the installed skill directory. It records the package version and exact file hashes.
 
@@ -180,7 +179,7 @@ The agent can also invoke the installed `resolve.py` by its absolute path with
 If you prefer a fixed release, clone the tag:
 
 ```sh
-git clone --branch v2.0.0 --depth 1 https://github.com/tangericm/optical-design.git
+git clone --branch v3.0.0 --depth 1 https://github.com/tangericm/optical-design.git
 ```
 
 Copy the **whole** `skills/optical-design` directory into your client's skill directory.
@@ -210,7 +209,7 @@ npx optical-design uninstall --agent codex
 
 Add `--global` to update/uninstall a global installation. Updates preserve a backup
 and refuse edited installations. A fixed version can be installed with
-`npx optical-design@2.0.0 install --agent codex`.
+`npx optical-design@3.0.0 install --agent codex`.
 
 For installations made with the shared `skills` installer, use its own commands:
 `npx skills update` or `npx skills remove optical-design`; consult that installer's

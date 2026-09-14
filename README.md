@@ -19,10 +19,8 @@ Licensed OpticStudio supports `.zos` through the optional native audited adapter
 
 ## Install
 
-**Development preview:** the improvements described here are unreleased; npm and
-the `v2.0.0` tag retain the previous behavior. To try this checkout, run
-`node bin/optical-design.mjs install --agent codex` from its root (choose your agent).
-The npm commands below install the published release. See [compatibility](docs/compatibility.md).
+Upgrading from v2? Version 3 corrects back focal length and tightens report validation.
+Read the [migration notes](docs/compatibility.md#upgrading-from-200) for affected scripts.
 
 Choose **one** command for your agent, from a terminal in your project:
 
@@ -51,8 +49,7 @@ OpticStudio is optional. [Installation by client, updates, troubleshooting →](
 ## Try it
 
 Start a new conversation and choose a starting point. The agent locates the bundled
-files; no prescription is needed for the first example. The new walkthrough currently
-requires the development checkout installation described above.
+files; no prescription or repository checkout is needed for the first example.
 
 **Learn with an example**
 
@@ -73,10 +70,10 @@ requires the development checkout installation described above.
 For a terminal-only guided example:
 
 ```sh
-node bin/optical-design.mjs walkthrough --out my-first-lens
+npx optical-design@latest walkthrough --out my-first-lens
 ```
 
-Run this from the development checkout. It creates a candidate lens and a visual review in a new directory. The first run may
+Run this from your project. It creates a candidate lens and a visual review in a new directory. The first run may
 download Python and Optiland. [Walkthrough and expected outputs](docs/quickstart.md).
 
 ## Example output

@@ -1,6 +1,6 @@
 {
   "name": "optical-design",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "Understand lenses, calculate optical limits, improve supported designs, and share measured results.",
   "author": {
     "name": "Eric Tang",

@@ -9,18 +9,16 @@ OpticStudio license, or knowledge of Python to run the walkthrough.
 
 Install [Node.js](https://nodejs.org/en/download) 22+ and
 [uv](https://docs.astral.sh/uv/getting-started/installation/), then open a terminal
-in this development checkout. These new commands are **unreleased**; the published
-npm `2.0.0` package does not yet include the walkthrough. For a separate project,
-replace `bin/optical-design.mjs` with the quoted absolute path to this checkout's CLI.
+in your project directory:
 
 ```sh
-node bin/optical-design.mjs doctor
-node bin/optical-design.mjs walkthrough --out my-first-lens
+npx optical-design@latest doctor
+npx optical-design@latest walkthrough --out my-first-lens
 ```
 
 Use a new output directory. The first run may download Python 3.11 and Optiland 0.6.2;
 subsequent runs reuse the dependency cache. To explicitly check the portable engine,
-run `node bin/optical-design.mjs doctor --engine-check`; this may also download dependencies.
+run `npx optical-design@latest doctor --engine-check`; this may also download dependencies.
 A default doctor check does not run the engine or verify native licensing.
 
 The walkthrough copies a bundled Cooke triplet, introduces a known focus offset,

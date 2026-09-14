@@ -11,7 +11,7 @@ compatibility: Python 3.11+ and uv. Prescription work uses Optiland 0.6.2 throug
 metadata:
   author: Eric Tang
   repo: https://github.com/tangericm/optical-design
-  version: "2.0.0"
+  version: "3.0.0"
 ---
 
 # optical-design

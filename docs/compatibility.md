@@ -1,16 +1,29 @@
 # Compatibility
 
-## Unreleased adoption repairs
+## 3.0.0
 
-The source checkout adds the guided walkthrough, installation lifecycle repairs, shared
+Version 3 adds the guided walkthrough, installation lifecycle repairs, shared
 import-fidelity assessment and corrected first-order/report contracts. Runtime pins remain
 Optiland 0.6.2 and the native versions recorded below. `bfl_mm` now means back focal length,
 not the final air gap; use `image_distance_mm` for that previous value. Explicit paraxial
 metric names retain documented legacy aliases. Versioned reviews accept legacy summaries
 where unambiguous, but reject contradictory pass flags and invalid numerical requirements.
 
-The npm version and published v2.0.0 tag remain unchanged until a new release is cut.
-Use this checkout to exercise unreleased commands. These repairs do not establish new
+### Upgrading from 2.0.0
+
+- Replace reads of the old detector-spacing `bfl_mm` value with `image_distance_mm`.
+  Use `back_focal_length_mm` (or the corrected `bfl_mm` alias) for paraxial back focus.
+- Review first-order gate specifications: tolerances require a target; all values must
+  be finite numbers, and non-mm prescriptions must be converted before numerical analysis.
+- For reloaded review evidence, include each metric's name, sampling conditions and
+  unit in exactly one check. Its `after_reload` must equal the displayed value; checks
+  must cover every reported metric. Use the updated summary recipe as the producer.
+- Development evaluation files now live in repository-level `evals/` and are not part
+  of installed skills or npm artifacts.
+
+The `v2.0.0` tag and npm version remain available for reproducible old workflows;
+install explicitly with `npx optical-design@2.0.0 install --agent codex` when required.
+Its known metric and import limitations still apply. These repairs do not establish new
 OpticStudio-version or agent-host compatibility; the historical records below retain
 their original version scope.
 

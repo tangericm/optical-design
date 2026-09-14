@@ -1,6 +1,11 @@
 # Changelog
 
-## Unreleased
+## 3.0.0 — 2026-09-14
+
+This major release corrects public metric semantics and tightens report validation.
+For the former `bfl_mm` detector-spacing value, use `image_distance_mm`. Existing
+report producers must provide consistent metric identities, units, and complete
+save/reload checks when claiming reloaded evidence. See [migration notes](docs/compatibility.md#upgrading-from-200).
 
 - Add a guided Cooke-triplet focus walkthrough with matched before/after figures,
   declared requirements and saved-candidate reload measurements. Keep the audited demo.

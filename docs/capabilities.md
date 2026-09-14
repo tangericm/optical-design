@@ -2,8 +2,8 @@
 
 [Documentation](README.md) / Capabilities
 
-This page describes the unreleased source checkout; see [compatibility](compatibility.md)
-for published-version scope and [quickstart](quickstart.md) for executable preview commands.
+This page describes version 3; see [compatibility](compatibility.md) for migration
+notes and [quickstart](quickstart.md) for a runnable first example.
 
 ## Choose a workflow
 
