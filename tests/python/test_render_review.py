@@ -151,3 +151,120 @@ def test_not_json_at_all_exits_four(run, tmp_path):
     out = tmp_path / "review.html"
     code, _, err = run(render_review.main, ["--summary", str(summary), "--out", str(out)])
     assert code == 4 and err
+
+
+@pytest.mark.parametrize("metric", [
+    {"value": 12, "requirement": {"max": 10}, "pass": True},
+    {"value": 9, "requirement": {"max": 10}, "pass": False},
+    {"value": float("nan"), "requirement": {"max": 10}},
+    {"value": True},
+    {"value": 9, "requirement": {"max": float("inf")}},
+    {"value": 9, "requirement": {"min": 10, "max": 5}},
+    {"value": 9, "requirement": {}},
+    {"value": 9, "pass": "false"},
+])
+def test_rejects_unreliable_metric_claims(run, tmp_path, metric):
+    summary = _write_summary(tmp_path, metrics=[{"name": "RMS spot", **metric}])
+    code, _, err = run(render_review.main, ["--summary", str(summary), "--out", str(tmp_path / "r.html")])
+    assert code == 4, err
+
+
+def test_versioned_report_computes_threshold_and_explains_evidence(run, tmp_path):
+    summary = _write_summary(tmp_path, schema_version=1, sha256_kind="source_file",
+        evidence={"status": "measured", "method": "SpotDiagram centroid reference"},
+        metrics=[{"name": "RMS spot", "field": "0,1 normalized", "wavelength": 0.55,
+                  "value": 12, "before": 20, "unit": "um", "requirement": {"max": 10}}],
+        captions={"spot": "Smaller spots mean less geometric blur; inspect the edge field."})
+    out = tmp_path / "r.html"
+    code, stdout, err = run(render_review.main, ["--summary", str(summary), "--out", str(out), "--json"])
+    assert code == 0, err
+    doc = out.read_text(encoding="utf-8")
+    assert "Measured" in doc and "Authored interpretation" in doc
+    assert "1 requirement failed" in doc and "FAIL" in doc
+    assert "Before" in doc and "Smaller spots" in doc
+    assert json.loads(stdout)["results"]["metrics_pass"] == 0
+
+
+def test_reload_status_requires_matching_metric_evidence(run, tmp_path):
+    summary = _write_summary(tmp_path, schema_version=1, evidence={"status": "reloaded"})
+    code, _, _ = run(render_review.main, ["--summary", str(summary), "--out", str(tmp_path / "r.html")])
+    assert code == 4
+
+
+def test_legacy_supplied_flags_do_not_create_acceptance(run, tmp_path):
+    summary = _write_summary(tmp_path, metrics=[{"name": "RMS spot", "value": 20,
+                            "wavelength": "d line", "unit": "um", "pass": True}])
+    out = tmp_path / "r.html"
+    code, stdout, err = run(render_review.main, ["--summary", str(summary), "--out", str(out), "--json"])
+    assert code == 0, err
+    assert json.loads(stdout)["results"]["metrics_pass"] == 0
+    doc = out.read_text(encoding="utf-8")
+    assert "Supplied data" in doc and "No acceptance requirements" in doc
+
+
+def test_unit_blocked_import_cannot_acquire_passing_report(run, tmp_path):
+    summary = _write_summary(tmp_path, schema_version=1,
+        import_assessment={"status": "partial", "source_units": "IN", "numerical_analysis_allowed": False})
+    code, _, err = run(render_review.main, ["--summary", str(summary), "--out", str(tmp_path / "r.html")])
+    assert code == 4 and "convert source units" in err
+
+
+@pytest.mark.parametrize("after,tolerance", [(2, 1e-8), (1, -1), (1, float("inf"))])
+def test_reload_claim_rejects_disagreement_and_invalid_tolerance(run, tmp_path, after, tolerance):
+    summary = _write_summary(tmp_path, metrics=[{"name": "RMS spot", "value": after, "unit": "um"}],
+        evidence={"status": "reloaded", "method": "RMS",
+        "candidate": "candidate.json", "candidate_sha256": "a" * 64,
+        "checks": [{"name": "RMS spot", "unit": "um", "before_save": 1,
+                    "after_reload": after, "tolerance": tolerance}]})
+    code, _, _ = run(render_review.main, ["--summary", str(summary), "--out", str(tmp_path / "r.html")])
+    assert code == 4
+
+
+def _write_reloaded_summary(tmp_path):
+    path = _write_summary(tmp_path, schema_version=1)
+    data = json.loads(path.read_text())
+    data["evidence"] = {"status": "reloaded", "method": "Per-condition optical measurements",
+        "candidate": "candidate.json", "candidate_sha256": "a" * 64,
+        "checks": [{**{key: row[key] for key in ("name", "field", "wavelength", "frequency", "axis", "unit") if key in row},
+                    "before_save": row["value"], "after_reload": row["value"], "tolerance": 1e-8}
+                   for row in data["metrics"]]}
+    path.write_text(json.dumps(data))
+    return path, data
+
+
+def test_reload_measurements_must_equal_reported_metric_values(run, tmp_path):
+    path, data = _write_reloaded_summary(tmp_path)
+    data["metrics"][1]["value"] = 99
+    data["evidence"]["checks"][1].update(before_save=1, after_reload=1)
+    path.write_text(json.dumps(data))
+    code, _, err = run(render_review.main, ["--summary", str(path), "--out", str(tmp_path / "r.html")])
+    assert code == 4 and "reported metric value" in err
+
+
+@pytest.mark.parametrize("mutate", [
+    lambda d: d["evidence"]["checks"].pop(),
+    lambda d: d["evidence"]["checks"].append(d["evidence"]["checks"][0].copy()),
+    lambda d: d["metrics"].append(d["metrics"][0].copy()),
+    lambda d: d["evidence"]["checks"][0].pop("name"),
+    lambda d: d["evidence"]["checks"][0].__setitem__("field", 0.7),
+    lambda d: d["evidence"]["checks"][0].__setitem__("wavelength", 0.65),
+    lambda d: d["evidence"]["checks"][0].__setitem__("frequency", 40),
+    lambda d: d["evidence"]["checks"][0].__setitem__("axis", "sagittal"),
+    lambda d: d["evidence"]["checks"][1].__setitem__("unit", "mm"),
+])
+def test_reload_requires_unique_complete_matching_metric_evidence(run, tmp_path, mutate):
+    path, data = _write_reloaded_summary(tmp_path)
+    mutate(data)
+    path.write_text(json.dumps(data))
+    code, _, err = run(render_review.main, ["--summary", str(path), "--out", str(tmp_path / "r.html")])
+    assert code == 4 and "reload" in err
+
+
+def test_complete_reload_evidence_is_matched_by_identity_not_row_order(run, tmp_path):
+    path, data = _write_reloaded_summary(tmp_path)
+    data["evidence"]["checks"].reverse()
+    path.write_text(json.dumps(data))
+    out = tmp_path / "r.html"
+    code, _, err = run(render_review.main, ["--summary", str(path), "--out", str(out)])
+    assert code == 0, err
+    assert "Reloaded:" in out.read_text(encoding="utf-8")

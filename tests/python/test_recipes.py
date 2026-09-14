@@ -9,6 +9,7 @@ if the block raises.
 
 from __future__ import annotations
 
+import json
 import re
 import sys
 from pathlib import Path
@@ -71,6 +72,17 @@ def test_recipe_runs(heading, code, tmp_path, monkeypatch):
     # the parametrize id (its number) does the same in the pytest summary line.
     try:
         exec(compile(code, f"<recipe {heading}>", "exec"), namespace)  # noqa: S102
+        if heading.startswith("14."):
+            import render_review
+            summary = json.loads((tmp_path / "review" / "summary.json").read_text())
+            assert summary["schema_version"] == 1
+            assert summary["engine"]["version"] == "0.6.2"
+            spot = namespace["spot"]
+            pairs = {(str(field.coord), float(w.value)) for field in spot.fields for w in spot.wavelengths}
+            assert {(r["field"], r["wavelength"]) for r in summary["metrics"]} == pairs
+            assert render_review.main(["--summary", str(tmp_path / "review" / "summary.json"),
+                                       "--out", str(tmp_path / "review.html")]) == 0
+            assert "Authored interpretation" not in (tmp_path / "review.html").read_text(encoding="utf-8")
     finally:
         # every recipe that plots leaves figures open under Agg; close them so
         # later recipes in the same process don't accumulate matplotlib state.

@@ -11,9 +11,12 @@ Input contract: --summary points at a JSON file (typically named summary.json; o
 paths referenced below are resolved relative to *its* directory, not the CWD):
 
     {
+      "schema_version": 1,
       "model": "path/to/lens.zmx",
       "sha256": "<source model hash>",
+      "sha256_kind": "source_file",
       "engine": {"name": "optiland", "version": "0.6.2"},
+      "evidence": {"status": "measured", "method": "analysis method and sampling"},
       "first_order": {"EFL": {"value": 49.05, "unit": "mm"}, ...},
       "metrics": [
         {"name": "MTF", "field": 0.0, "wavelength": 0.55, "value": 0.42, "unit": "1",
@@ -29,6 +32,25 @@ paths referenced below are resolved relative to *its* directory, not the CWD):
     }
 
 Only "model", "sha256", "engine", "first_order", "metrics" and "figures" are required.
+Version 1 preserves the legacy shape; omission of schema_version is accepted for
+legacy packages. sha256_kind is source_file, saved_candidate, or in_memory_json.
+Each metric's value and optional before are finite numbers or null (unavailable).
+Wavelength is in micrometres; field should include its coordinate convention.
+Requirements must have finite min/max bounds; status is computed from those bounds.
+An optional boolean pass must agree with them. Without bounds no pass is inferred.
+An optional captions object maps figure roles to explanatory text.
+
+Evidence defaults to {"status": "supplied"}. "measured" requires a method string.
+"reloaded" additionally requires candidate, candidate_sha256 and nonempty checks:
+[{"name": "RMS spot", "field": 0, "wavelength": 0.55, "unit": "um",
+  "before_save": 1.23, "after_reload": 1.23, "tolerance": 1e-8}]. Checks must cover
+every metric exactly once by name and all supplied field/wavelength/frequency/axis
+conditions. Units must match; after_reload must equal that metric's reported value.
+Check values and nonnegative tolerance must be finite and agree. The producer supplies
+this evidence: rendering checks consistency, not file hashes or optical truth.
+verdict and diagnosis remain authored interpretation, never automatic validation.
+Optional import_assessment carries the shared import-fidelity result and warnings;
+numerical_analysis_allowed=false prevents acceptance requirements from rendering.
 Figure roles are laid out in the order layout, spot, ray_fan, opd_fan, field_curvature,
 distortion, mtf, then any other roles in the order supplied; a role naming a PNG that
 does not exist under the summary's directory is skipped, not an error. A metric's
@@ -48,6 +70,7 @@ import json
 import sys
 from pathlib import Path
 
+sys.dont_write_bytecode = True
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from _lib import cli  # noqa: E402, RUF100
 from _lib.review_render import render_html, validate_summary  # noqa: E402, RUF100

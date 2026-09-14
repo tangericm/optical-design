@@ -14,7 +14,8 @@ from pathlib import Path, PureWindowsPath
 from typing import Any
 
 REQUIRED_KEYS = {"model", "sha256", "engine", "first_order", "metrics", "figures"}
-OPTIONAL_KEYS = {"changes", "verdict", "diagnosis", "settings"}
+OPTIONAL_KEYS = {"changes", "verdict", "diagnosis", "settings", "schema_version",
+                 "sha256_kind", "evidence", "captions", "import_assessment"}
 ALLOWED_KEYS = REQUIRED_KEYS | OPTIONAL_KEYS
 
 # Display order for known figure roles; any other role the caller supplies is
@@ -34,6 +35,26 @@ TWO_DECIMAL_UNITS = {"mtf", "strehl"}
 TWO_DECIMAL_NAME_HINTS = ("mtf", "strehl")
 
 ACCENT = "#087F8C"
+METRIC_IDENTITY_KEYS = ("name", "field", "wavelength", "frequency", "axis")
+
+
+def _finite(value: Any) -> bool:
+    return isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value)
+
+
+def _metric_identity(row: dict) -> dict:
+    """The measured quantity and every supplied sampling condition identify a row."""
+    return {key: row[key] for key in METRIC_IDENTITY_KEYS if key in row}
+
+
+def metric_pass(metric: dict) -> bool | None:
+    """Evaluate declared numeric bounds; an unqualified caller flag is not a gate."""
+    rule = metric.get("requirement")
+    if not rule:
+        return None
+    value = metric["value"]
+    return (_finite(value) and ("min" not in rule or value >= rule["min"])
+            and ("max" not in rule or value <= rule["max"]))
 
 
 def validate_summary(data: Any) -> dict:
@@ -47,6 +68,10 @@ def validate_summary(data: Any) -> dict:
     unknown = set(data) - ALLOWED_KEYS
     if unknown:
         raise ValueError(f"summary has unknown top-level key(s): {sorted(unknown)}")
+    if "schema_version" in data and (type(data["schema_version"]) is not int or data["schema_version"] != 1):
+        raise ValueError("summary.schema_version must be 1 (or omitted for legacy summaries)")
+    if data.get("sha256_kind") not in (None, "source_file", "saved_candidate", "in_memory_json"):
+        raise ValueError("summary.sha256_kind must identify source_file, saved_candidate, or in_memory_json")
     if not isinstance(data["model"], str) or not data["model"]:
         raise ValueError("summary.model must be a nonempty string")
     if not isinstance(data["sha256"], str) or not data["sha256"]:
@@ -64,9 +89,26 @@ def validate_summary(data: Any) -> dict:
     for i, row in enumerate(data["metrics"]):
         if not isinstance(row, dict) or "name" not in row or "value" not in row:
             raise ValueError(f"summary.metrics[{i}] must be an object with at least 'name' and 'value'")
+        if not isinstance(row["name"], str) or not row["name"]:
+            raise ValueError(f"summary.metrics[{i}].name must be a nonempty string")
+        for key in ("value", "before", "frequency", "wavelength"):
+            if key == "wavelength" and "schema_version" not in data and isinstance(row.get(key), str):
+                continue  # legacy summaries permitted named wavelength labels
+            if key in row and row[key] is not None and not _finite(row[key]):
+                raise ValueError(f"summary.metrics[{i}].{key} must be finite numeric data or null")
         requirement = row.get("requirement")
-        if requirement is not None and not isinstance(requirement, dict):
-            raise ValueError(f"summary.metrics[{i}].requirement must be an object")
+        if requirement is not None:
+            if not isinstance(requirement, dict) or not requirement or set(requirement) - {"min", "max"}:
+                raise ValueError(f"summary.metrics[{i}].requirement must contain min and/or max")
+            if not all(_finite(v) for v in requirement.values()):
+                raise ValueError(f"summary.metrics[{i}].requirement bounds must be finite numbers")
+            if requirement.get("min", -math.inf) > requirement.get("max", math.inf):
+                raise ValueError(f"summary.metrics[{i}].requirement min exceeds max")
+        if "pass" in row:
+            if not isinstance(row["pass"], bool):
+                raise ValueError(f"summary.metrics[{i}].pass must be boolean")
+            if requirement and row["pass"] != metric_pass(row):
+                raise ValueError(f"summary.metrics[{i}].pass contradicts its requirement and value")
     if not isinstance(data["figures"], dict):
         raise TypeError("summary.figures must be an object of role -> PNG path")
     for role, path in data["figures"].items():
@@ -84,6 +126,48 @@ def validate_summary(data: Any) -> dict:
             raise ValueError(f"summary.{key} must be a string when present")
     if data.get("settings") is not None and not isinstance(data["settings"], dict):
         raise ValueError("summary.settings must be an object")
+    assessment = data.get("import_assessment")
+    if assessment is not None:
+        if not isinstance(assessment, dict):
+            raise ValueError("summary.import_assessment must be an object")
+        if assessment.get("numerical_analysis_allowed") is False and any(m.get("requirement") for m in data["metrics"]):
+            raise ValueError("import assessment disallows numerical acceptance; convert source units first")
+    captions = data.get("captions", {})
+    if not isinstance(captions, dict) or not all(isinstance(v, str) for v in captions.values()):
+        raise ValueError("summary.captions must map figure roles to explanatory strings")
+    evidence = data.get("evidence", {"status": "supplied"})
+    if not isinstance(evidence, dict) or evidence.get("status") not in {"supplied", "measured", "reloaded"}:
+        raise ValueError("summary.evidence.status must be supplied, measured, or reloaded")
+    if evidence["status"] in {"measured", "reloaded"} and (
+            not isinstance(evidence.get("method"), str) or not evidence["method"].strip()):
+        raise ValueError("measured evidence requires a method description")
+    if evidence["status"] == "reloaded":
+        if not evidence.get("candidate") or not evidence.get("candidate_sha256"):
+            raise ValueError("reloaded evidence requires candidate and candidate_sha256")
+        checks = evidence.get("checks")
+        if not isinstance(checks, list) or not checks:
+            raise ValueError("reloaded evidence requires numeric before_save/after_reload checks")
+        identities = [_metric_identity(row) for row in data["metrics"]]
+        covered = set()
+        for check in checks:
+            if not isinstance(check, dict) or not all(_finite(check.get(k)) for k in ("before_save", "after_reload", "tolerance")):
+                raise ValueError("reload checks require finite before_save, after_reload, tolerance")
+            if check["tolerance"] < 0 or abs(check["before_save"] - check["after_reload"]) > check["tolerance"]:
+                raise ValueError("reload check does not agree within tolerance")
+            matches = [i for i, identity in enumerate(identities) if identity == _metric_identity(check)]
+            if len(matches) != 1:
+                raise ValueError("reload check identity must match exactly one reported metric (name, field, wavelength, frequency, axis)")
+            index = matches[0]
+            if index in covered:
+                raise ValueError("duplicate reload check for the same reported metric")
+            row = data["metrics"][index]
+            if check.get("unit") != row.get("unit"):
+                raise ValueError("reload check unit differs from its reported metric unit")
+            if check["after_reload"] != row["value"]:
+                raise ValueError("reload check after_reload must equal the reported metric value")
+            covered.add(index)
+        if len(covered) != len(data["metrics"]):
+            raise ValueError("reloaded evidence must cover every reported metric exactly once")
     return data
 
 
@@ -187,7 +271,7 @@ def _table(headers: list[str], rows: list[list[str]]) -> str:
     return f'<div class="table-scroll"><table><thead><tr>{head}</tr></thead><tbody>{body}</tbody></table></div>'
 
 
-def _figures_html(figures: dict, summary_dir: Path) -> tuple[str, list[str], list[str]]:
+def _figures_html(figures: dict, summary_dir: Path, captions: dict) -> tuple[str, list[str], list[str]]:
     ordered_roles = [r for r in FIGURE_ORDER if r in figures]
     ordered_roles += [r for r in figures if r not in FIGURE_ORDER]
     embedded, missing = [], []
@@ -198,8 +282,9 @@ def _figures_html(figures: dict, summary_dir: Path) -> tuple[str, list[str], lis
             missing.append(role)
             continue
         data_uri = "data:image/png;base64," + base64.b64encode(resolved.read_bytes()).decode("ascii")
-        caption = FIGURE_CAPTIONS.get(role, role.replace("_", " ").title())
-        blocks.append(f'<figure><img src="{data_uri}" alt="{html.escape(caption)}">'
+        caption = captions.get(role, FIGURE_CAPTIONS.get(role, role.replace("_", " ").title()))
+        width_class = ' class="wide"' if role in {"spot", "spot_before", "spot_after"} else ""
+        blocks.append(f'<figure{width_class}><img src="{data_uri}" alt="{html.escape(caption)}">'
                       f'<figcaption>{html.escape(caption)}</figcaption></figure>')
         embedded.append(role)
     figures_html = f'<div class="figures">{"".join(blocks)}</div>' if blocks else "<p>No figures were supplied.</p>"
@@ -209,15 +294,16 @@ def _figures_html(figures: dict, summary_dir: Path) -> tuple[str, list[str], lis
 def render_html(summary: dict, summary_dir: Path) -> tuple[str, dict]:
     """Render the review HTML; returns (html_text, stats) where stats reports what was
     embedded/skipped for the CLI's JSON envelope."""
+    validate_summary(summary)
     model_name = Path(summary["model"]).name
     short_hash = summary["sha256"][:8]
     title = f"{model_name} · {short_hash}"
 
     verdict = summary.get("verdict")
-    verdict_html = html.escape(verdict) if verdict else "No verdict was written."
+    verdict_html = ("<strong>Authored interpretation:</strong> " + html.escape(verdict)) if verdict else "No verdict was written."
     diagnosis = summary.get("diagnosis")
 
-    figures_html, embedded, missing_figures = _figures_html(summary["figures"], summary_dir)
+    figures_html, embedded, missing_figures = _figures_html(summary["figures"], summary_dir, summary.get("captions", {}))
 
     first_order_rows = [
         [_esc(name), format_value(row.get("value"), row.get("unit"), name), _esc(row.get("unit") or "")]
@@ -227,11 +313,12 @@ def render_html(summary: dict, summary_dir: Path) -> tuple[str, dict]:
     pass_count = 0
     metric_rows = []
     for metric in summary["metrics"]:
-        passed = metric.get("pass")
+        passed = metric_pass(metric)
         if passed:
             pass_count += 1
         metric_rows.append([
             _esc(metric.get("name")), _esc(metric.get("field")), _esc(metric.get("wavelength")),
+            f"{format_value(metric.get('before'), metric.get('unit'), metric.get('name'))}{_unit_text(metric.get('unit'))}",
             f"{format_value(metric.get('value'), metric.get('unit'), metric.get('name'))}{_unit_text(metric.get('unit'))}",
             html.escape(_requirement_text(metric)), _pass_chip(passed),
         ])
@@ -248,10 +335,27 @@ def render_html(summary: dict, summary_dir: Path) -> tuple[str, dict]:
     provenance = {
         "model": summary["model"], "sha256": summary["sha256"], "engine": engine,
         "settings": summary.get("settings", {}),
+        "sha256_kind": summary.get("sha256_kind", "unspecified (legacy)"),
+        "evidence": summary.get("evidence", {"status": "supplied"}),
+        "import_assessment": summary.get("import_assessment"),
     }
     provenance_json = html.escape(json.dumps(provenance, indent=2, ensure_ascii=False, sort_keys=True, default=str))
 
     diagnosis_html = f'<p class="diagnosis">{html.escape(diagnosis)}</p>' if diagnosis else ""
+    evidence = summary.get("evidence", {"status": "supplied"})
+    status_text = {"supplied": "Supplied data: analysis and saved-file agreement were not recorded.",
+                   "measured": "Measured: the producer recorded an optical analysis method.",
+                   "reloaded": "Reloaded: the producer recorded saved-file metric agreement within tolerance."}[evidence["status"]]
+    bounded = [metric_pass(m) for m in summary["metrics"] if m.get("requirement")]
+    failed = bounded.count(False)
+    gate_text = (f"{failed} requirement failed; {bounded.count(True)} passed." if failed else
+                 f"All {len(bounded)} declared requirements passed." if bounded else
+                 "No acceptance requirements were declared; performance is not qualified.")
+    evidence_html = f'<p>{html.escape(status_text)} The renderer checks data consistency; it does not run optics or independently verify these claims.</p>'
+    assessment = summary.get("import_assessment")
+    if assessment:
+        evidence_html += f'<p><strong>Import fidelity: {_esc(assessment.get("status", "unspecified"))}.</strong> '
+        evidence_html += _esc(" ".join(str(w) for w in assessment.get("warnings", []))) + "</p>"
 
     doc = f"""<!doctype html>
 <html lang="en">
@@ -287,6 +391,7 @@ h2 {{ font-size: 1.05rem; margin: 32px 0 10px; border-bottom: 1px solid var(--bo
 figure {{ margin: 0; background: var(--panel); border: 1px solid var(--border); border-radius: 8px;
          padding: 10px; flex: 1 1 260px; max-width: 100%; }}
 figure img {{ display: block; width: 100%; height: auto; border-radius: 4px; }}
+figure.wide {{ flex-basis: 100%; }}
 figcaption {{ text-align: center; color: var(--muted); font-size: 0.85rem; margin-top: 6px; }}
 .table-scroll {{ overflow-x: auto; }}
 table {{ width: 100%; border-collapse: collapse; font-size: 0.92rem; }}
@@ -304,6 +409,8 @@ pre {{ overflow-x: auto; font-size: 0.82rem; }}
 <body>
 <main>
 <h1>{html.escape(model_name)} <span class="hash">{html.escape(short_hash)}</span></h1>
+<p><strong>{html.escape(gate_text)}</strong></p>
+{evidence_html}
 <div class="verdict">{verdict_html}</div>
 {diagnosis_html}
 <h2>Figures</h2>
@@ -311,7 +418,7 @@ pre {{ overflow-x: auto; font-size: 0.82rem; }}
 <h2>First-order summary</h2>
 {_table(["Quantity", "Value", "Unit"], first_order_rows)}
 <h2>Metrics</h2>
-{_table(["Metric", "Field", "Wavelength", "Value", "Requirement", "Status"], metric_rows)}
+{_table(["Metric", "Field", "Wavelength (µm)", "Before", "Value", "Requirement", "Status"], metric_rows)}
 <h2>Changes</h2>
 {_table(["Surface", "Parameter", "Before", "After", "Unit"], change_rows) if change_rows else "<p>No changes were recorded.</p>"}
 <details>

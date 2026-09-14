@@ -31,7 +31,7 @@ save_optiland_file(optic, str(out_dir / "copy.json"))   # native round-trip form
 save_zemax_file(optic, str(out_dir / "copy.zmx"))        # re-export to .zmx
 print(sha256[:12], (out_dir / "copy.json").exists(), (out_dir / "copy.zmx").exists())
 ```
-Read: `optic.info()` prints radius/thickness/material/conic/semi-aperture — the first sanity check; the hash is your receipt `src` was never mutated. Pitfall: `load_zemax_file` reads real OpticStudio exports (coordinate breaks, toroids, Zemax paraxial surfaces), not a restricted subset; `save_zemax_file` writes UTF-16 LE and warns on glasses with no catalog entry — read those warnings.
+Read: `optic.info()` prints radius/thickness/material/conic/semi-aperture — the first sanity check; comparing the source hash before and after work is your receipt that `src` was never mutated. Pitfall: successful `load_zemax_file` parsing does not establish faithful representation of every OpticStudio setting. Use `inspect_zmx.py` to review units, unsupported directives, and importer warnings before accepting numerical results; non-mm prescriptions need explicit conversion. `save_zemax_file` writes UTF-16 LE and warns on glasses with no catalog entry — read those warnings.
 
 ## 2. First-order summary
 Use before anything else — catches over-constrained specs (EFL, magnification and track length are coupled) before you waste a merit function on an impossible target.
@@ -42,11 +42,12 @@ from optiland.samples.objectives import CookeTriplet
 optic = CookeTriplet()
 p = optic.paraxial
 n = len(optic.surfaces.surfaces)
-bfl = float(optic.surfaces.get_thickness(n - 2)[0])  # air gap before the image surface
-print("EFL", p.f2(), "BFL", bfl, "FNO", p.FNO(), "total_track", optic.total_track)
+image_distance = float(optic.surfaces.get_thickness(n - 2)[0])
+bfl = image_distance + float(p.F2())  # back focus is relative to current image plane
+print("EFL", p.f2(), "BFL", bfl, "image distance", image_distance, "FNO", p.FNO(), "total_track", optic.total_track)
 print("EPD", p.EPD(), "XPD", p.XPD(), "mag", p.magnification(), "invariant", p.invariant())
 
-orig = optic.wavelengths.primary_index  # chromatic focal shift: EFL at each wavelength
+orig = optic.wavelengths.primary_index  # EFL spread at each wavelength
 for i, w in enumerate(optic.wavelengths.wavelengths):
     optic.wavelengths.primary_index = i
     print(w.value, "um -> EFL", float(p.f2()))
@@ -56,7 +57,7 @@ y_chief, u_chief = p.chief_ray()  # paraxial chief ray heights/angles at the edg
 angle_deg = float(np.degrees(np.arctan(np.ravel(u_chief)[-1])))
 print("image-space chief-ray angle (deg), 0 = telecentric:", angle_deg)
 ```
-Read: EFL/F#/total-track is the spec-consistency check; per-wavelength EFL spread is longitudinal chromatic focal shift; chief-ray angle near 0° at the edge field means image-space telecentric. Pitfall: `paraxial.f2()` always uses `optic.primary_wavelength`, no wavelength argument — sweep by reassigning `optic.wavelengths.primary_index` and restoring it, as above.
+Read: BFL is measured from the last optical vertex to paraxial back focus; image distance is the current final air gap. Moving the image plane changes only the latter. EFL/F#/total-track is the spec-consistency check; per-wavelength EFL spread is a chromatic focal-length diagnostic, not the chromatic best-image-plane shift; chief-ray angle near 0° at the edge field means image-space telecentric. Pitfall: `paraxial.f2()` always uses `optic.primary_wavelength`, no wavelength argument — sweep by reassigning `optic.wavelengths.primary_index` and restoring it, as above.
 
 ## 3. Layout plot
 Use for the first thing anyone should see: a cross-section with real rays, at every field and wavelength.
@@ -198,7 +199,7 @@ print("merit", before[0], "->", float(problem.sum_squared()))
 for v, b in zip(problem.variables, before[1]):
     print(v.type, v.kwargs["surface_number"], b, "->", v.variable.get_value())
 ```
-Read: `sum_squared()` before/after is the merit value, smaller is better; per-variable values above are real physical units (mm), not solver-scaled space. Pitfall: `v.value` is the *scaled* solver value — always read `v.variable.get_value()` to report a number; every operand needs `optic` in its `input_data`, paraxial ones included. Follow the progressive order in the comments — first-order operand first, then spot, then wavefront/MTF; freeze glass until shape converges; sample fields at 0, 0.5, 0.8, 0.9 of full field, where real designs fail first.
+Read: `sum_squared()` before/after is the merit value, smaller is better; it does not establish acceptance. After saving and reloading, measure RMS spot at every required wavelength and field, including the full-field edge `Hy=1.0`, and compare each result with its frozen threshold. The edge chief-ray-angle operand above does not measure edge blur. Per-variable values above are real physical units (mm), not solver-scaled space. Pitfall: `v.value` is the *scaled* solver value — always read `v.variable.get_value()` to report a number; every operand needs `optic` in its `input_data`, paraxial ones included. Follow the progressive order in the comments — first-order operand first, then spot, then wavefront/MTF; freeze glass until shape converges.
 
 ## 10. Global search, then polish
 Use when local least-squares gets stuck in a merit-function local minimum and you need a broader search before the final polish.
@@ -306,6 +307,7 @@ Read: the two RMS values should agree to numerical noise; if not, the save/load 
 Use as the final step of a review: bundle first-order numbers, metrics, and the figures a human will look at into one file a renderer can consume.
 ```python
 import hashlib, json
+from importlib.metadata import version
 from pathlib import Path
 import matplotlib
 matplotlib.use("Agg")
@@ -315,26 +317,33 @@ from optiland.mtf import FFTMTF
 
 optic = CookeTriplet()
 out = Path("review"); out.mkdir(exist_ok=True)
-optic.draw(fields="all", wavelengths="all")[0].savefig(out / "layout.png", dpi=150)
-spot = SpotDiagram(optic, fields="all")
-spot.view(add_airy_disk=True, show=False)[0].savefig(out / "spot.png", dpi=150)
-FFTMTF(optic, fields="all").view(add_reference=True)[0].savefig(out / "mtf.png", dpi=150)
-rms_um = [float(v) * 1000 for v in spot.rms_spot_radius()[0]]
+optic.draw(fields="all", wavelengths="all")[0].savefig(out / "layout.png", dpi=150, bbox_inches="tight")
+spot = SpotDiagram(optic, fields="all", wavelengths="all", reference="centroid")
+spot.view(add_airy_disk=True, show=False)[0].savefig(out / "spot.png", dpi=150, bbox_inches="tight")
+FFTMTF(optic, fields="all").view(add_reference=True)[0].savefig(out / "mtf.png", dpi=150, bbox_inches="tight")
+rms = spot.rms_spot_radius()
 model_hash = hashlib.sha256(json.dumps(optic.to_dict(), sort_keys=True, default=str).encode()).hexdigest()
 summary = {
-    "model": "CookeTriplet", "sha256": model_hash,
-    "first_order": {"efl_mm": float(optic.paraxial.f2()), "fno": float(optic.paraxial.FNO()),
-                     "total_track_mm": float(optic.total_track)},
-    "metrics": [{"field": "0,0", "rms_spot_um": r} for r in rms_um],
+    "schema_version": 1,
+    "model": "CookeTriplet", "sha256": model_hash, "sha256_kind": "in_memory_json",
+    "engine": {"name": "optiland", "version": version("optiland")},
+    "evidence": {"status": "measured", "method": "SpotDiagram; centroid reference; all configured fields and wavelengths"},
+    "first_order": {"EFL": {"value": float(optic.paraxial.f2()), "unit": "mm"},
+                    "F/#": {"value": float(optic.paraxial.FNO()), "unit": "1"},
+                    "Total track": {"value": float(optic.total_track), "unit": "mm"}},
+    "metrics": [{"name": "RMS spot radius", "field": str(field.coord), "wavelength": float(w.value),
+                 "value": float(rms[i][j]) * 1000, "unit": "um"}
+                for i, field in enumerate(spot.fields) for j, w in enumerate(spot.wavelengths)],
     "figures": {"layout": "layout.png", "spot": "spot.png", "mtf": "mtf.png"},
-    "verdict": "diffraction-limited on axis; residual coma at the edge field",
+    "captions": {"layout": "Ray paths through the lens at all configured fields and wavelengths.",
+                 "spot": "Geometric blur by field and wavelength. Smaller spots mean tighter ray concentration; the circle is the Airy reference.",
+                 "mtf": "Contrast transfer versus spatial frequency; compare each field with the dashed diffraction reference."},
 }
-(out / "summary.json").write_text(json.dumps(summary, indent=2))
+(out / "summary.json").write_text(json.dumps(summary, indent=2, allow_nan=False), encoding="utf-8")
 print(sorted(p.name for p in out.iterdir()))
 ```
-Read: `summary.json` is the contract between analysis code and any review renderer — keep the keys stable (`model`, `sha256`, `first_order`, `metrics`, `figures`, `verdict`) as you add more. Pitfall: hash what you actually have — the source file's bytes when you started from one (recipe 1), or a canonical JSON serialization (`optic.to_dict()`, sorted keys) when built in place, as above; say which one you computed.
+Read: this emits version 1 of the contract documented in `scripts/render_review.py`; pass its `review/summary.json` directly to that script with `--summary` and a user-owned `--out` HTML path. No requirement was declared, so the report does not claim acceptance or diffraction-limited performance. Add numeric `requirement: {"max": ...}` or `{"min": ...}` per metric only when agreed; the renderer derives threshold status and rejects contradictory `pass` flags. A `verdict`, if supplied, is visibly an authored interpretation. The default evidence status is `supplied`; `measured` records the analysis method; `reloaded` additionally requires a saved candidate hash and exactly one round-trip check for every reported metric. Each check copies the metric's `name`, all supplied `field`, `wavelength`, `frequency`, `axis` conditions, and `unit`; its `after_reload` must equal the reported `value`, and its `before_save` must agree within its declared finite `tolerance`. Rendering never independently verifies optical claims. Pitfall: `sha256_kind` distinguishes source file bytes, saved candidate bytes, and the in-memory JSON representation used here. Recipe 13 shows how to obtain saved-file evidence; `scripts/walkthrough.py --out <new-user-directory>` connects a bundled model, bounded focus, save/reload and this report contract.
 
 ## Links
 
 [Optiland documentation](https://optiland.readthedocs.io/en/latest/) and its [analysis framework guide](https://optiland.readthedocs.io/en/latest/developers_guide/analysis_framework.html). Source read for every recipe above, for the full argument list of any class used only partially here: [`fileio`](https://github.com/optiland/optiland/blob/v0.6.2/optiland/fileio/__init__.py), [`paraxial.py`](https://github.com/optiland/optiland/blob/v0.6.2/optiland/paraxial.py), [`aberrations`](https://github.com/optiland/optiland/blob/v0.6.2/optiland/aberrations/__init__.py), [`optimization`](https://github.com/optiland/optiland/blob/v0.6.2/optiland/optimization/__init__.py), [`glass_expert.py`](https://github.com/optiland/optiland/blob/v0.6.2/optiland/optimization/optimizer/scipy/glass_expert.py), [`tolerancing`](https://github.com/optiland/optiland/blob/v0.6.2/optiland/tolerancing/core.py).
-
