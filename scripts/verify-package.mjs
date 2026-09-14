@@ -23,7 +23,7 @@ try {
   for (const required of ["bin/optical-design.mjs", "lib/cli.mjs", "lib/installer.mjs", "lib/filesystem.mjs", "lib/workflows.mjs",
     ".codex-plugin/plugin.json", ".claude-plugin/plugin.json", ".agents/plugins/marketplace.json", ".cursor-plugin/plugin.json", "plugin.json",
     "assets/icon.png", "assets/logo.png", "assets/logo-dark.png", "assets/brand/header.svg",
-    "docs/README.md", "docs/cli.md", "docs/glossary.md", "docs/professional-workflow.md",
+    "docs/README.md", "docs/install.md", "docs/quickstart.md", "docs/capabilities.md", "docs/glossary.md", "docs/compatibility.md",
     "skills/optical-design/SKILL.md", "skills/optical-design/LICENSE",
     "skills/optical-design/scripts/_lib/cli.py", "skills/optical-design/scripts/resolve.py",
     "skills/optical-design/scripts/zernike.py", "skills/optical-design/scripts/wavefront.py",
@@ -54,7 +54,7 @@ try {
     "skills/optical-design/assets/field-validation/validation.json",
     "skills/optical-design/assets/optimization-spec.json", "skills/optical-design/assets/variables-example.json",
     "skills/optical-design/assets/refocus-spec.json", "skills/optical-design/assets/portable-singlet.json",
-    "docs/tiers.md", "docs/install.md", "LICENSE", "README.md", "SECURITY.md"]) {
+    "LICENSE", "README.md", "SECURITY.md"]) {
     assert.ok(files.includes(required), `Missing package file: ${required}`);
   }
   assert.ok(files.every(f => !/^(?:tests|node_modules|docs\/superpowers|docs\/research|\.github)\//u.test(f)), "Package contains local files");
