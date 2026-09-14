@@ -38,7 +38,7 @@ For native Huygens/POP intensity comparisons, use the
 
 ## Evaluate or contribute
 
-[Runnable eval scenarios](../skills/optical-design/evals/README.md) provide example
+[Runnable eval scenarios](https://github.com/tangericm/optical-design/tree/main/evals) provide example
 prompts and grading criteria. [Compatibility](compatibility.md) records tested
 environments and verification evidence.
 

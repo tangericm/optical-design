@@ -4,13 +4,12 @@
 
 # optical-design
 
-Open a lens file, see what limits it, fix it with a verified change, and hand off a
-review your team can read.
+Understand a lens, improve it against stated requirements, and share the evidence.
 
 An optical-design skill for **Claude Code, Codex, Cursor, OpenCode, and Hermes** that
-lets your agent write and run real Optiland (or licensed OpticStudio) code against your
-`.zmx`, `.zos`, or Optiland JSON prescription, with the recipes, aberration knowledge,
-and discipline of a lens-design colleague.
+helps you learn with a bundled example, answer practical optics questions, and analyze
+your own lens. Portable prescription work uses Optiland with `.zmx` or Optiland JSON.
+Licensed OpticStudio supports `.zos` through the optional native audited adapter.
 
 [![CI](https://github.com/tangericm/optical-design/actions/workflows/ci.yml/badge.svg)](https://github.com/tangericm/optical-design/actions/workflows/ci.yml)
 [![npm](https://img.shields.io/npm/v/optical-design?color=087F8C)](https://www.npmjs.com/package/optical-design)
@@ -20,13 +19,20 @@ and discipline of a lens-design colleague.
 
 ## Install
 
-```sh
-npx optical-design install --agent claude-code
-npx optical-design install --agent codex
-npx optical-design install --agent cursor
-npx optical-design install --agent opencode
-npx optical-design install --agent hermes
-```
+**Development preview:** the improvements described here are unreleased; npm and
+the `v2.0.0` tag retain the previous behavior. To try this checkout, run
+`node bin/optical-design.mjs install --agent codex` from its root (choose your agent).
+The npm commands below install the published release. See [compatibility](docs/compatibility.md).
+
+Choose **one** command for your agent, from a terminal in your project:
+
+| Agent | Install |
+|---|---|
+| Claude Code | `npx optical-design install --agent claude-code` |
+| Codex | `npx optical-design install --agent codex` |
+| Cursor | `npx optical-design install --agent cursor` |
+| OpenCode | `npx optical-design install --agent opencode` |
+| Hermes | `npx optical-design install --agent hermes` |
 
 Prefer Claude Code's plugin manager?
 
@@ -44,21 +50,34 @@ OpticStudio is optional. [Installation by client, updates, troubleshooting →](
 
 ## Try it
 
-Start a new conversation in your agent and paste one of these.
+Start a new conversation and choose a starting point. The agent locates the bundled
+files; no prescription is needed for the first example. The new walkthrough currently
+requires the development checkout installation described above.
 
-> Use optical-design to inspect `skills/optical-design/assets/forms/cooke-triplet.zmx`,
-> run the first-order gate, then diagnose which aberration limits it at the edge field
-> and which variable usually controls that aberration.
+**Learn with an example**
 
-> Design a 4f relay in optical-design that matches a 20x microscope objective's pupil
-> to a camera with 6.5 µm pixels. Start from
-> `skills/optical-design/assets/forms/4f-relay-tube-lens.json`, check Nyquist sampling,
-> and show the layout.
+> Use optical-design to walk me through its bundled lens example. Explain how the lens
+> forms an image, show the before/after blur, and tell me what the improvement does and
+> does not prove. Save the results in a new folder in my project.
 
-> Use optical-design to rebalance
-> `skills/optical-design/assets/forms/oct-semi-plossl-scan-lens.json` across 800-900 nm:
-> show the chromatic focal shift before and after, and explain what you traded in Seidel
-> terms.
+**Answer a practical question**
+
+> Will 6.5 µm camera pixels sample my microscope adequately? Use optical-design and help
+> me identify the objective NA, magnification and wavelength you need.
+
+**Work on my design**
+
+> Use optical-design to inspect my attached lens. Check import fidelity and units,
+> explain what limits it, and suggest the smallest useful change against my requirements.
+
+For a terminal-only guided example:
+
+```sh
+node bin/optical-design.mjs walkthrough --out my-first-lens
+```
+
+Run this from the development checkout. It creates a candidate lens and a visual review in a new directory. The first run may
+download Python and Optiland. [Walkthrough and expected outputs](docs/quickstart.md).
 
 ## Example output
 
@@ -78,7 +97,7 @@ layout with real rays, and the spot diagram at each field against the Airy disk.
 4. Look before optimizing (layout, spot, fans, Seidel table), then optimize
    progressively — first-order operands, then spot, then wavefront or MTF.
 5. Look again, re-diagnose, and compare against the diffraction limit.
-6. Save, reload, re-measure, tolerance if it will be built, and render a review.
+6. Save, reload, re-measure, tolerance if it will be built, and render a review that separates measured results from acceptance.
 
 Full detail: [SKILL.md](skills/optical-design/SKILL.md).
 
@@ -91,9 +110,9 @@ Full detail: [SKILL.md](skills/optical-design/SKILL.md).
 | Optiland recipes | Fourteen tested snippets: layout, spot, fans, Seidel, wavefront/MTF, least-squares and global optimization, glass substitution, tolerancing |
 | Primer and references | Aberrations, diagnosis, microscopy, OCT, PSF/MTF, interferometry, merit functions, tolerancing |
 | Forms library | Eleven starting designs by F-number, field, and NA, each with commentary |
-| Evals | Five real-problem scenarios with grading criteria |
+| Evaluation | Repository-only scenarios, fixed-budget comparison protocol, and regression tests; rubrics are excluded from installations |
 | Audited mode | A hash-verified receipt for a bounded, narrower change — for teams that need that discipline |
-| OpticStudio | The same recipes and audited mode through licensed OpticStudio (ZOSPy), optional |
+| OpticStudio | Optional licensed native audited workflow via ZOSPy; Optiland snippets are not interchangeable with ZOSPy |
 
 [Full capabilities table →](docs/capabilities.md)
 

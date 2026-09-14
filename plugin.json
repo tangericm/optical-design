@@ -2,7 +2,7 @@
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "optical-design",
   "version": "2.0.0",
-  "description": "Optical-design copilot skill: numerical optics, sequential audit/refocus, tolerance evidence, and OpticStudio/Optiland adapters.",
+  "description": "Understand lenses, calculate optical limits, improve supported designs, and share measured results.",
   "author": {
     "name": "Eric Tang",
     "email": "eric.tang22@gmail.com"

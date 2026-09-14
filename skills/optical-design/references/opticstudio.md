@@ -1,5 +1,10 @@
 # Licensed OpticStudio for native optical design
 
+The portable inspection and first-order scripts accept `.zmx` and Optiland JSON only.
+A `.zos` file requires this licensed native path, or an export to supported `.zmx` in
+OpticStudio. The optical workflow is similar, but Optiland snippets are not executable
+ZOSPy recipes. Native support here is the bounded audited adapter below.
+
 ## Requirements
 
 - Windows operating system.

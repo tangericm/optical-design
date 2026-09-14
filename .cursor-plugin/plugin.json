@@ -1,12 +1,20 @@
 {
   "name": "optical-design",
   "version": "2.0.0",
-  "description": "Optical calculations, sequential lens workflows, and engineering review.",
-  "author": { "name": "Eric Tang", "email": "eric.tang22@gmail.com" },
+  "description": "Understand lenses, calculate optical limits, improve supported designs, and share measured results.",
+  "author": {
+    "name": "Eric Tang",
+    "email": "eric.tang22@gmail.com"
+  },
   "homepage": "https://github.com/tangericm/optical-design#readme",
   "repository": "https://github.com/tangericm/optical-design",
   "license": "MIT",
-  "keywords": ["optics", "optical-design", "opticstudio", "optiland"],
+  "keywords": [
+    "optics",
+    "optical-design",
+    "opticstudio",
+    "optiland"
+  ],
   "skills": "./skills/",
   "logo": "assets/icon.png"
 }

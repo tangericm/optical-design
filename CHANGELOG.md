@@ -1,5 +1,29 @@
 # Changelog
 
+## Unreleased
+
+- Add a guided Cooke-triplet focus walkthrough with matched before/after figures,
+  declared requirements and saved-candidate reload measurements. Keep the audited demo.
+- Make the recipe summary and HTML renderer use one versioned contract; retain field,
+  wavelength and metric definitions, reject contradictory statuses, and distinguish
+  supplied interpretation from recorded measurement/reload evidence.
+- Correct back focal length and expose image distance separately. `bfl_mm` now returns
+  physical paraxial back focal length; callers needing the former final-gap value must
+  use `image_distance_mm`. Explicit names clarify paraxial NA, chief-ray angle and EFL spread.
+- Preserve import-fidelity warnings through first-order analysis and reject unconverted
+  non-mm prescriptions for numerical gates. Distinguish supported imports, metadata,
+  unsupported optical content and unknown directives.
+- Reject nonfinite/boolean gate values, tolerance-only rules and inconsistent bounds.
+  Correct aberration teaching, full-field acceptance and penalty-versus-constraint guidance.
+- Prevent ordinary Python caches from blocking managed updates/uninstalls. Retain one
+  intact prior backup, preserve edited/unowned data, and add previewable `prune-backups`.
+- Add an explicit `doctor --engine-check`; default checks clearly leave engines untested.
+- Rewrite first-use prompts and output-location guidance for beginners; document the
+  actual native/portable capabilities and starting-form provenance.
+- Move evaluation rubrics outside installed skills, fix the reference checker's BFL,
+  and add failure/beginner tasks with fixed budgets and a reproducible comparison protocol.
+  Historical agent results remain preliminary; no fresh cross-model uplift is claimed.
+
 ## 2.0.0 — 2026-09-14
 
 The skill now guides the coding agent instead of wrapping it: knowledge, recipes and

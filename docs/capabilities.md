@@ -2,51 +2,71 @@
 
 [Documentation](README.md) / Capabilities
 
-## What's inside
+This page describes the unreleased source checkout; see [compatibility](compatibility.md)
+for published-version scope and [quickstart](quickstart.md) for executable preview commands.
 
-| Area | Shipped scope |
-|---|---|
-| Calculators (no engine) | Airy radius and FWHM; Rayleigh, Abbe and Sparrow limits; diffraction and geometric depth of focus; telescope Rayleigh and Dawes; Gaussian beam waist, Rayleigh range, divergence and focused spot; OCT axial resolution and lateral spot with confocal parameter; microscope lateral/axial resolution and Nyquist pixel. `uv run scripts/resolve.py <subcommand> --json` |
-| Wavefront tools (no engine) | Zernike coefficients in Fringe, Noll and ANSI schemes; scalar FFT PSF, Strehl and MTF from coefficients or a measured map; interferogram interpretation (OPD, single pass, surface), phase unwrapping, fringe cavity model. `scripts/zernike.py`, `scripts/wavefront.py`, `scripts/interfero.py` |
-| Thin scripts | `inspect_zmx.py` opens any real OpticStudio export through Optiland's own reader and reports surfaces, fields, wavelengths and ignored cosmetic directives; `first_order.py` runs the paraxial gate (EFL, BFL, F-number, pupils, chromatic focal shift, telecentricity) against a declared spec; `render_review.py` turns a `summary.json` plus PNGs into a self-contained HTML/Markdown review — no optical engine of its own |
-| Optiland recipes | Fourteen short, tested snippets an agent adapts directly against Optiland 0.6.2: load/inspect/save, first-order summary, layout, spot diagram, ray and OPD fans, field curvature and distortion, Seidel and third-order aberrations, RMS wavefront/Strehl/MTF, build and run an optimization (damped least squares), global search then polish, glass substitution with GlassExpert, tolerancing (perturb/compensate/sample yield), re-measure a saved candidate, export a summary and figures. [Optiland recipes](../skills/optical-design/references/optiland-recipes.md) |
-| Primer and domain references | [Aberrations](../skills/optical-design/references/aberrations.md) (five Seidel terms plus axial/lateral color, sign conventions, which variable controls each, Petzval sum, Maréchal/Rayleigh criteria); [diagnosis](../skills/optical-design/references/diagnosis.md); [microscopy](../skills/optical-design/references/microscopy.md); [OCT](../skills/optical-design/references/oct.md); [PSF/MTF](../skills/optical-design/references/psf-mtf.md); [interferometry](../skills/optical-design/references/interferometry.md); [merit functions](../skills/optical-design/references/merit-functions.md); [tolerancing](../skills/optical-design/references/tolerancing.md) |
-| Forms library | Eleven starting designs (`.zmx` and Optiland JSON, each with commentary): cemented and air-spaced achromats, Cooke triplet, Tessar, double Gauss, Petzval, telephoto, 20x/60x microscope objectives, OCT semi-Plössl scan lens, 4f relay. [Forms library](../skills/optical-design/assets/forms/README.md) |
-| Evals | Five scenarios in `evals/evals.json` — diagnose a `.zmx`, match an objective to a camera through a relay, rebalance a scan lens across a wavelength band, optimize a triplet, tolerance a doublet — plus `check_first_order.py` as ground truth for grading. [Evals](../skills/optical-design/evals/README.md) |
-| Audited mode | The original job runner (`design.py`, `review.py`, `server.py`, `zos.py`, `benchmark.py`): every job works on a copy, hashes source and artifacts, re-measures the saved candidate after reload, and refuses a change that fails a declared requirement. Deliberately narrow — spherical/plane prescriptions on the portable backend (fixed conics and even aspheres on native), radius/thickness variables only, at most four for `optimize`, and six scalar metrics. [Audited mode](../skills/optical-design/references/audited/README.md) |
-| OpticStudio | The same recipes and the audited job runner both run through licensed OpticStudio via ZOSPy 2.1.5 on Windows — optional, not required for any of the above. [OpticStudio](../skills/optical-design/references/opticstudio.md) |
+## Choose a workflow
 
-## Engine and execution
-
-| Backend | Needs | Status |
+| Task | Implementation | What it establishes |
 |---|---|---|
-| Calculators and review rendering | Python 3.11+, uv; declared numerical dependencies | shipped, no optical engine |
-| Optiland (recipes and audited mode) | Optiland 0.6.2 through `uv run --with optiland==0.6.2` | shipped; recipes cover most of what Optiland exposes, audited mode a bounded subset |
-| OpticStudio (recipes and audited mode) | Windows, valid OpticStudio API license; ZOSPy 2.1.5, pythonnet 3.1.0 | optional, owned standalone session |
+| Learn with a lens | `npx optical-design walkthrough --out NEW-DIRECTORY` | Controlled focus change, before/after figures and saved-candidate measurements |
+| Calculate a limit | `resolve.py`: resolution, depth of focus, Gaussian beams, OCT, camera sampling | Closed-form results under stated scalar/paraxial assumptions |
+| Interpret wavefront data | `zernike.py`, `wavefront.py`, `interfero.py` | Scalar wavefront/PSF/MTF or interferogram quantities with conventions and sampling |
+| Inspect a prescription | `inspect_zmx.py` and `first_order.py` | Import-fidelity assessment, first-order quantities and optional gates |
+| Design or improve a lens | Fourteen Optiland recipes and eleven starting forms | Agent-written analysis, optimization and tolerance code; final requirements checked separately |
+| Share a review | `render_review.py` | Self-contained HTML from a versioned summary and PNGs; rendering verifies no optics |
+| Make a bounded audited change | `design.py`, `review.py`, optional local job server | Copy/hash, hard requirements, saved-candidate reload and bounded mutation evidence; HTML/Markdown reviews |
 
-Exit codes across the thin scripts and audited mode: 0 success, 1 a failed gate,
-requirement, or comparison mismatch, 2 usage, 3 missing engine, 4 analysis failure.
-A completed tolerance job may contain failed trials; inspect its yield and errors.
+## File formats and engines
 
-## Model and analysis limits
+| Input or feature | Portable path | Licensed native path |
+|---|---|---|
+| Zemax `.zmx` | Optiland reader plus import assessment; unsupported content remains visible | Audited adapter within its sequential subset |
+| Optiland `.json` | Optiland native format | Not a native OpticStudio input |
+| OpticStudio `.zos` | Unsupported; export a supported `.zmx` in OpticStudio or use native mode | Windows and valid OpticStudio API license |
+| Layout, spot, fans, Seidel, wavefront/MTF | Tested Optiland 0.6.2 recipe examples | Separate ZOSPy/API code needed; no drop-in recipe equivalence |
+| Audited edits, refocus, optimization, sensitivity, tolerances | Spherical/plane systems; radius/thickness variables | Fixed Standard conics and EvenAspheric A2–A16 also supported |
+| Huygens/POP benchmark | Unavailable | Same-method profile reproduction on unchanged models |
 
-The Optiland recipes carry whatever Optiland 0.6.2 itself supports: Standard,
-EvenAsphere, OddAsphere, Forbes Q, Zernike, Chebyshev, toroidal, biconic and grid-sag
-surfaces; radius, thickness, conic, asphere, polynomial coefficient and refractive-index
-(GlassExpert) variables; damped least squares, global and evolutionary optimizers.
-`inspect_zmx.py` and the recipes read a real OpticStudio export through Optiland's own
-reader — cosmetic directives (`AUTH`, `ENVD`, `RAIM`, …) are reported as ignored rather
-than rejecting the file.
+Use Python 3.11+ and uv. Portable commands use `uv run --python 3.11 --with optiland==0.6.2`.
+Native commands use ZOSPy 2.1.5 and pythonnet 3.1.0; Python 3.11 is the recorded native
+runtime. Installation success, engine readiness, native licensing and end-to-end agent
+host behavior are separate checks. See [compatibility](compatibility.md).
 
-Audited mode keeps its original, narrower contract: the portable backend supports
-centered spherical/plane sequential systems, the native backend also supports fixed
-Standard conics and EvenAspheric coefficients (fixed during edits and optimization).
-Variables are radius and thickness only, at most four for `optimize`. Metrics are EFL,
-F-number, total track, image distance, RMS spot radius and FFT MTF at one frequency.
-Coatings, coordinate breaks and multi-configuration prescriptions reject.
+## Measurement and acceptance
 
-Neither path covers non-sequential and stray-light design, thin-film coating design,
-illumination and non-imaging optics, or manufacturing release. See
-[evidence limits](../skills/optical-design/references/evidence-limits.md) for the
-complete, terse list of numerical, optimization, and provenance limits, and
-[compatibility](compatibility.md) for tested engine versions.
+Back focal length is measured from the last optical vertex to paraxial focus. Image
+distance locates the actual image plane and may differ. The `bfl_mm` key remains an
+alias for corrected back focal length; use `image_distance_mm` for detector spacing.
+First-order NA and chief-ray angle are paraxial quantities, distinct from real-ray or
+high-NA measurements. EFL spread over wavelength is not a best-focus search.
+
+Inspection preserves import warnings through analysis. Non-mm data needs conversion
+before a mm-based gate can accept it. A directive ignored by a reader is not automatically
+cosmetic. Optiland's native capabilities do not imply every imported Zemax surface or
+setting is represented faithfully.
+
+Optimizer bounds on operands may be penalties. Re-measure hard requirements independently
+on the saved candidate at declared fields, including the required edge, wavelengths and
+sampling. Reports distinguish supplied interpretation, measured results and recorded
+reload evidence. A failed design can still have a useful review.
+
+## Scope
+
+The audited adapter remains narrower than direct Optiland programming: at most four
+radius/thickness optimization variables, centered sequential geometry, mm units, fixed
+solves and its documented scalar metrics. Coatings, coordinate breaks, explicit apertures
+and multiple configurations are outside its acceptance contract. Consult the
+[audited reference](../skills/optical-design/references/audited/README.md).
+
+Supported workflows do not cover non-sequential/stray-light design, thin-film design,
+illumination/non-imaging optics or manufacturing release. High-NA and polarization-sensitive
+work needs an appropriate vector model. See
+[evidence limits](../skills/optical-design/references/evidence-limits.md).
+
+## Evaluation
+
+[Repository evaluations](https://github.com/tangericm/optical-design/tree/main/evals)
+contain fixed-budget tasks, grading guidance and historical results. They are excluded
+from installed skills and npm artifacts. Historical five-pair results are preliminary;
+passing regression tests implies no new cross-model speed or correctness guarantee.

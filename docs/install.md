@@ -1,5 +1,10 @@
 # Install optical-design
 
+**Development preview:** `walkthrough`, `prune-backups`, and `doctor --engine-check`
+below are unreleased. Use `node bin/optical-design.mjs` in this checkout in place of
+`npx optical-design` to try them, or invoke the CLI by its quoted absolute path from
+your project. npm and tag `v2.0.0` retain the previous behavior.
+
 [Documentation](README.md) / Install
 
 Choose one installation route per agent. The shared skill contains the same optical
@@ -98,8 +103,11 @@ installation. Node.js 22+ is required. Add `--json` for structured output.
 |---|---|
 | `npx optical-design install --agent codex` | Copy this package's skill into the current project |
 | `npx optical-design install --agent cursor --global` | Install into your user-level Cursor skills directory |
-| `npx optical-design doctor` | Check Node and uv readiness; describe native prerequisites |
-| `npx optical-design demo --out my-first-lens` | Run the portable example and generate a review in a new directory |
+| `npx optical-design doctor` | Check Node and uv; engine and native status remain untested |
+| `npx optical-design doctor --engine-check` | Run a portable engine calculation; may download Python and pinned dependencies |
+| `npx optical-design walkthrough --out my-first-lens` | Guided before/after lens example and visual review |
+| `npx optical-design demo --out audited-focus` | Check the original audited refocus and receipt pipeline |
+| `npx optical-design prune-backups --agent codex` | Preview eligible managed backups; add `--apply` to remove them |
 | `npx optical-design@latest update --agent codex` | Replace an intact managed install with the fetched package version; keep a backup |
 | `npx optical-design uninstall --agent codex` | Remove an intact installation managed by this installer |
 | `npx optical-design --version` | Print the package version being executed |
@@ -125,15 +133,18 @@ The installer refuses an existing unmanaged skill, symlinked paths, or a managed
 installation whose files or directory structure changed. There is no force-overwrite
 flag. Keep design outputs outside the installed skill directory.
 
-Normal Python execution can create `__pycache__` files. The demo prevents those writes;
-other script invocations may create them. Extra files trigger the same conservative
-update/uninstall refusal as edits. Inspect and back up changes first. To recover from
-a modified install without deleting anything, move the whole skill folder outside
-the client's skills directory, then install a fresh copy and reconcile changes manually.
+Supported script entry points prevent Python bytecode writes. Existing regular CPython
+caches are recognized only when their filename/header matches an owned, unchanged source.
+Malformed caches, unknown files, links and genuine edits remain protected. For a genuinely
+edited installation, preserve it outside the client's skills directory, install a fresh
+copy, and reconcile edits manually. Keep user-generated designs outside the installation.
 
-An update reports a sibling `.optical-design.backup-*` folder holding the previous
-installation. Keep it until you have verified the replacement. An interrupted uninstall
-may leave a `.optical-design.remove-*` recovery folder; errors identify it.
+Updates retain one intact prior installation in a reported `.optical-design.backup-*`
+directory. Older intact, provenance-matched backups are cleaned; edited, legacy or unowned
+backups remain and their paths are reported. Preview explicit cleanup with
+`npx optical-design prune-backups --agent codex`; add `--apply` to remove only eligible
+backups. Use the same `--global` choice as installation. An interrupted uninstall may
+leave a `.optical-design.remove-*` recovery directory identified in its error.
 
 If `.optical-design.lock` remains after interruption, confirm no installer process is
 running before removing the empty lock directory. Never remove an active operation's lock.
@@ -141,8 +152,9 @@ running before removing the empty lock directory. Never remove an active operati
 ### Diagnostics and outcomes
 
 CLI exit 0 means success; failures return a nonzero exit code. `doctor` returns nonzero
-when required local tooling is unavailable. It does not validate an OpticStudio license
-or run the complete optical test suite.
+when required local tooling is unavailable. Without `--engine-check`, it does not execute
+Optiland. Even with that option, it does not validate an OpticStudio license or run the
+complete optical test suite.
 
 The demo needs uv, an existing output parent directory, and permission to create a new
 output directory. uv may download Python 3.11 and Optiland 0.6.2. The demo reports
@@ -152,15 +164,16 @@ inspect the individual optical commands and their separate exit-code contract.
 
 ## Verify your installation
 
-From the installed `optical-design` skill directory, run:
+From your project directory, run:
 
 ```sh
-uv run scripts/resolve.py airy --wavelength-um 0.55 --fnum 4 --json
+npx optical-design doctor --engine-check
+npx optical-design walkthrough --out first-lens
 ```
 
-Expect `airy_radius_um` of approximately **2.684** and `airy_diameter_um` of
-approximately **5.368**, with the method and units in the output. For the next step,
-[refocus the bundled lens and render its review](quickstart.md#refocus-a-lens).
+The agent can also invoke the installed `resolve.py` by its absolute path with
+`airy --wavelength-um 0.55 --fnum 4 --json`. Expect radius **2.684 µm** and diameter
+**5.368 µm**. [Interpret the walkthrough](quickstart.md#run-the-guided-example).
 
 ## Manual installation and fixed releases
 
@@ -200,7 +213,8 @@ and refuse edited installations. A fixed version can be installed with
 `npx optical-design@2.0.0 install --agent codex`.
 
 For installations made with the shared `skills` installer, use its own commands:
-`npx skills update optical-design` or `npx skills remove optical-design`.
+`npx skills update` or `npx skills remove optical-design`; consult that installer's
+help for its current scope options.
 
 For Claude Code plugin installations, use `/plugin` to manage the installed plugin.
 Refresh this repository's catalog with `/plugin marketplace update optical-design`.
@@ -214,7 +228,7 @@ snapshot. Remove with `codex plugin remove optical-design@optical-design`.
 |---|---|
 | Installation already exists or was edited | Preserve it and follow [managed installation recovery](install.md#files-and-recovery); do not delete your edits to silence the error. |
 | The agent cannot find the skill | Check the selected agent and installation scope, then start a new conversation. |
-| A script path is missing | Run from the installed skill directory, or use an absolute script path. Confirm the whole skill was copied. |
+| A script path is missing | Run from your project using the absolute installed script path. Confirm the whole skill was copied and keep outputs outside it. |
 | `uv` is not found | Install uv, then reopen the terminal so the updated PATH is loaded. |
 | An output folder already exists | Choose a new output folder. Design jobs need a new or empty folder; review rendering needs a new one. |
 | An engine is unavailable | Use the portable quickstart or check the [native prerequisites](capabilities.md). |

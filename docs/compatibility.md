@@ -1,5 +1,42 @@
 # Compatibility
 
+## Unreleased adoption repairs
+
+The source checkout adds the guided walkthrough, installation lifecycle repairs, shared
+import-fidelity assessment and corrected first-order/report contracts. Runtime pins remain
+Optiland 0.6.2 and the native versions recorded below. `bfl_mm` now means back focal length,
+not the final air gap; use `image_distance_mm` for that previous value. Explicit paraxial
+metric names retain documented legacy aliases. Versioned reviews accept legacy summaries
+where unambiguous, but reject contradictory pass flags and invalid numerical requirements.
+
+The npm version and published v2.0.0 tag remain unchanged until a new release is cut.
+Use this checkout to exercise unreleased commands. These repairs do not establish new
+OpticStudio-version or agent-host compatibility; the historical records below retain
+their original version scope.
+
+### Verification of these repairs
+
+On Windows with Python 3.11 and Optiland 0.6.2, the portable Python suite passed
+**941 tests**, with one skip and six native tests deselected. Execution was split
+between the broad suite (887 passes), all recipe tests (15), report renderer (37),
+and walkthrough tests (2). The Node suite passed **56 tests**, with one platform skip.
+Type checking, Ruff, skill lint, and documentation file links passed.
+
+The npm tarball was installed into a fresh consumer. Managed installation, update,
+and uninstall passed for all five supported agent destinations. The installed Codex
+copy ran the calculator and real walkthrough; its candidate and review remained
+after uninstall. The packed audited demo also passed. These are installer and tool
+checks, not new verification inside every agent host.
+
+The walkthrough measured every configured field/wavelength pair after save/reload;
+its plots were visually checked with matching before/after axes. New regressions
+cover unsupported import content, non-mm gates, corrected BFL, overflow and invalid
+requirements, conflicting report evidence, and ownership-preserving cleanup.
+
+No new cross-model benchmark, beginner participant pilot, marketplace acceptance,
+or native optical-engine compatibility result is claimed. The evaluation protocol
+and public development cases are ready for those separate studies.
+
 ## 2.0.0
 
 The 2.0.0 reframing changes documentation, adds the recipes, forms, evals and three thin

@@ -1,145 +1,108 @@
-# Quickstart
+# Your first lens
 
 [Documentation](README.md) / Quickstart
 
-Run a calculator, refocus a synthetic singlet, and generate a review you can open in a
-browser. No OpticStudio license is needed.
+Start with a picture and one measured improvement. You do not need a lens file,
+OpticStudio license, or knowledge of Python to run the walkthrough.
 
-## One command
+## Run the guided example
 
 Install [Node.js](https://nodejs.org/en/download) 22+ and
-[uv](https://docs.astral.sh/uv/getting-started/installation/), then open a terminal in
-your project folder:
+[uv](https://docs.astral.sh/uv/getting-started/installation/), then open a terminal
+in this development checkout. These new commands are **unreleased**; the published
+npm `2.0.0` package does not yet include the walkthrough. For a separate project,
+replace `bin/optical-design.mjs` with the quoted absolute path to this checkout's CLI.
 
 ```sh
-npx optical-design doctor
-npx optical-design demo --out my-first-lens
+node bin/optical-design.mjs doctor
+node bin/optical-design.mjs walkthrough --out my-first-lens
 ```
 
-Use a new output directory. The first run may download Python and Optiland. The demo
-calculates a diffraction limit, adjusts the example lens's final air gap, verifies the
-saved candidate, and creates an HTML review. Open the review path printed at completion;
-the source model stays unchanged.
+Use a new output directory. The first run may download Python 3.11 and Optiland 0.6.2;
+subsequent runs reuse the dependency cache. To explicitly check the portable engine,
+run `node bin/optical-design.mjs doctor --engine-check`; this may also download dependencies.
+A default doctor check does not run the engine or verify native licensing.
 
-| Output | What to look for |
-|---|---|
-| Job outcome | Whether the candidate improved and met the stated requirements |
-| Prescription changes | The original and final spacing, with the remaining lens geometry fixed |
-| Analysis settings | Fields, wavelengths, sampling, metric definitions, and units |
-| Saved-model checks | Whether the saved and reloaded candidate matches the reported result |
-| Review package | A readable view of the recorded evidence; it can also describe a failed job |
+The walkthrough copies a bundled Cooke triplet, introduces a known focus offset,
+searches a bounded image distance, and saves and reloads the candidate. Open the
+HTML review path printed at completion. Results belong to your project; the
+installed skill stays unchanged.
 
-The requirements are specific to the synthetic model, and an HTML report is not by
-itself proof that a design passed. Prefer individual commands? Continue below.
+Look for four things:
 
-## Step by step
+1. **Layout:** the lens bends rays toward the image. The detector position matters.
+2. **Before and after:** the spot shows where rays from one object point arrive.
+   A smaller geometric RMS radius means a tighter distribution under that sampling.
+3. **Requirements:** inspect each field and wavelength. A lower combined merit does
+   not mean every field improved or every target passed.
+4. **Saved candidate:** reload measurements check the delivered file. They do not
+   prove manufacturing yield or a global optimum.
 
-You need [uv](https://docs.astral.sh/uv/getting-started/installation/) and Python 3.11+.
-uv can provision the requested Python and dependencies on first use; allow time for
-those downloads. The command examples below work in PowerShell and common Unix shells.
+This is a controlled focus exercise, not a manufacturing-ready triplet.
+Cold-download time depends on your connection. Watch the stage messages; a
+budget limit or failed target should be part of the result.
 
-Open the example directory. If you [installed the skill](install.md), open a terminal
-in its `optical-design` directory, the one containing `SKILL.md`, `scripts/`, and
-`assets/`. Alternatively, use a standalone checkout:
+On the development Windows machine, the warmed optical work took about 10 seconds
+and worst sampled RMS radius improved from **85.03 to 18.76 µm** across the nine
+field/wavelength pairs. This is a measured example, not a setup-time guarantee;
+dependency downloads and process startup add time.
+
+## Use it with your agent
+
+[Install the skill](install.md), start a new conversation, and choose a task:
+
+> Use optical-design to run its bundled walkthrough. Explain the pictures without
+> assuming I know optical design, and save the results in my project.
+
+> Will my camera pixels sample my microscope adequately? Help me find the objective
+> NA, total magnification and wavelength needed, then calculate the answer.
+
+> Inspect my attached lens with optical-design. Check units and import fidelity,
+> then explain the main limitation and a small useful change against my requirements.
+
+The agent resolves scripts and assets from the installed `SKILL.md`. Keep all
+generated scripts, candidate lenses and figures in one project output directory
+outside the installation.
+
+## A calculator without an optical engine
+
+An agent invokes `scripts/resolve.py` using its absolute installed path:
+
+```text
+uv run --python 3.11 <absolute-skill-directory>/scripts/resolve.py airy --wavelength-um 0.55 --fnum 4 --json
+```
+
+Replace the placeholder with the directory containing `SKILL.md`; quote paths
+containing spaces. At 550 nm and f/4, the scalar clear-circular-pupil Airy
+first-zero radius is **2.684 µm**, and its diameter is **5.368 µm**. Neither is FWHM.
+
+## Your own prescription
+
+| Input | First action | Needs |
+|---|---|---|
+| `.zmx` | Import-fidelity assessment, then first-order analysis | Optiland 0.6.2; correctly interpreted units |
+| Optiland `.json` | First-order analysis and selected diagnostics | Optiland 0.6.2, compatible model serialization |
+| `.zos` | Native audited inspection through `design.py` | Windows, OpticStudio and valid API license |
+
+The agent adapts the relevant [recipe](../skills/optical-design/references/optiland-recipes.md),
+preserves the source, and checks hard requirements on the saved, reloaded candidate.
+Parsing a file does not establish faithful conversion. Unsupported import content
+remains visible in the analysis and review.
+
+The [native reference](../skills/optical-design/references/opticstudio.md) describes
+the narrower licensed adapter. Optiland snippets do not run unchanged through ZOSPy.
+
+## Audited refocus demo
+
+The original deterministic refocus example remains available:
 
 ```sh
-git clone --branch v2.0.0 --depth 1 https://github.com/tangericm/optical-design.git
-cd optical-design/skills/optical-design
+npx optical-design demo --out audited-focus
 ```
 
-Run the rest of this guide from that skill directory.
+It searches only the synthetic singlet's final air gap and writes machine-readable
+evidence and a review into a new directory. Read the acceptance checks and
+saved-candidate verification. Rendering alone does not establish optical success.
 
-### Calculate the diffraction limit
-
-```sh
-uv run scripts/resolve.py airy --wavelength-um 0.55 --fnum 4 --json
-```
-
-The JSON result includes:
-
-| Quantity | Expected value |
-|---|---|
-| Airy first-zero radius | 2.684 µm |
-| Airy first-zero diameter | 5.368 µm |
-
-This is a scalar, clear circular pupil calculation in image-space air at 550 nm and
-f/4. The diameter is twice the radius; neither quantity is the FWHM.
-
-### Refocus a lens
-
-The included singlet is deliberately defocused. This command searches only the final
-air gap within the bundled specification's bounds:
-
-```sh
-uv run --python 3.11 --with optiland==0.6.2 scripts/design.py refocus --backend optiland --model assets/portable-singlet.json --spec assets/refocus-spec.json --out quickstart-focus --json
-```
-
-Use a new or empty `quickstart-focus` folder. On a repeat run, choose another name.
-The source model in `assets/` stays unchanged.
-
-Open `quickstart-focus/report.json`. For this example, expect `status: "improved"`
-and `saved_candidate_verified: true`. Check the requirements before using the saved
-candidate. A candidate file's existence alone does not establish success.
-
-### Open the review
-
-```sh
-uv run scripts/review.py --report quickstart-focus/report.json --out quickstart-review --json
-```
-
-Open `quickstart-review/report.html` in your browser. The folder must be new. The
-review collects the recorded outcome, metric comparisons, prescription changes, and
-evidence into one readable page.
-
-| Keep this file | What it contains |
-|---|---|
-| `quickstart-focus/candidate-model.json` | The saved candidate lens |
-| `quickstart-focus/report.json` | The job's machine-readable evidence and acceptance checks |
-| `quickstart-review/report.html` | The standalone visual review |
-| `quickstart-review/report.md` | A Markdown version for reading or sharing |
-| `quickstart-review/manifest.json` | Hashes and verification details for the review |
-
-Review rendering can also succeed for a failed optical job. Read the recorded outcome;
-rendering success is not a separate optical acceptance test.
-
-## Your own lens
-
-Point your agent at your `.zmx`, `.zos` or Optiland JSON file and let it write the
-Optiland code directly, following [SKILL.md](../skills/optical-design/SKILL.md) and the
-[Optiland recipes](../skills/optical-design/references/optiland-recipes.md):
-
-1. **Inspect it.** `uv run --python 3.11 --with optiland==0.6.2 scripts/inspect_zmx.py --model your-lens.zmx --json` reports the surface table, fields, wavelengths, and which Zemax directives Optiland ignored as cosmetic.
-2. **Run the first-order gate.** `uv run --python 3.11 --with optiland==0.6.2 scripts/first_order.py --model your-lens.zmx --json` reports EFL, F-number, total track, chromatic focal shift, and telecentricity error — check these against your spec before anything else, since EFL, magnification and track length are coupled.
-3. **Look, then diagnose.** Recipe 3 (layout) and recipe 4 (spot diagram) show the geometry and blur; recipe 7 (Seidel and third-order) names which aberration dominates. See [diagnosis.md](../skills/optical-design/references/diagnosis.md) for how to turn the Seidel table and fans into a two-sentence verdict.
-4. **Optimize.** Recipe 9 (`OptimizationProblem` with `LeastSquares`) is the standard damped-least-squares path: first-order operands first, then RMS spot at 0/0.5/0.8/0.9 of full field, then wavefront or MTF. Recipe 10 adds a global search when the local optimizer gets stuck; recipe 11 substitutes glass with `GlassExpert`.
-5. **Render a review.** `uv run scripts/render_review.py --summary summary.json --out review --json` turns a `summary.json` (model, hashes, first-order numbers, metrics, figure paths, verdict) plus the PNGs from the recipes above into one self-contained HTML page. `render_review.py --help` documents the input contract in full.
-
-Starting a new design instead of editing one? Pick a form from the
-[forms library](../skills/optical-design/assets/forms/README.md) by F-number, field and
-NA, and scale it to your EFL.
-
-### Audited mode
-
-For a hash-verified receipt on a bounded change — restricted to spherical/plane
-prescriptions, radius/thickness variables only, and a handful of scalar metrics —
-`scripts/design.py` is a narrower, older path still available for teams that need that
-discipline enforced by a job runner rather than by an agent following SKILL.md:
-
-```sh
-uv run --python 3.11 --with optiland==0.6.2 scripts/design.py refocus --backend optiland --model assets/portable-singlet.json --spec assets/refocus-spec.json --out quickstart-focus --json
-```
-
-This is the same command as the refocus step above. See
-[audited mode](../skills/optical-design/references/audited/README.md) for its full
-scope, commands, and acceptance rules.
-
-## Continue
-
-To hand the tool your own saved prescription, ask your agent:
-
-> Use optical-design to inspect [model path]. Check that its surface types and analysis
-> assumptions are supported. Summarize the current design, name the dominant
-> aberration, and preserve the source model.
-
-Next: [command reference](install.md#command-reference), [capabilities and limits](capabilities.md),
-or [run the complete workflow example](../skills/optical-design/evals/README.md).
+[Capabilities](capabilities.md) · [Installation and recovery](install.md) ·
+[Compatibility](compatibility.md)

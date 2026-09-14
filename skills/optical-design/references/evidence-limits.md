@@ -1,10 +1,14 @@
 # Evidence limits
 
-Limits that apply to every result from this skill, stated once so the other pages can stay short.
+Numerical assumptions apply where relevant to every result. The detailed job, mutation
+and adapter contracts below describe audited mode; direct Optiland recipes have broader
+capabilities but must independently preserve inputs and check saved-candidate requirements.
+Import fidelity and unsupported source settings remain part of the result.
 
 ## Model scope
 
-- Portable: centered refractive spherical/plane systems, scalar analyses only.
+- Audited portable adapter: centered refractive spherical/plane systems, scalar analyses only.
+- Direct Optiland code can use additional engine features; faithful import is assessed separately.
 - Native: Standard conics, EvenAspheric A2–A16 fixed; units mm, solves fixed, no apertures/decenters/tilts.
 - Native field normalization radial, no vignetting; 17-ray validation catches gross failures, not all clipping.
 - Automatic apertures are not mechanical clear apertures.
@@ -39,7 +43,7 @@ Limits that apply to every result from this skill, stated once so the other page
 - Matching curves cannot resolve Huygens–POP disagreement; wavelength-bandwidth approximates frequency.
 - Phase index controls refraction, do not substitute group index; state one-way vs round-trip depth.
 
-## Optimization and tolerancing
+## Audited optimization and tolerancing
 
 - Local deterministic search, not global optimum proof; small budgets provide only coarse exploration.
 - Baseline may lie outside bounds; all applied values must lie inside.
@@ -57,7 +61,7 @@ Limits that apply to every result from this skill, stated once so the other page
 - Focus-only must be described as focus sensitivity, not yield analysis.
 - Wilson method quantifies sampling uncertainty, not incorrect manufacturing model uncertainty.
 
-## Provenance
+## Audited provenance
 
 - Jobs open copy in owned session; source unchanged; never reuse rejected candidates.
 - Edit requires expected original and requested value; checks saved/reloaded candidate against requirements.
@@ -75,7 +79,8 @@ Limits that apply to every result from this skill, stated once so the other page
 ## Outside scope
 
 - Non-sequential, stray-light, thermal coupling, manufacturing release outside workflows.
-- Topology, glass optimization, live GUI, web-catalog import, portable aspheric unsupported.
+- Audited mode excludes topology/glass optimization, live GUI, web-catalog import and portable aspheres.
+  Direct recipes include glass substitution and conic/asphere variables; this is not audited acceptance.
 - Coordinate breaks, multi-config, coating optimization, material/temperature tolerances, decenter/tilt unsupported.
 - POP Gaussian-waist launch only, not arbitrary fields; manufacturing acceptance requires separate evidence.
 - Magnification alone does not establish resolution; do not fill unknown objective data generically.

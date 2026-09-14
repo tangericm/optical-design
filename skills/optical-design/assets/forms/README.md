@@ -13,7 +13,7 @@ scan lens, the 4f relay) are built here from catalog glass and a short damped
 least-squares polish (`optiland.optimization.LeastSquares`), because Optiland ships no
 sample for them. Only the achromats are corrected to a clean starting point; the OCT
 scan lens and the 4f relay are deliberately left with real residuals for the
-optimization evals in `evals/evals.json` to chase.
+learning exercises to explore. These forms are not validated manufacturing designs.
 
 Only Erfle is available under `optiland.samples.eyepieces` (no Plössl), so a Plössl
 eyepiece form was not added — see "What didn't make it" below.
@@ -41,9 +41,26 @@ a cemented doublet counts 2.
 | [oct-semi-plossl-scan-lens](oct-semi-plossl-scan-lens.md) | 36.00 | 9.00 | +/-6.0 deg scan | 800.0, 840.0, 900.0 | 4 | 102.4 (unbalanced) |
 | [4f-relay-tube-lens](4f-relay-tube-lens.md) | afocal | F/50 per element | +/-1.0 deg | 486.1, 587.6, 656.3 | 4 | n/a (collimated) |
 
-EPD, back focal length and total track for every form are in `_build_summary.json` in
+EPD, image distance (historically labeled `bfl`) and total track for every form are in `_build_summary.json` in
 this directory (build provenance, not part of the shipped form set) alongside the raw
 reload-verification numbers.
+
+## Learning status and provenance
+
+| Forms | Use as | Important condition |
+|---|---|---|
+| Cemented and air-spaced achromats | Educational imaging starts | Verify focus and the required field/wavelength envelope |
+| Cooke triplet, Tessar, double Gauss, Petzval, telephoto | Reference design forms | A familiar form does not imply corrected performance for a new specification |
+| Microscope objectives 20x/60x | Reverse-trace structure references | Names come from upstream samples; establish manufacturer, magnification convention and real NA separately |
+| OCT semi-Plössl | Deliberately unbalanced exercise | Large nominal blur; intended for rebalancing, not direct use |
+| 4f relay | Afocal pupil-relay example | Judge collimation and pupil matching, not spot at the arbitrary observation plane |
+
+Seven forms are adapted from [Optiland 0.6.2 samples](https://github.com/optiland/optiland/tree/v0.6.2/optiland/samples).
+Optiland is copyright 2024 Kramer Harrison under the MIT license; its notice is retained
+in the [skill license](../../LICENSE). The other four forms were constructed for this
+project. Attribution is not a claim of validation for a particular product. The saved
+build summary records historical measurements; its `bfl` values denote the original
+final air gap, not independently computed back focal length.
 
 ## Picking a start from a specification
 
@@ -61,7 +78,7 @@ reload-verification numbers.
 - Need speed above field (f/1.4-f/2, narrow field, projection or a fast relay) —
   **petzval**, and budget a field flattener or accept curvature.
 - Need a long-focus, physically short package — **telephoto**.
-- Matching a finite-conjugate microscope objective to a tube lens or camera —
+- Studying a reverse-traced microscope objective and its tube-lens convention —
   **microscope-objective-20x** or **microscope-objective-60x**, read alongside
   `references/microscopy.md` for the tube-lens convention math.
 - Building an OCT sample arm or a galvo-scanned imaging path — **oct-semi-plossl-scan-lens**,
@@ -88,10 +105,10 @@ print(z.paraxial.FNO(), j.paraxial.FNO())
 PY
 ```
 
-or, for a printed report against the ground-truth extractor:
+or, for a printed report using the first-order extractor:
 
 ```bash
-uv run --python 3.11 --with optiland==0.6.2 evals/check_first_order.py assets/forms/cemented-achromat-doublet.zmx
+uv run --python 3.11 --with optiland==0.6.2 scripts/first_order.py --model assets/forms/cemented-achromat-doublet.zmx --json
 ```
 
 ## What didn't make it
