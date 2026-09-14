@@ -93,10 +93,10 @@ requirements, and saved-model checks so you can see what changed and why it pass
 | Your task | Start here |
 |---|---|
 | Calculate resolution, Gaussian beams, PSF/MTF, or aberrations | [Numerical tools and compute tiers](docs/tiers.md) |
-| Inspect a prescription or make an explicit edit | [Model inspection and edits](skills/optical-design/references/model-actions.md) |
-| Refocus or optimize a saved lens | [Design workflow](skills/optical-design/references/design-workflow.md) and [optimization](skills/optical-design/references/optimization.md) |
-| Evaluate sensitivity, tolerances, or extra fields and wavelengths | [Sensitivity](skills/optical-design/references/sensitivity.md), [tolerancing](skills/optical-design/references/tolerancing.md), and [validation](skills/optical-design/references/validation.md) |
-| Share results or control jobs interactively | [Review packages](skills/optical-design/references/review-reports.md) and [optional MCP setup](skills/optical-design/references/interactive.md) |
+| Inspect a prescription or make an explicit edit | [Model inspection and edits](skills/optical-design/references/audited/model-actions.md) |
+| Refocus or optimize a saved lens | [Design workflow](skills/optical-design/references/audited/design-workflow.md) and [optimization](skills/optical-design/references/audited/optimization.md) |
+| Evaluate sensitivity, tolerances, or extra fields and wavelengths | [Sensitivity](skills/optical-design/references/audited/sensitivity.md), [tolerancing](skills/optical-design/references/tolerancing.md), and [validation](skills/optical-design/references/audited/validation.md) |
+| Share results or control jobs interactively | [Review packages](skills/optical-design/references/audited/review-reports.md) and [optional MCP setup](skills/optical-design/references/audited/interactive.md) |
 
 ## Current boundaries
 

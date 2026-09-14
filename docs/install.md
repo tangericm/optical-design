@@ -158,6 +158,6 @@ snapshot. Remove with `codex plugin remove optical-design@optical-design`.
 | An output folder already exists | Choose a new output folder. Design jobs need a new or empty folder; review rendering needs a new one. |
 | An engine is unavailable | Use the portable quickstart or check the [native prerequisites](tiers.md). |
 
-For optional interactive jobs, configure the [local MCP server](../skills/optical-design/references/interactive.md)
+For optional interactive jobs, configure the [local MCP server](../skills/optical-design/references/audited/interactive.md)
 with your workspace and allowed input roots. Installing the skill does not configure
 or start that server automatically.

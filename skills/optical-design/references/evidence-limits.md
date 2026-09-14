@@ -7,7 +7,8 @@ Limits that apply to every result from this skill, stated once so the other page
 - Portable: centered refractive spherical/plane systems, scalar analyses only.
 - Native: Standard conics, EvenAspheric A2–A16 fixed; units mm, solves fixed, no apertures/decenters/tilts.
 - Native field normalization radial, no vignetting; 17-ray validation catches gross failures, not all clipping.
-- Automatic apertures not mechanical clear apertures; Optiland whitelisted ZMX subset only, full exports rejected.
+- Automatic apertures are not mechanical clear apertures.
+- `inspect_zmx.py` opens any OpticStudio export through Optiland; the audited `design.py` portable path still accepts only its spherical subset.
 - Coatings, coordinate breaks, multi-configuration prescriptions reject.
 - Profile backend allows complex sequential surfaces with native polarization in mm single-config models.
 - Profile backend does not expand scalar prescription adapters or certify arbitrary beam launch/coatings.

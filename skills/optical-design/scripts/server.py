@@ -2,7 +2,7 @@
 # requires-python = ">=3.11"
 # dependencies = ["mcp==2.2.0", "numpy>=1.26"]
 # ///
-"""Owned optical CLI jobs over official MCP stdio; see references/interactive.md."""
+"""Owned optical CLI jobs over official MCP stdio; see references/audited/interactive.md."""
 from __future__ import annotations
 
 import argparse

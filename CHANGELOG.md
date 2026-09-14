@@ -15,6 +15,16 @@
 
 ## Unreleased
 
+- Reframe the skill around guiding the coding agent: a one-screen `SKILL.md` with the
+  workflow and discipline, an Optiland recipes reference with executable, tested snippets,
+  an aberrations primer, a diagnosis template, a rewritten merit-function recipe, and
+  rewritten microscopy and OCT design references.
+- Add `inspect_zmx.py` (opens any OpticStudio export through Optiland and classifies its
+  directives), `first_order.py` (paraxial gate with optional pass/fail spec) and
+  `render_review.py` (summary.json plus PNGs to a self-contained review page).
+- Add an eleven-form starting-point library in `.zmx` and Optiland JSON with commentary,
+  five eval scenarios with checkable assertions, and a first-order ground-truth checker.
+- Move the job-runner documentation under `references/audited/` as the audited mode.
 - Remove committed release-evidence trees (`docs/research/`, 98 MB of receipts and logs),
   internal planning documents (`docs/superpowers/`), the product brief and the deployment
   explainer from the main branch. Evidence stays available at the v1.0.0 and v1.1.0 tags.

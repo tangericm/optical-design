@@ -152,7 +152,7 @@ spec fails without acceptance. A symbolic-link test skips where Windows cannot c
 links. Real optical acceptance is a separate engine-enabled integration check, not
 inferred from this transport test.
 
-Use [the full-workflow eval scenarios](../evals/README.md) to collect current installed-client
+Use [the full-workflow eval scenarios](../../evals/README.md) to collect current installed-client
 evidence for inspection, edits, composite merit, sensitivity and review. The scenarios
 include stale expected values, stale input hashes, and rejected designs; a test
 description is not a claim that a specific engine/client run passed.

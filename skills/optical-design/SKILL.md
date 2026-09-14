@@ -1,11 +1,13 @@
 ---
 name: optical-design
 description: >
-  Use when reviewing or improving sequential imaging optics, checking resolution,
-  PSF/MTF, wavefront or interferometry data, analyzing OpticStudio prescriptions,
-  or investigating microscopy and OCT performance and optical tolerances.
+  Use whenever the user has a lens or optical system to design, analyze, optimize,
+  tolerance or review: a .zmx, .zos or Optiland prescription; achromats, objectives,
+  relays, tube lenses, scan lenses; microscopy or OCT optics; or questions about
+  resolution, PSF, MTF, Strehl, Zernike, wavefront or interferometry results. Use it
+  for lens-design questions even when no file is attached.
 license: MIT
-compatibility: Python 3.11+ and uv. Portable prescription jobs require Optiland 0.6.2. Native jobs require Windows, a valid OpticStudio ZOS-API license, ZOSPy 2.1.5 and pythonnet 3.1.0.
+compatibility: Python 3.11+ and uv. Prescription work uses Optiland 0.6.2 through `uv run --with optiland==0.6.2`. Licensed OpticStudio through ZOSPy 2.1.5 on Windows is optional.
 metadata:
   author: Eric Tang
   repo: https://github.com/tangericm/optical-design
@@ -14,147 +16,74 @@ metadata:
 
 # optical-design
 
-Turn a system requirement into computed optical evidence and a reviewable model change.
-Use the scripts for numerical results; identify assumptions, sources, engine versions,
-units and analysis settings. Distinguish measured performance from estimates and unavailable data.
+Help the user design, understand and improve lenses. Compute with Optiland (or licensed
+OpticStudio) by writing short scripts from the recipes; use the bundled calculators for
+closed-form numbers; explain every result in the language of aberrations, with units and
+the conditions it was measured under. You do the work; the skill supplies the knowledge,
+the recipes and the discipline.
 
-## Choose the workflow
+## Start here
 
-| Request | Entry point | Read when relevant |
+| The user wants | Do | Read |
 |---|---|---|
-| Resolution, sampling, Gaussian beam, OCT limits | `scripts/resolve.py` | [Microscopy](references/microscopy.md), [OCT](references/oct.md) |
-| Zernike coefficients, wavefront PSF/MTF | `scripts/zernike.py`, `scripts/wavefront.py` | [PSF/MTF validity](references/psf-mtf.md) |
-| Interferometer maps and pass/surface interpretation | `scripts/interfero.py` | [Interferometry](references/interferometry.md) |
-| Inspect a saved prescription before defining requirements | `scripts/design.py inspect` | [Design workflow](references/design-workflow.md) |
-| Audit a sequential prescription against requirements | `scripts/design.py audit` | [Design workflow and schema](references/design-workflow.md) |
-| Apply explicit radius/thickness changes with expected original values | `scripts/design.py edit --changes` | [Explicit changes](references/design-workflow.md#explicit-prescription-changes) |
-| Define merit over multiple metrics or conditions | `objective.aggregation: weighted_rms` in the design spec | [Merit functions](references/merit-functions.md) |
-| Improve focus within authorized travel | `scripts/design.py refocus` | [Optimization](references/optimization.md) |
-| Improve explicit radius/thickness variables | `scripts/design.py optimize` | [Optimization](references/optimization.md) |
-| Check the saved optimum at separate fields, wavelengths or sampling | `scripts/design.py optimize --validation-spec` | [Separate validation](references/validation.md) |
-| Interactive local optical jobs | `scripts/server.py` | [MCP interface](references/interactive.md) |
-| Local derivatives at declared symmetric steps | `scripts/design.py sensitivity --perturbations` | [Sensitivity](references/sensitivity.md) |
-| Seeded Monte Carlo with optional focus compensation | `scripts/design.py tolerance --tolerances` | [Tolerancing](references/tolerancing.md) |
-| Render an existing receipt for engineering review | `scripts/review.py --report --out` or MCP `review(job_id)` | [Review packages](references/review-reports.md) |
-| Local stock-lens shortlist | `scripts/catalog.py validate` / `match` | [Specifications and catalog schema](references/specifications.md) |
-| Reproduce native Huygens/POP intensity profiles on unchanged models | `scripts/benchmark.py` | [Profile benchmark contract](references/profile-benchmark.md) |
-| Numerical equivalence | `scripts/compare.py` | [Comparison boundaries](references/design-workflow.md#comparison) |
+| A number: resolution, depth of focus, Gaussian beam, OCT, camera sampling | `uv run scripts/resolve.py <subcommand> --json` | [microscopy](references/microscopy.md), [OCT](references/oct.md) |
+| To understand a lens file | `scripts/inspect_zmx.py`, then `scripts/first_order.py`, then layout, spot and fans from the recipes | [Optiland recipes](references/optiland-recipes.md), [diagnosis](references/diagnosis.md) |
+| To improve a lens | First-order gate, freeze requirements, then least squares (recipe 9) | [merit functions](references/merit-functions.md), [aberrations](references/aberrations.md) |
+| To start a new design | Pick a form by F-number, field and NA, scale it to the EFL | [forms library](assets/forms/README.md) |
+| Yield or tolerances | Recipe 12 with a focus compensator | [tolerancing](references/tolerancing.md) |
+| To interpret wavefront or interferometer data | `scripts/zernike.py`, `scripts/wavefront.py`, `scripts/interfero.py` | [PSF/MTF](references/psf-mtf.md), [interferometry](references/interferometry.md) |
+| A review to hand off | Write `summary.json` and PNGs (recipe 14), then `scripts/render_review.py` | `render_review.py --help` |
+| Licensed OpticStudio | Same workflow through ZOSPy | [OpticStudio](references/opticstudio.md) |
+| A hash-verified receipt for a bounded change | `scripts/design.py` audited mode | [audited mode](references/audited/README.md) |
 
-Prescription jobs support centered refractive sequential systems and scalar analyses.
-Native OpticStudio supports Standard spheres/planes/conics and EvenAspheric surfaces;
-conics and even coefficients A2 through A16 remain fixed during radius/thickness changes.
-Portable Optiland remains restricted to its spherical/plane subset and rejects unsupported
-native shapes. Coatings, coordinate breaks and multi-configuration prescriptions reject.
-The separate native profile backend can analyze
-complex surfaces and enable native polarization in mm, single-configuration sequential
-models; its POP launch is an explicitly seeded Gaussian waist. This does not establish
-general validity for arbitrary prescriptions, beam launches or polarization models.
-Topology changes, glass optimization, live GUI attachment, non-sequential/stray-light analysis,
-coatings optimization, thermal/structural coupling, manufacturing release and automatic
-web-catalog import remain outside these workflows.
+Run any script with `--help` first. Scripts exit 0 on success, 1 on a failed gate or
+requirement, 2 on usage, 3 when an engine is missing, 4 on an analysis failure.
 
-## Run and interpret
+## How to work a design problem
 
-Run `uv --version`, then `uv run <skill-dir>/scripts/<name>.py --help` if syntax is unfamiliar.
-Tier 0 scripts declare dependencies. Read the design workflow for pinned optional-engine
-commands; use `uv run <skill-dir>/scripts/zos.py check --json` to test an actual native license.
+1. Copy the input file and hash it. Never write to the user's path.
+2. Inspect, then run the first-order gate. If EFL, F-number, field, wavelengths or
+   conjugates disagree with the request, stop and ask; they are coupled and the rest of
+   the work depends on them.
+3. Freeze the requirements before optimizing: fields (0, 0.5, 0.8, 0.9 of full field),
+   wavelengths and weights, metrics with thresholds, hard constraints (EFL, track, edge
+   thickness), variables with bounds.
+4. Look before you optimize: layout, spot diagram, ray and OPD fans, Seidel table. Write
+   the two-sentence diagnosis from [diagnosis.md](references/diagnosis.md).
+5. Optimize progressively: first-order operands, then RMS spot, then wavefront or MTF.
+   Open glass variables last and only when color is the limit.
+6. Look again and re-diagnose. Compare against the diffraction limit.
+7. Save the candidate, reload it, re-measure. Report the re-measured value.
+8. If it will be built, tolerance it. Write `summary.json`, render the review, and keep
+   a short `notes.md` of what you tried and why.
 
-Start with `inspect` when the prescription is unfamiliar; it requires no specification
-and supplies no invented acceptance requirements. Use its actual surface inventory,
-units, fields, wavelengths and source hash to construct the next action.
-For prescription work, establish fields, wavelengths, pupil, units, hard requirements and
-analysis settings before optimizing. Use the user's existing specification when supplied.
-Ask only for information that materially determines acceptance; label any provisional
-assumption. The example specification is a synthetic demonstration, not a default requirement.
+## Explaining results
 
-The complete loop is inspect → explicit requirements and merit → edit/refocus/optimize →
-local sensitivity or conditional tolerance evidence → separate validation → review.
-Freeze validation conditions before searching, even when that stage runs later.
-`optimize --validation-spec` integrates its final validation gate; separate `audit` jobs
-can check an edited or refocused saved model. Never reuse a rejected candidate as an
-accepted source. Preserve model lineage and exact hashes when chaining jobs.
+- Every number carries its unit, field, wavelength and metric definition (RMS spot
+  radius is not a diameter or FWHM; state the sampling for MTF).
+- Name the dominant aberration and the evidence for it, then the variable that controls it.
+- Say what the optimizer traded, in Seidel terms or in the fans.
+- Compare with the diffraction limit: Airy radius 1.22 λ F/#, MTF cutoff 1/(λ F/#).
+- State a model limit in one clause where it matters (scalar, paraxial NA, nominal
+  design), not in a paragraph. Nominal performance is not yield; say so once when relevant.
 
-Jobs open a **copy** in an owned backend session. `edit` requires expected original and
-requested new values, and checks the saved/reloaded candidate against requirements.
-`refocus` changes only the final air gap,
-within explicit bounds. `optimize` varies up to four declared radius/thickness parameters.
-The source remains unchanged. Accept a changed candidate only when all
-declared constraints pass and save/reload reproduces the result. Search actions additionally
-require objective gain above the threshold; an explicit edit is not an improvement claim.
-Composite merit is dimensionless weighted RMS distance to explicit targets/scales/weights;
-hard requirements still gate every acceptance. Return per-term evidence, baseline/candidate
-metrics, limitations, source/artifact hashes
-and model/report paths. A failed or unavailable metric cannot support acceptance.
+## Not this skill
 
-When independent analysis settings or extra field/wavelength requirements are supplied,
-freeze them before searching and pass `--validation-spec`. The search winner then faces
-separate baseline/candidate checks; validation failure rejects it. Report repeated settings
-as repeated numerical checks, not an independent physical validation. Tuning against results
-from this stage makes those checks part of design iteration, not an untouched holdout.
+Non-sequential and stray-light design, thin-film coating design, illumination and
+non-imaging optics. Say so and stop.
 
-`sensitivity` measures central derivatives and finite-step curvature at declared ±steps,
-retains both trial rows, and ranks only identical metric identities and units. Completion
-does not accept a prescription or establish yield. `tolerance` uses independent
-radius/thickness perturbations. An optional explicit bounded
-final-gap compensator retains paired uncompensated/compensated outcomes. Report the
-seed, distributions, analysis failures, sample count and Wilson interval; sampled pass rate
-is conditional on those assumptions and is not a manufacturing-yield certification.
+## References
 
-Exit codes: 0 completed/success; 1 comparison mismatch, unmet design requirements or no
-acceptable refocus/optimization improvement; 2 usage; 3 missing engine/dependency; 4 analysis failure.
-Inspection, sensitivity and review completion do not establish optical acceptance.
-Tolerance completion (0) does not imply every trial passed. Inspect the report's yield.
-After a failed job, inspect `failure.json`; use a fresh output directory for a retry.
-Render the verified receipt with `review.py`, or call MCP `review` for an owned job.
-Report generation performs no new ray trace. Preserve unmet requirements and missing
-evidence, and label the prescription schematic as schematic. Do not convert a diagnostic
-failure package or a rejected design into an accepted result through presentation.
-
-For a profile benchmark, pin model/reference hashes and every case's analysis settings.
-Analyze a copy in an owned native session without saving prescription changes. A run without
-a reference can complete with `reference_validated: false`; completion is not validation.
-Reference agreement establishes same-method numerical reproduction, not design acceptance.
-Preserve native coordinate pitch and inspect threshold/ROI sampling status before interpreting
-width or flatness. See [profile units and limitations](references/profile-benchmark.md).
-
-## Scientific checks that change decisions
-
-- State pupil geometry and amplitude, coherence, wavelength, image/object-space convention,
-  and metric definition. Zernike coefficients require an explicit `fringe`, `noll` or `ansi`
-  scheme; normalization and fit aperture affect RMS.
-- For wavefront maps, NaNs mean opaque/outside-pupil pixels. They do not encode unknown
-  samples to interpolate. Supply the pupil center/radius for translated, clipped or
-  obstructed apertures; inspect inferred-geometry warnings.
-- Maréchal is an approximation near high Strehl, not a convention detector. At 0.1 waves,
-  disagreement with the truncated `1-(2πσ)^2` formula alone does not prove a scheme error.
-  Pure defocus has an exact pupil-integral check; use computed diffraction results and
-  the stated approximation range. See [PSF/MTF](references/psf-mtf.md).
-- Compare aberrated MTF with the **same pupil amplitude and support** with phase removed.
-  An annular or apodized pupil can exceed a clear circular reference at some frequencies.
-  The clear-circle overlay is a separate reference, not a universal upper bound.
-- Scalar/paraxial formulas do not establish high-NA vectorial performance. Express NA with
-  refractive index and state approximation limits. Camera sampling also depends on
-  magnification, coherence and pixel response; do not apply a universal `Q < 2` verdict.
-- Interferometric measured OPD, single-pass wavefront and surface height differ. Set the
-  quantity, pass factor and incidence angle explicitly; report removed piston/tilt/defocus.
-- Geometric RMS spot radius, PSF width, Strehl and MTF are different metrics. Compare
-  identical field/wavelength/axis/frequency and sampling settings, then assess the actual
-  requirement. A visually attractive spot or nominal diffraction limit does not prove yield.
-- An illumination intensity cut, a point-image PSF and an integrated marginal answer
-  different questions. Huygens central cuts are normalized; POP cuts retain absolute
-  irradiance. Combine incoherent spectral intensities with declared weights before peak
-  normalization. Interpolated coordinates add no native spatial resolution, and a partially
-  covered flatness ROI cannot support the full-ROI requirement.
-
-## Representative start
-
-When an on-axis design passes but full-field or spectral performance matters, use the
-[multi-field validation example](references/field-validation-example.md). Require each
-intended field/wavelength/axis explicitly and preserve failed conditions in the report.
-
-For a camera/objective sampling question, run `resolve.py micro` with the stated wavelength,
-NA, magnification and pixel pitch; explain its scalar model limit. For an authorized lens
-refocus, follow [the executable example](references/design-workflow.md), substitute the
-user's model/specification, and report the saved/reloaded candidate or the reason none passed.
-For a complete installed-skill exercise, use [the workflow evals](evals/README.md).
-Their prompts and executable checks define evidence to collect, not pre-recorded success.
+[Optiland recipes](references/optiland-recipes.md) ·
+[Aberrations primer](references/aberrations.md) ·
+[Diagnosis](references/diagnosis.md) ·
+[Merit functions](references/merit-functions.md) ·
+[Microscopy](references/microscopy.md) ·
+[OCT](references/oct.md) ·
+[Forms library](assets/forms/README.md) ·
+[PSF and MTF](references/psf-mtf.md) ·
+[Interferometry](references/interferometry.md) ·
+[Tolerancing](references/tolerancing.md) ·
+[OpticStudio](references/opticstudio.md) ·
+[Evidence limits](references/evidence-limits.md) ·
+[Audited mode](references/audited/README.md)

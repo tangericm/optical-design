@@ -5,7 +5,7 @@
 """Audit, refocus, optimize, or tolerance a copied sequential model against explicit requirements.
 
 Install a pinned optional engine using uv --with: optiland==0.6.2, or
-zospy==2.1.5 and pythonnet==3.1.0 on licensed Windows. See references/design-workflow.md.
+zospy==2.1.5 and pythonnet==3.1.0 on licensed Windows. See references/audited/design-workflow.md.
 """
 from __future__ import annotations
 

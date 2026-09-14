@@ -107,7 +107,7 @@ Use independent validation metrics or held-out field/wavelength samples where th
 supports them, and compare the observed gain with numerical convergence variation.
 
 After nominal improvement, run the declared manufacturing/assembly model rather than
-assuming nominal merit-function gain establishes yield. See [tolerance evidence](tolerancing.md).
+assuming nominal merit-function gain establishes yield. See [tolerance evidence](../tolerancing.md).
 
 Primary link checked 2026-09-12. The bounded search and acceptance rules are project policy.
 

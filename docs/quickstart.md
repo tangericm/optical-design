@@ -114,10 +114,10 @@ To hand the tool your own saved prescription, ask your agent:
 > assumptions are supported. Summarize the current design, identify the inputs needed
 > to assess [my requirement], and preserve the source model.
 
-Use the [model contract and specification guide](../skills/optical-design/references/design-workflow.md)
+Use the [model contract and specification guide](../skills/optical-design/references/audited/design-workflow.md)
 before substituting your own lens. Example requirements belong to the synthetic
 singlet; they are not defaults for an unrelated system.
 
-Next, [inspect and edit a model](../skills/optical-design/references/model-actions.md),
-[optimize multiple variables](../skills/optical-design/references/optimization.md), or
+Next, [inspect and edit a model](../skills/optical-design/references/audited/model-actions.md),
+[optimize multiple variables](../skills/optical-design/references/audited/optimization.md), or
 [run the complete workflow example](../skills/optical-design/evals/README.md).

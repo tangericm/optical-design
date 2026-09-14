@@ -1,42 +1,15 @@
 # Optiland recipes
 
-Fourteen short, tested snippets for real lens-design work directly against Optiland
-0.6.2, the engine this skill pins. Each is something to adapt, not a black box to
-call. All run as-is against `optiland.samples` objects, no fixture needed:
-`uv run --python 3.11 --with optiland==0.6.2 --with matplotlib python snippet.py`
-(add `--with scipy`, or `--with pandas --with seaborn` for tolerancing — normal
-Optiland dependencies already).
+Fourteen short, tested snippets for real lens-design work directly against Optiland 0.6.2, the engine this skill pins. Each is something to adapt, not a black box to call. All run as-is against `optiland.samples` objects, no fixture needed: `uv run --python 3.11 --with optiland==0.6.2 --with matplotlib python snippet.py` (add `--with scipy`, or `--with pandas --with seaborn` for tolerancing — normal Optiland dependencies already).
 
-Conventions: lengths mm, wavelengths µm (`optic.primary_wavelength`, every
-`wavelength=`); multiply by 1000 for µm-scale display values. Field args to
-analysis classes are normalized `Hx, Hy` in `[-1, 1]`, not an index — `Hy=1.0` is
-the full-field edge; `fields="all"` uses `optic.fields`'s own points. `.view()`
-defaults to `plt.show()`; pass `show=False` and set `matplotlib.use("Agg")` before
-importing pyplot when headless, and save with `fig.savefig(...)`.
-`optiland.__version__` reports `0.6.1` even pinned to `optiland==0.6.2` — a
-packaging quirk, not a real mismatch. Work on a copy: hash the source before
-touching it, never write back to the input path, and re-measure whatever you save
-(recipe 13) before reporting a number.
+Conventions: lengths mm, wavelengths µm (`optic.primary_wavelength`, every `wavelength=`); multiply by 1000 for µm-scale display values. Field args to analysis classes are normalized `Hx, Hy` in `[-1, 1]`, not an index — `Hy=1.0` is the full-field edge; `fields="all"` uses `optic.fields`'s own points. `.view()` defaults to `plt.show()`; pass `show=False` and set `matplotlib.use("Agg")` before importing pyplot when headless, and save with `fig.savefig(...)`. `optiland.__version__` reports `0.6.1` even pinned to `optiland==0.6.2` — a packaging quirk, not a real mismatch. Work on a copy: hash the source before touching it, never write back to the input path, and re-measure whatever you save (recipe 13) before reporting a number.
 
 ## Contents
-1. [Load, inspect, and save a copy](#1-load-inspect-and-save-a-copy)
-2. [First-order summary](#2-first-order-summary)
-3. [Layout plot](#3-layout-plot)
-4. [Spot diagram](#4-spot-diagram)
-5. [Ray fan and OPD fan](#5-ray-fan-and-opd-fan)
-6. [Field curvature and distortion](#6-field-curvature-and-distortion)
-7. [Seidel and third-order aberrations](#7-seidel-and-third-order-aberrations)
-8. [RMS wavefront, Strehl, and MTF](#8-rms-wavefront-strehl-and-mtf)
-9. [Build and run an optimization problem](#9-build-and-run-an-optimization-problem)
-10. [Global search, then polish](#10-global-search-then-polish)
-11. [Glass substitution with GlassExpert](#11-glass-substitution-with-glassexpert)
-12. [Tolerancing: perturb, compensate, sample yield](#12-tolerancing-perturb-compensate-sample-yield)
-13. [Re-measure the saved candidate](#13-re-measure-the-saved-candidate)
-14. [Export figures and a summary.json](#14-export-figures-and-a-summaryjson)
+
+1. [Load, inspect, save](#1-load-inspect-and-save-a-copy) · 2. [First-order summary](#2-first-order-summary) · 3. [Layout plot](#3-layout-plot) · 4. [Spot diagram](#4-spot-diagram) · 5. [Ray/OPD fan](#5-ray-fan-and-opd-fan) · 6. [Field curvature/distortion](#6-field-curvature-and-distortion) · 7. [Seidel/third-order](#7-seidel-and-third-order-aberrations) · 8. [Wavefront/Strehl/MTF](#8-rms-wavefront-strehl-and-mtf) · 9. [Build/run optimization](#9-build-and-run-an-optimization-problem) · 10. [Global search, polish](#10-global-search-then-polish) · 11. [GlassExpert](#11-glass-substitution-with-glassexpert) · 12. [Tolerancing/yield](#12-tolerancing-perturb-compensate-sample-yield) · 13. [Re-measure saved candidate](#13-re-measure-the-saved-candidate) · 14. [Export summary.json](#14-export-figures-and-a-summaryjson)
 
 ## 1. Load, inspect, and save a copy
-Use when you're handed a `.zmx` and need to look at it and start a working copy
-without touching the original.
+Use when you're handed a `.zmx` and need to look at it and start a working copy without touching the original.
 ```python
 import hashlib
 from pathlib import Path
@@ -58,15 +31,10 @@ save_optiland_file(optic, str(out_dir / "copy.json"))   # native round-trip form
 save_zemax_file(optic, str(out_dir / "copy.zmx"))        # re-export to .zmx
 print(sha256[:12], (out_dir / "copy.json").exists(), (out_dir / "copy.zmx").exists())
 ```
-Read: `optic.info()` prints radius/thickness/material/conic/semi-aperture — the
-first sanity check; the hash is your receipt `src` was never mutated. Pitfall:
-`load_zemax_file` reads real OpticStudio exports (coordinate breaks, toroids,
-Zemax paraxial surfaces), not a restricted subset; `save_zemax_file` writes UTF-16
-LE and warns on glasses with no catalog entry — read those warnings.
+Read: `optic.info()` prints radius/thickness/material/conic/semi-aperture — the first sanity check; the hash is your receipt `src` was never mutated. Pitfall: `load_zemax_file` reads real OpticStudio exports (coordinate breaks, toroids, Zemax paraxial surfaces), not a restricted subset; `save_zemax_file` writes UTF-16 LE and warns on glasses with no catalog entry — read those warnings.
 
 ## 2. First-order summary
-Use before anything else — catches over-constrained specs (EFL, magnification and
-track length are coupled) before you waste a merit function on an impossible target.
+Use before anything else — catches over-constrained specs (EFL, magnification and track length are coupled) before you waste a merit function on an impossible target.
 ```python
 import numpy as np
 from optiland.samples.objectives import CookeTriplet
@@ -88,15 +56,10 @@ y_chief, u_chief = p.chief_ray()  # paraxial chief ray heights/angles at the edg
 angle_deg = float(np.degrees(np.arctan(np.ravel(u_chief)[-1])))
 print("image-space chief-ray angle (deg), 0 = telecentric:", angle_deg)
 ```
-Read: EFL/F#/total-track is the spec-consistency check; per-wavelength EFL spread is
-longitudinal chromatic focal shift; chief-ray angle near 0° at the edge field means
-image-space telecentric. Pitfall: `paraxial.f2()` always uses
-`optic.primary_wavelength`, no wavelength argument — sweep by reassigning
-`optic.wavelengths.primary_index` and restoring it, as above.
+Read: EFL/F#/total-track is the spec-consistency check; per-wavelength EFL spread is longitudinal chromatic focal shift; chief-ray angle near 0° at the edge field means image-space telecentric. Pitfall: `paraxial.f2()` always uses `optic.primary_wavelength`, no wavelength argument — sweep by reassigning `optic.wavelengths.primary_index` and restoring it, as above.
 
 ## 3. Layout plot
-Use for the first thing anyone should see: a cross-section with real rays, at every
-field and wavelength.
+Use for the first thing anyone should see: a cross-section with real rays, at every field and wavelength.
 ```python
 import matplotlib
 matplotlib.use("Agg")
@@ -106,10 +69,7 @@ optic = CookeTriplet()
 fig, ax = optic.draw(fields="all", wavelengths="all", num_rays=5, figsize=(8, 4))
 fig.savefig("layout.png", dpi=150)
 ```
-Read: rays clipping a surface edge or the mechanical aperture are visible
-immediately, often faster than a vignetting table. Pitfall: `draw()` never calls
-`plt.show()` itself; still set the `Agg` backend before anything imports
-`matplotlib.pyplot`. `projection="XZ"` (default `"YZ"`) picks the plane.
+Read: rays clipping a surface edge or the mechanical aperture are visible immediately, often faster than a vignetting table. Pitfall: `draw()` never calls `plt.show()` itself; still set the `Agg` backend before anything imports `matplotlib.pyplot`. `projection="XZ"` (default `"YZ"`) picks the plane.
 
 ## 4. Spot diagram
 Use to see geometric blur by field and wavelength, against the diffraction limit.
@@ -132,15 +92,10 @@ p = optic.paraxial
 airy_radius_mm = 1.22 * float(p.FNO()) * optic.primary_wavelength / 1000.0
 print("Airy radius (mm)", airy_radius_mm)
 ```
-Read: RMS spot within 1-2x the Airy radius is essentially diffraction limited;
-several times larger means geometric aberration dominates. Pitfall:
-`rms_spot_radius()` centers on the chief ray by default; pass
-`reference="centroid"` at construction for centroid spots — the two differ under
-real coma.
+Read: RMS spot within 1-2x the Airy radius is essentially diffraction limited; several times larger means geometric aberration dominates. Pitfall: `rms_spot_radius()` centers on the chief ray by default; pass `reference="centroid"` at construction for centroid spots — the two differ under real coma.
 
 ## 5. Ray fan and OPD fan
-Use to diagnose which aberration limits a field, by wavelength, from curve shape
-rather than a single number.
+Use to diagnose which aberration limits a field, by wavelength, from curve shape rather than a single number.
 ```python
 import matplotlib
 matplotlib.use("Agg")
@@ -156,17 +111,10 @@ opd = PupilAberration(optic, fields="all", wavelengths="all")  # OPD fan
 fig2, axs2 = opd.view(figsize=(9, 3.5), show=False)
 fig2.savefig("opdfan.png", dpi=150)
 ```
-
-Read, by shape: tilted line through origin = defocus; symmetric parabola =
-spherical; asymmetric S-curve odd about the origin = coma; tangential/sagittal fans
-separating = astigmatism; curves shifting vertically between wavelengths = lateral
-color. Pitfall: read at the specific field you're diagnosing, not averaged — coma
-only at 0.8-1.0 field says release a stop-shift/bending variable, not a
-spherical-correcting one.
+Read, by shape: tilted line through origin = defocus; symmetric parabola = spherical; asymmetric S-curve odd about the origin = coma; tangential/sagittal fans separating = astigmatism; curves shifting vertically between wavelengths = lateral color. Pitfall: read at the specific field you're diagnosing, not averaged — coma only at 0.8-1.0 field says release a stop-shift/bending variable, not a spherical-correcting one.
 
 ## 6. Field curvature and distortion
-Use to see how focus shift and image-height error grow with field, tangential
-versus sagittal.
+Use to see how focus shift and image-height error grow with field, tangential versus sagittal.
 ```python
 import matplotlib
 matplotlib.use("Agg")
@@ -182,15 +130,10 @@ dist = Distortion(optic, wavelengths="all")
 fig2, ax2 = dist.view(figsize=(6, 5), show=False)
 fig2.savefig("distortion.png", dpi=150)
 ```
-Read: field curvature plots tangential/sagittal focus shift (mm) versus field — the
-gap is astigmatism, the mean is Petzval curvature; distortion is percent
-image-height error, positive pincushion, negative barrel. Pitfall: both plot
-versus real field coordinate, not normalized `Hy` — check axis units against a
-spec in degrees or mm of object height.
+Read: field curvature plots tangential/sagittal focus shift (mm) versus field — the gap is astigmatism, the mean is Petzval curvature; distortion is percent image-height error, positive pincushion, negative barrel. Pitfall: both plot versus real field coordinate, not normalized `Hy` — check axis units against a spec in degrees or mm of object height.
 
 ## 7. Seidel and third-order aberrations
-Use once you need to know which term is responsible for poor image quality, so you
-pick the right variable.
+Use once you need to know which term is responsible for poor image quality, so you pick the right variable.
 ```python
 from optiland.samples.objectives import CookeTriplet
 
@@ -203,20 +146,10 @@ vals = optic.aberrations.third_order()
 for name, v in zip(names, vals):
     print(name, v.sum())
 ```
-Read: `SI` spherical, `SII` coma, `SIII` astigmatism, `SIV` Petzval, `SV`
-distortion — one large term with the others small says exactly what's wrong;
-`third_order()` gives the same families per-surface first, to see which surface
-generates it. Variable that usually controls each: spherical — bending or a
-stop-side asphere; coma — stop position/shift; astigmatism — stop-to-element
-distance; Petzval — glass pair index split or a field flattener (bending barely
-touches it); distortion — stop position vs. a strongly-curved element; axial color
-— the crown/flint Abbe split; lateral color — glass choice plus stop position.
-Pitfall: these are paraxial sums, not real-ray RMS — offsetting large terms can
-still leave a small residual spot; cross-check with recipe 4.
+Read: `SI` spherical, `SII` coma, `SIII` astigmatism, `SIV` Petzval, `SV` distortion — one large term with the others small says exactly what's wrong; `third_order()` gives the same families per-surface first, to see which surface generates it. Variable that usually controls each: spherical — bending or a stop-side asphere; coma — stop position/shift; astigmatism — stop-to-element distance; Petzval — glass pair index split or a field flattener (bending barely touches it); distortion — stop position vs. a strongly-curved element; axial color — the crown/flint Abbe split; lateral color — glass choice plus stop position. Pitfall: these are paraxial sums, not real-ray RMS — offsetting large terms can still leave a small residual spot; cross-check with recipe 4.
 
 ## 8. RMS wavefront, Strehl, and MTF
-Use to quantify diffraction-limited performance versus field and defocus, beyond
-geometric blur.
+Use to quantify diffraction-limited performance versus field and defocus, beyond geometric blur.
 ```python
 import numpy as np
 from optiland.samples.objectives import CookeTriplet
@@ -237,19 +170,10 @@ FFTMTF(optic, fields="all").view(add_reference=True)[0].savefig("mtf.png", dpi=1
 tf = ThroughFocusMTF(optic, spatial_frequency=30, delta_focus=0.02, num_steps=5)
 tf.view(show=False)[0].savefig("through_focus_mtf.png", dpi=150)
 ```
-Read: `add_reference=True` overlays the diffraction-limited MTF curve at the
-on-axis working F/# — close to it at your required frequency is a pass;
-through-focus MTF shows focus latitude and whether best focus sits away from
-paraxial focus. Pitfall: Maréchal's `Strehl ≈ exp(-(2π·RMS)²)` is valid only under
-~0.2 waves RMS — above that it badly underestimates Strehl (above: ~0.5 waves RMS
-gives Maréchal ~1e-6 against an actual FFT Strehl around 0.3); trust
-`ScalarFFTPSF(...).strehl_ratio()` instead once you're not near diffraction limit.
-Scalar FFT MTF assumes unpolarized light on a clear pupil; not valid above roughly
-NA 0.6 (`VectorialFFTMTF` handles that).
+Read: `add_reference=True` overlays the diffraction-limited MTF curve at the on-axis working F/# — close to it at your required frequency is a pass; through-focus MTF shows focus latitude and whether best focus sits away from paraxial focus. Pitfall: Maréchal's `Strehl ≈ exp(-(2π·RMS)²)` is valid only under ~0.2 waves RMS — above that it badly underestimates Strehl (above: ~0.5 waves RMS gives Maréchal ~1e-6 against an actual FFT Strehl around 0.3); trust `ScalarFFTPSF(...).strehl_ratio()` instead once you're not near diffraction limit. Scalar FFT MTF assumes unpolarized light on a clear pupil; not valid above roughly NA 0.6 (`VectorialFFTMTF` handles that).
 
 ## 9. Build and run an optimization problem
-Use once requirements are frozen and you've picked free surfaces/parameters — the
-standard damped-least-squares path Optiland provides, no bespoke pattern search.
+Use once requirements are frozen and you've picked free surfaces/parameters — the standard damped-least-squares path Optiland provides, no bespoke pattern search.
 ```python
 from optiland.samples.objectives import CookeTriplet
 from optiland.optimization import OptimizationProblem, LeastSquares
@@ -274,18 +198,10 @@ print("merit", before[0], "->", float(problem.sum_squared()))
 for v, b in zip(problem.variables, before[1]):
     print(v.type, v.kwargs["surface_number"], b, "->", v.variable.get_value())
 ```
-Read: `sum_squared()` before/after is the merit value, smaller is better;
-per-variable values above are real physical units (mm), not solver-scaled space.
-Pitfall: `v.value` is the *scaled* solver value — always read
-`v.variable.get_value()` to report a number; every operand needs `optic` in its
-`input_data`, paraxial ones included. Follow the progressive order in the
-comments — first-order operand first, then spot, then wavefront/MTF; freeze glass
-until shape converges; sample fields at 0, 0.5, 0.8, 0.9 of full field, where real
-designs fail first.
+Read: `sum_squared()` before/after is the merit value, smaller is better; per-variable values above are real physical units (mm), not solver-scaled space. Pitfall: `v.value` is the *scaled* solver value — always read `v.variable.get_value()` to report a number; every operand needs `optic` in its `input_data`, paraxial ones included. Follow the progressive order in the comments — first-order operand first, then spot, then wavefront/MTF; freeze glass until shape converges; sample fields at 0, 0.5, 0.8, 0.9 of full field, where real designs fail first.
 
 ## 10. Global search, then polish
-Use when local least-squares gets stuck in a merit-function local minimum and you
-need a broader search before the final polish.
+Use when local least-squares gets stuck in a merit-function local minimum and you need a broader search before the final polish.
 ```python
 from optiland.samples.objectives import CookeTriplet
 from optiland.optimization import OptimizationProblem, LeastSquares, DifferentialEvolution
@@ -304,17 +220,10 @@ print("after DE", float(problem.sum_squared()))
 LeastSquares(problem).optimize(maxiter=30, method_choice="trf")  # polish to a local optimum
 print("after polish", float(problem.sum_squared()))
 ```
-Read: DE's merit after the coarse step won't be fully converged — that's the point,
-it's meant to land in the right basin. The polish afterward should drop further with
-far fewer evaluations than DE alone would need for the same point.
-Pitfall: `DifferentialEvolution.optimize()` raises `ValueError` if any variable
-lacks a bound, unlike `LeastSquares`. A real budget is `maxiter` in the hundreds
-with `workers=-1`; above uses `maxiter=3, workers=1` only to keep this fast. `CMAES`
-is the other global option, same bounded-variable requirement.
+Read: DE's merit after the coarse step won't be fully converged — the point is landing in the right basin; the polish afterward should drop further, fast. Pitfall: `DifferentialEvolution.optimize()` raises `ValueError` if any variable lacks a bound, unlike `LeastSquares`. A real budget is `maxiter` in the hundreds with `workers=-1`; here `maxiter=3, workers=1` only keeps this recipe fast. `CMAES` is the other global option, same bounded-variable requirement.
 
 ## 11. Glass substitution with GlassExpert
-Use to search a glass catalog for a better crown/flint choice instead of
-hand-picking candidates.
+Use to search a glass catalog for a better crown/flint choice instead of hand-picking candidates.
 ```python
 from optiland.samples.objectives import CookeTriplet
 from optiland.optimization import OptimizationProblem, GlassExpert
@@ -331,18 +240,10 @@ problem.add_variable(optic, "radius", surface_number=1, min_val=15, max_val=30) 
 GlassExpert(problem).run(num_neighbours=2, maxiter=20, disp=False, verbose=False)
 print("after", optic.surfaces.surfaces[1].material_post.name)
 ```
-Read: `GlassExpert` runs a greedy nearest-neighbour search in (n_d, V_d) space —
-broad catalog pass, then a focused pass near the winner, scoring each candidate with
-a local optimization. `material_post.name` after `run()` is the chosen glass.
-Pitfall: `GlassExpert` needs at least one continuous variable alongside the
-`"material"` variable — its per-candidate scoring runs a local optimization and
-fails with a bounds error otherwise. To lock a glass, just don't add a `"material"`
-variable for that surface in any later `OptimizationProblem` — omission is the lock.
+Read: `GlassExpert` greedily searches (n_d, V_d) space — a broad catalog pass, then a focused pass near the winner, scoring each candidate with a local optimization; `material_post.name` after `run()` is the chosen glass. Pitfall: it needs at least one continuous variable alongside `"material"` — per-candidate scoring runs a local optimization and fails with a bounds error otherwise. To lock a glass, just don't add a `"material"` variable for that surface in any later problem — omission is the lock.
 
 ## 12. Tolerancing: perturb, compensate, sample yield
-Use to turn "how sensitive is this to manufacturing error" into a number: a
-sensitivity sweep per tolerance, then a Monte Carlo yield estimate with everything
-applied at once.
+Use to turn "how sensitive is this to manufacturing error" into a number: a sensitivity sweep per tolerance, then a Monte Carlo yield estimate with everything applied at once.
 ```python
 import numpy as np
 from optiland.samples.objectives import CookeTriplet
@@ -374,19 +275,10 @@ half = z * np.sqrt(p * (1 - p) / n + z**2 / (4 * n**2)) / (1 + z**2 / n)  # Wils
 center = (p + z**2 / (2 * n)) / (1 + z**2 / n)
 print(f"yield {p:.2f}, Wilson 95% CI [{center - half:.2f}, {center + half:.2f}]")
 ```
-Read: `SensitivityAnalysis._results` is a per-step DataFrame — scan it for which
-single tolerance moves the operand most, that's the one to tighten first. Report the
-Monte Carlo yield with its Wilson interval, not the raw fraction — 30 trials gives a
-wide interval and the normal-approximation CI breaks down near 0 or 1.
-Pitfall: `Perturbation.apply()` sets the variable to the sampler's value directly,
-not a delta — `DistributionSampler("normal", loc=0.0, ...)` drives a radius to
-near-zero and produces NaNs; use `loc=<current value>` as above.
-`SensitivityAnalysis` requires `RangeSampler` perturbations; `MonteCarlo` expects
-`DistributionSampler` — use two separate `Tolerancing` instances, not one.
+Read: `SensitivityAnalysis._results` is a per-step DataFrame — the tolerance that moves the operand most is the one to tighten first; report the Monte Carlo yield with its Wilson interval, not the raw fraction — 30 trials gives a wide interval and a normal-approximation CI breaks down near 0 or 1. Pitfall: `Perturbation.apply()` sets the variable to the sampler's value directly, not a delta — `DistributionSampler("normal", loc=0.0, ...)` drives a radius to near-zero and NaNs result; use `loc=<current value>`, as above. `SensitivityAnalysis` requires `RangeSampler`; `MonteCarlo` expects `DistributionSampler` — use two `Tolerancing` instances, not one.
 
 ## 13. Re-measure the saved candidate
-Use as the last step before reporting any number: prove the saved file reproduces
-the number you're about to claim.
+Use as the last step before reporting any number: prove the saved file reproduces the number you're about to claim.
 ```python
 import hashlib
 from pathlib import Path
@@ -408,15 +300,10 @@ print("pre-save RMS", rms_before, "post-reload RMS", rms_after)
 assert abs(rms_before - rms_after) < 1e-9, "save/reload did not round-trip the metric"
 print("hash of saved candidate", sha_saved[:12])
 ```
-Read: the two RMS values should agree to numerical noise. If not, the save/load path
-silently changed the model (a dropped solve, an unresolved pickup) — don't trust it.
-Pitfall: this is cheap (one extra spot-diagram evaluation) and belongs in every
-workflow that saves a file, not as a one-off test — the same discipline the skill's
-job runner enforces by construction, applied to code you write yourself.
+Read: the two RMS values should agree to numerical noise; if not, the save/load path silently changed the model (a dropped solve, an unresolved pickup) — don't trust it. Pitfall: this is cheap and belongs in every workflow that saves a file, not as a one-off test — the same discipline the skill's job runner enforces by construction, applied to code you write yourself.
 
 ## 14. Export figures and a summary.json
-Use as the final step of a review: bundle first-order numbers, metrics, and the
-figures a human will look at into one file a renderer can consume.
+Use as the final step of a review: bundle first-order numbers, metrics, and the figures a human will look at into one file a renderer can consume.
 ```python
 import hashlib, json
 from pathlib import Path
@@ -445,22 +332,9 @@ summary = {
 (out / "summary.json").write_text(json.dumps(summary, indent=2))
 print(sorted(p.name for p in out.iterdir()))
 ```
-Read: `summary.json` is the contract between analysis code and any review renderer —
-keep the keys stable (`model`, `sha256`, `first_order`, `metrics`, `figures`,
-`verdict`) as you add more, so a renderer built against this shape doesn't break.
-Pitfall: hash what you actually have — the source file's bytes when you started from
-one (recipe 1), or a canonical JSON serialization (`optic.to_dict()`, sorted keys)
-when you built or optimized it in place, as above. Say which one you computed.
+Read: `summary.json` is the contract between analysis code and any review renderer — keep the keys stable (`model`, `sha256`, `first_order`, `metrics`, `figures`, `verdict`) as you add more. Pitfall: hash what you actually have — the source file's bytes when you started from one (recipe 1), or a canonical JSON serialization (`optic.to_dict()`, sorted keys) when built in place, as above; say which one you computed.
 
 ## Links
-- [Optiland documentation](https://optiland.readthedocs.io/en/latest/) and its
-  [analysis framework guide](https://optiland.readthedocs.io/en/latest/developers_guide/analysis_framework.html).
-- Source read for every recipe above:
-  [`fileio`](https://github.com/optiland/optiland/blob/v0.6.2/optiland/fileio/__init__.py),
-  [`paraxial.py`](https://github.com/optiland/optiland/blob/v0.6.2/optiland/paraxial.py),
-  [`aberrations`](https://github.com/optiland/optiland/blob/v0.6.2/optiland/aberrations/__init__.py),
-  [`optimization`](https://github.com/optiland/optiland/blob/v0.6.2/optiland/optimization/__init__.py),
-  [`glass_expert.py`](https://github.com/optiland/optiland/blob/v0.6.2/optiland/optimization/optimizer/scipy/glass_expert.py),
-  [`tolerancing`](https://github.com/optiland/optiland/blob/v0.6.2/optiland/tolerancing/core.py) —
-  read the docstrings there for the full argument list of any class used only
-  partially here.
+
+[Optiland documentation](https://optiland.readthedocs.io/en/latest/) and its [analysis framework guide](https://optiland.readthedocs.io/en/latest/developers_guide/analysis_framework.html). Source read for every recipe above, for the full argument list of any class used only partially here: [`fileio`](https://github.com/optiland/optiland/blob/v0.6.2/optiland/fileio/__init__.py), [`paraxial.py`](https://github.com/optiland/optiland/blob/v0.6.2/optiland/paraxial.py), [`aberrations`](https://github.com/optiland/optiland/blob/v0.6.2/optiland/aberrations/__init__.py), [`optimization`](https://github.com/optiland/optiland/blob/v0.6.2/optiland/optimization/__init__.py), [`glass_expert.py`](https://github.com/optiland/optiland/blob/v0.6.2/optiland/optimization/optimizer/scipy/glass_expert.py), [`tolerancing`](https://github.com/optiland/optiland/blob/v0.6.2/optiland/tolerancing/core.py).
+

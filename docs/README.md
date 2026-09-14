@@ -23,12 +23,12 @@ terms in the [glossary](glossary.md).
 
 | Task | Guide |
 |---|---|
-| Define the problem and explicit requirements | [Specifications](../skills/optical-design/references/specifications.md) and [executable design contract](../skills/optical-design/references/design-workflow.md) |
-| Inspect the prescription or make a controlled edit | [Model actions](../skills/optical-design/references/model-actions.md) |
-| Optimize within parameter bounds | [Optimization](../skills/optical-design/references/optimization.md) and [composite merit](../skills/optical-design/references/merit-functions.md) |
-| Measure local effects and tolerance outcomes | [Sensitivity](../skills/optical-design/references/sensitivity.md) and [tolerancing](../skills/optical-design/references/tolerancing.md) |
-| Check additional conditions | [Separate validation](../skills/optical-design/references/validation.md) and [field/spectral example](../skills/optical-design/references/field-validation-example.md) |
-| Review results or run interactive jobs | [Review packages](../skills/optical-design/references/review-reports.md) and [MCP interface](../skills/optical-design/references/interactive.md) |
+| Define the problem and explicit requirements | [Specifications](../skills/optical-design/references/audited/specifications.md) and [executable design contract](../skills/optical-design/references/audited/design-workflow.md) |
+| Inspect the prescription or make a controlled edit | [Model actions](../skills/optical-design/references/audited/model-actions.md) |
+| Optimize within parameter bounds | [Optimization](../skills/optical-design/references/audited/optimization.md) and [composite merit](../skills/optical-design/references/merit-functions.md) |
+| Measure local effects and tolerance outcomes | [Sensitivity](../skills/optical-design/references/audited/sensitivity.md) and [tolerancing](../skills/optical-design/references/tolerancing.md) |
+| Check additional conditions | [Separate validation](../skills/optical-design/references/audited/validation.md) and [field/spectral example](../skills/optical-design/references/audited/field-validation-example.md) |
+| Review results or run interactive jobs | [Review packages](../skills/optical-design/references/audited/review-reports.md) and [MCP interface](../skills/optical-design/references/audited/interactive.md) |
 
 ## Understand the optics
 
@@ -38,7 +38,7 @@ terms in the [glossary](glossary.md).
 [Interferometry](../skills/optical-design/references/interferometry.md)
 
 For native Huygens/POP intensity comparisons, use the
-[profile benchmark guide](../skills/optical-design/references/profile-benchmark.md).
+[profile benchmark guide](../skills/optical-design/references/audited/profile-benchmark.md).
 
 ## Evaluate or contribute
 

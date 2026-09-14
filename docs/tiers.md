@@ -14,7 +14,7 @@ Tier 2 adds native OpticStudio execution when you have a compatible licensed ins
 Tier 0 calculator envelopes include inputs, results, units, method, warnings and provenance.
 Design/tolerance reports use a separate schema with explicit requirement assessment,
 inspection, raw metrics, artifacts and source-preservation evidence. See
-[the full contract](../skills/optical-design/references/design-workflow.md).
+[the full contract](../skills/optical-design/references/audited/design-workflow.md).
 
 Exit codes: 0 successful/completed, 1 comparison mismatch/unmet requirements/no acceptable
 refocus/optimization improvement, 2 usage, 3 missing dependency/engine, 4 analysis failure.
@@ -24,4 +24,4 @@ Dependency download happens through uv. The adapters do not send optical models 
 service. OpticStudio's own licensing behavior and third-party library behavior remain external.
 
 The local stdio server uses MCP Python SDK 2.2.0 and launches the same pinned optical
-CLI engines. See [interactive setup](../skills/optical-design/references/interactive.md).
+CLI engines. See [interactive setup](../skills/optical-design/references/audited/interactive.md).

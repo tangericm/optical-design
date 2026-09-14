@@ -1,6 +1,6 @@
 # Tolerance evidence
 
-The shipped command is `design.py tolerance`; see [the executable workflow](design-workflow.md).
+The shipped command is `design.py tolerance`; see [the executable workflow](audited/design-workflow.md).
 Its JSON configuration uses `schema: "1"`, explicit integer `seed`, `samples` from 1 to 1000,
 and `perturbations`: `{surface, parameter, distribution, half_width_mm}` for uniform draws,
 or `{surface, parameter, distribution, sigma_mm}` for Gaussian draws. Supported parameters

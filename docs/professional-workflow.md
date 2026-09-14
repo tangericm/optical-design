@@ -23,9 +23,9 @@ scales, and weights with explicit metric identities. Declare variables and bound
 optimization supports up to four radius/thickness variables. Freeze extra validation
 conditions before selecting the winning candidate.
 
-[Specification contract](../skills/optical-design/references/design-workflow.md#specification-contract) ·
+[Specification contract](../skills/optical-design/references/audited/design-workflow.md#specification-contract) ·
 [Composite merit](../skills/optical-design/references/merit-functions.md) ·
-[Optimization](../skills/optical-design/references/optimization.md)
+[Optimization](../skills/optical-design/references/audited/optimization.md)
 
 ## Change, verify, and assess robustness
 
@@ -36,19 +36,19 @@ Check extra fields/wavelengths or finer sampling using the frozen validation spe
 Sensitivity is local to its declared steps. Tolerance outcomes are conditional on the
 chosen distributions, sample count, seed, and compensator; report those with the yield.
 
-[Controlled edits](../skills/optical-design/references/model-actions.md) ·
-[Separate validation](../skills/optical-design/references/validation.md) ·
-[Sensitivity](../skills/optical-design/references/sensitivity.md) ·
+[Controlled edits](../skills/optical-design/references/audited/model-actions.md) ·
+[Separate validation](../skills/optical-design/references/audited/validation.md) ·
+[Sensitivity](../skills/optical-design/references/audited/sensitivity.md) ·
 [Tolerancing](../skills/optical-design/references/tolerancing.md)
 
 ## Hand off the evidence
 
-Create an [offline review package](../skills/optical-design/references/review-reports.md)
+Create an [offline review package](../skills/optical-design/references/audited/review-reports.md)
 and retain the job directory. Review metric identities, failed or unavailable conditions,
 parameter changes, and model lineage. File hashes check artifact identity; they are not
 independent optical verification or a signature of authenticity.
 
 For native Huygens/POP intensity profiles, use the separate
-[profile benchmark](../skills/optical-design/references/profile-benchmark.md).
+[profile benchmark](../skills/optical-design/references/audited/profile-benchmark.md).
 Illumination cuts and point-image PSFs answer different questions. The
 [compatibility record](compatibility.md) keeps unresolved method differences visible.

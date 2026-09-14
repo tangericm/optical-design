@@ -43,7 +43,7 @@ they do not attach to an open editor. Native tool calls can block past a coopera
    model lineage, objective terms, per-condition failures and sensitivity limits. The
    schematic is prescription geometry, not a traced ray plot or physical measurement.
 
-Use the [installed-skill workflow evals](../evals/README.md) for executable steps and
+Use the [installed-skill workflow evals](../../evals/README.md) for executable steps and
 pass/fail evidence criteria. Shipped assets are synthetic examples, never inferred
 requirements for an unrelated optical system.
 
@@ -111,7 +111,7 @@ MTF is scalar FFT MTF with linear frequency interpolation and no extrapolation.
 Composite terms carry exact metric identities/units, finite targets and positive scales
 and weights. Merit is `sqrt(sum(w*((value-target)/scale)^2)/sum(w))`. A target is an equality
 preference; use a hard minimum or maximum requirement for a one-sided constraint.
-Reports retain each objective term. See [merit functions](merit-functions.md).
+Reports retain each objective term. See [merit functions](../merit-functions.md).
 
 The refocus workflow coarsely samples the declared interval, then refines near the best
 coarse objective. It is a bounded local search and can miss another optimum or narrow
@@ -143,7 +143,7 @@ cross-validation; FFT MTF agreement is not assumed. Repeat with higher sampling 
 changes acceptance. Polarization, portable aspheres, coatings, coordinate breaks,
 multi-configuration models, ghost/stray-light,
 material/temperature tolerances and decenter/tilt tolerances are unsupported. Optional bounded
-final-gap compensation is available; see [tolerancing](tolerancing.md).
+final-gap compensation is available; see [tolerancing](../tolerancing.md).
 
 For multiple explicit radius/thickness variables, see [optimization](optimization.md).
 Its normalized bounded search retains the best feasible candidate and verifies all edits,
