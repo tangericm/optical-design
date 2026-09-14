@@ -1,55 +1,51 @@
-# Installed workflow evaluation
+# Evals
 
-Run these scenarios against the installed skill directory. They are evaluation inputs
-and executable acceptance checks, not claims that a particular release, engine or client
-has passed. Preserve generated output directories to keep artifact paths reproducible.
+`evals.json` holds five scenarios that exercise the skill on real problems: read a
+`.zmx` and diagnose it, match a microscope objective to a camera through a relay,
+rebalance a scan lens across a wavelength band, run a real optimizer on a triplet, and
+tolerance a doublet. Each entry has a `query`, the `assets/forms/` files it needs, and
+an `expected_behavior` list of checkable assertions — units stated, wavelength named
+for every number, the original file left unmodified, numeric before/after values
+rather than qualitative claims. These are not pass/fail unit tests; grade them by
+reading the transcript and any files the agent wrote against `expected_behavior`.
 
-`full-workflow.json` contains two prompts and observable grading criteria. Give one prompt
-at a time to the engineering agent, along with the installed skill path and a new output
-root. Grade evidence produced by tools; prose claims without receipts do not satisfy a
-criterion. Record the model/effort, installed revision, engine versions, exact inputs,
-outputs and unmet criteria with each run. Do not replace numeric results with expected
-values from this document.
+## Running a with-skill / without-skill pair
 
-## Portable executable check
+The comparison is the point: run the same `query` twice, once with an agent that has
+the optical-design skill installed and once with a bare agent that only has Optiland
+(or ZOSPy) and general knowledge, then compare the two transcripts against
+`expected_behavior`. In practice: spawn two sessions on the same model and effort
+level, give each the identical `query` text from `evals.json` and the same starting
+`files`, let both run to completion, then grade independently. `expected_behavior`
+describes what the skill should add over the bare agent — an agent with genuine optics
+knowledge can pass some assertions without the skill; the skill should raise the pass
+rate and the quality of the reasoning shown (named aberrations, stated assumptions,
+correct conventions), not just get numbers approximately right.
 
-From the installed skill directory, with PowerShell 7 and `uv` available:
+## Grading with check_first_order.py
 
-```powershell
-pwsh -NoProfile -File evals/run-portable-workflow.ps1 -OutputRoot C:/Optical/evals/new-workflow
+`check_first_order.py` is the ground truth for every first-order number an eval asks
+for: EFL, BFL, F/#, EPD, total track, per-wavelength EFL (chromatic focal shift), and
+the real-ray image-space chief-ray angle at the largest declared field (telecentricity
+error). Run it against the same `.zmx`/`.json` the agent was given, and against
+whatever file the agent produced, and compare:
+
+```bash
+uv run --python 3.11 --with optiland==0.6.2 evals/check_first_order.py \
+  assets/forms/cemented-achromat-doublet.zmx
 ```
 
-The runner uses Python 3.11 and Optiland 0.6.2, copies no secrets, and launches no native
-engine. It exercises inspect → expected-value edit with composite merit → sensitivity →
-separate original/candidate audits → review. It also checks stale expected values, an
-invalid sensitivity step, missing action configuration and an intentionally rejected edit.
-Every CLI call retains stdout/stderr separately. The runner emits one JSON summary only
-after its assertions pass; failure throws and leaves existing evidence intact. A failed
-original audit is expected and retained; the edited candidate must pass the supplied
-synthetic requirements and its separate audit for this scenario to pass.
+It exits 3 with a clear message if Optiland is not installed, 2 on a bad path or
+extension, and prints one JSON object to stdout otherwise. Treat any agent-reported
+first-order number more than 1% off this script's value as a failed assertion.
 
-The script is a deterministic workflow check. The agent prompt additionally evaluates
-whether the agent interprets the optical evidence and limitations correctly. Neither
-constitutes independent physical validation or a native-engine test.
+## Legacy audited-mode check
 
-## MCP full-field check
-
-Launch the server using the pinned commands in [interactive.md](../references/interactive.md),
-with this installed skill's `assets` directory under a declared input root. Use a new
-workspace. Apply the second JSON prompt through the actual installed MCP client.
-
-1. Hash model/spec/variables/validation bytes immediately before `start`. Inspect first
-   without spec fields, then start optimization with all matching path/hash pairs.
-2. Wait through `status`, then obtain `results`. Record the final state and acceptance,
-   and every failing field/wavelength/axis. Do not require optimization to succeed as the
-   evaluation's expected outcome; require the agent to preserve the actual outcome.
-3. Call `review` with the returned job ID. Verify the rendered package agrees with the
-   receipt and remains unaccepted when validation fails.
-4. Submit a separate start request with an intentionally wrong 64-digit model hash.
-   Require rejection before job creation. Keep the source model bytes unchanged.
-
-For a native adaptation, an operator must launch the pinned licensed Windows server and
-use the corresponding `assets/field-validation/native.zmx`. Run serially. Native conic
-and EvenAspheric shape coverage requires its own saved prescriptions and shape invariants;
-the spherical fixture here does not establish that coverage. Never infer native success
-from this portable scenario.
+`run-portable-workflow.ps1` and `full-workflow.json` predate this eval set and exercise
+the older wrapper-based job pipeline (`design.py inspect/optimize/sensitivity/review`
+with explicit hashing and acceptance receipts) rather than open-ended agent reasoning.
+Keep running it as a regression check on that pipeline — `pwsh -NoProfile -File
+evals/run-portable-workflow.ps1 -OutputRoot <new-dir>` — but treat it as the audited,
+deterministic-workflow counterpart to `evals.json`, not a replacement for it: it never
+asks an agent to name an aberration, choose a tube-lens convention, or explain a
+tradeoff, which is exactly what the five scenarios above are for.

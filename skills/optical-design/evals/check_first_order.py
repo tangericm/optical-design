@@ -27,7 +27,7 @@ from pathlib import Path
 
 def _load_optic(path: Path):
     try:
-        import optiland.fileio as fileio
+        from optiland import fileio
     except ImportError:
         print(
             "optiland is required but not installed. Run with, e.g.:\n"

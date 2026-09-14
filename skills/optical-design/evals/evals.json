@@ -1,0 +1,85 @@
+{
+  "skill_name": "optical-design",
+  "note": "Run every eval twice with an identical query and transcript-grading setup: once with the optical-design skill available to the agent, once without it. The comparison is the point — expected_behavior lists what the skill should add over an agent that only has Optiland/ZOSPy and general knowledge. Grade from the transcript and any output files the agent wrote; ground first-order numbers against evals/check_first_order.py rather than trusting the agent's arithmetic. Files are given relative to skills/optical-design/.",
+  "evals": [
+    {
+      "id": "achromat-first-order-and-diagnosis",
+      "skills": ["optical-design"],
+      "query": "Open assets/forms/cemented-achromat-doublet.zmx. Report its first-order values: EFL, BFL, F/#, EPD, and total track. Then name the dominant residual aberration in this design and show the evidence for your diagnosis (a ray fan or Seidel table), not just an assertion.",
+      "files": ["assets/forms/cemented-achromat-doublet.zmx"],
+      "expected_behavior": [
+        "reports EFL, BFL, F/#, EPD, and total track each with correct units, all within 1% of the values evals/check_first_order.py computes for this file",
+        "states the wavelength (or that it used the primary wavelength) for every first-order number reported",
+        "identifies the dominant aberration using quantitative evidence: a described/rendered ray fan shape, a Seidel coefficient table, or an RMS-spot-vs-field trend, not a bare claim",
+        "does not confuse F-number with NA, and does not report EFL with an inverted or implausible sign",
+        "traces or works on a copy of the model and leaves assets/forms/cemented-achromat-doublet.zmx byte-identical afterward"
+      ]
+    },
+    {
+      "id": "4f-relay-objective-camera-match",
+      "skills": ["optical-design"],
+      "query": "Design a 4f relay to match assets/forms/microscope-objective-20x.zmx to a camera with 6.5 micron pixels, using assets/forms/4f-relay-tube-lens.zmx as your starting relay. Choose the tube-lens EFL per the manufacturer convention appropriate to this objective, compute object-space sampling against the Nyquist limit set by the objective's NA, and check pupil matching between the objective and the relay.",
+      "files": [
+        "assets/forms/microscope-objective-20x.zmx",
+        "assets/forms/4f-relay-tube-lens.zmx"
+      ],
+      "expected_behavior": [
+        "states which tube-lens convention it assumed (e.g. a specific manufacturer's reference focal length) and that this is an assumption, since the objective file alone does not declare one",
+        "computes system magnification from the chosen tube-lens EFL and reports object-space pixel pitch (camera pixel size divided by magnification) in the same units as its resolution figures",
+        "computes the diffraction-limited resolution from the objective's NA (from check_first_order.py or its own trace) and compares object-space sampling against the Nyquist criterion, stating undersampled/oversampled/matched explicitly",
+        "checks pupil matching: compares the objective's exit pupil (or entrance pupil on the tube-lens side) diameter against the relay's clear aperture/entrance pupil, and flags vignetting risk if they do not match",
+        "gives every number with its unit and states the wavelength used for the resolution calculation",
+        "works on copies of both input files and leaves the originals unmodified"
+      ]
+    },
+    {
+      "id": "oct-scan-lens-rebalance",
+      "skills": ["optical-design"],
+      "query": "Rebalance assets/forms/oct-semi-plossl-scan-lens.zmx over the 800-900 nm band. Report chromatic focal shift across the band, lateral spot size versus scan angle, and telecentricity error (image-space chief-ray angle) before and after optimization. Keep the 4 mm entrance pupil and the +/-6 degree scan range fixed.",
+      "files": [
+        "assets/forms/oct-semi-plossl-scan-lens.zmx",
+        "assets/forms/oct-semi-plossl-scan-lens.json"
+      ],
+      "expected_behavior": [
+        "reports the baseline (pre-optimization) chromatic focal shift across 800/840/900 nm within 1% of evals/check_first_order.py's per-wavelength EFL for this file",
+        "reports baseline and post-optimization lateral spot size at 0, ~4.2, and 6 degrees scan, each tagged with its field angle and wavelength(s)",
+        "reports baseline and post-optimization telecentricity error (image-space chief-ray angle) within 1% of evals/check_first_order.py's chief-ray-angle figure for the corresponding file",
+        "confirms after optimization that entrance pupil diameter is still 4 mm and full scan range is still +/-6 degrees (states this explicitly, does not just leave it unstated)",
+        "names which variables it released to optimize (e.g. element curvatures, air gap) and reports a numeric improvement, not a qualitative one, for at least the RMS spot and telecentricity metrics",
+        "works on a copy and leaves both original files in assets/forms/ unmodified"
+      ]
+    },
+    {
+      "id": "cooke-triplet-least-squares",
+      "skills": ["optical-design"],
+      "query": "Optimize assets/forms/cooke-triplet.zmx with least squares on RMS spot size at the three declared fields. Hold EFL within 1% of its starting value. Explain what the optimizer traded off, in terms of specific Seidel aberration terms, to reach the result.",
+      "files": [
+        "assets/forms/cooke-triplet.zmx",
+        "assets/forms/cooke-triplet.json"
+      ],
+      "expected_behavior": [
+        "uses a real merit-function optimizer (e.g. Optiland's LeastSquares/OptimizationProblem with named operands and variables), not a single manual radius edit",
+        "reports RMS spot size at all three fields, before and after, each with its wavelength(s) and in consistent units (um)",
+        "reports EFL before and after and confirms the after value is within 1% of the before value (both within 1% of evals/check_first_order.py's EFL for the starting file)",
+        "states which surfaces/parameters were released as variables and which were held fixed",
+        "explains the tradeoff by naming specific Seidel terms (e.g. spherical, coma, astigmatism, Petzval, or their standard symbols) and the direction each moved, not a generic 'aberrations were balanced' statement",
+        "works on a copy and leaves assets/forms/cooke-triplet.zmx and .json unmodified"
+      ]
+    },
+    {
+      "id": "achromat-tolerancing-yield",
+      "skills": ["optical-design"],
+      "query": "Tolerance assets/forms/cemented-achromat-doublet.zmx: radius +/-0.1%, thickness +/-0.02 mm, 200 Monte Carlo trials, with focus compensation. Report yield and state your assumptions.",
+      "files": ["assets/forms/cemented-achromat-doublet.zmx"],
+      "expected_behavior": [
+        "states the exact perturbation model applied (distribution shape, +/-0.1% on each radius, +/-0.02 mm on each thickness) matching the requested tolerances before reporting results",
+        "states or fixes a random seed and confirms 200 trials were run (not a smaller sample scaled up, or a closed-form approximation presented as simulation)",
+        "describes the focus compensator used (e.g. re-solving the final air gap per trial) and reports both compensated and uncompensated yield, or explicitly states compensation was always applied",
+        "defines the pass/fail yield criterion (e.g. RMS spot below a stated threshold at a stated field/wavelength) before quoting a yield percentage",
+        "reports yield with an interval appropriate for n=200 (e.g. a Wilson interval), not a bare point percentage",
+        "states the analysis's limits explicitly: no tilt/decenter/surface-irregularity terms included, radius and thickness errors treated as independent",
+        "works on a copy and leaves assets/forms/cemented-achromat-doublet.zmx unmodified"
+      ]
+    }
+  ]
+}
