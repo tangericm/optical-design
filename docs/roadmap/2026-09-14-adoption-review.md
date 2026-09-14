@@ -591,8 +591,10 @@ Executed after the review was written, largely by delegated Sonnet and Haiku age
 the orchestrator integrating and committing:
 
 - Phase 1: `evals/evals.json` with five scenarios and checkable assertions,
-  `evals/check_first_order.py` as ground truth, and a with/without baseline of scenario 1
-  (`evals/results/2026-09-14-scenario-1.md`: both correct, skill run 2.3x faster).
+  `evals/check_first_order.py` as ground truth, and with/without baselines of all five
+  scenarios (`evals/results/`): 30 of 30 assertions with the skill against 26 of 30 without,
+  one correctness failure avoided (a wrong NA in scenario 2), median wall clock 10 against
+  14 minutes.
 - Phase 2: one-screen `SKILL.md` (89 lines, about 680 words); `optiland-recipes.md` with
   14 executable, tested recipes; `aberrations.md`, `diagnosis.md`, rewritten
   `merit-functions.md`, `microscopy.md`, `oct.md`; consolidated `evidence-limits.md` and
@@ -607,8 +609,10 @@ the orchestrator integrating and committing:
   and install; capabilities rewritten; glossary extended. Evidence trees and internal
   planning docs removed from the main tree.
 
-Not yet done: scenarios 2 to 5 baselines, the 2.0 version bump, and the description
-near-miss eval.
+Also done: the 2.0.0 version bump and a description near-miss set of 20 queries
+(`evals/description-triggers.json`, judged by the same agent that wrote it, so a fair
+run with a separate judge is still owed). Not yet done: a converged rerun of scenarios 3
+and 4 with an explicit optimizer budget, and excluding `evals/` from the installed skill.
 
 ## What this review did not change
 
