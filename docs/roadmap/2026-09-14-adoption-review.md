@@ -585,6 +585,31 @@ axial and lateral resolution are independent
 requirements and their cost ([Thorlabs](https://www.thorlabs.com/newgrouppage9.cfm?objectgroup_ID=10343));
 and the relay-conjugation requirement between galvo mirrors for true telecentric scanning.
 
+## Progress on this branch (2026-09-14)
+
+Executed after the review was written, largely by delegated Sonnet and Haiku agents with
+the orchestrator integrating and committing:
+
+- Phase 1: `evals/evals.json` with five scenarios and checkable assertions,
+  `evals/check_first_order.py` as ground truth, and a with/without baseline of scenario 1
+  (`evals/results/2026-09-14-scenario-1.md`: both correct, skill run 2.3x faster).
+- Phase 2: one-screen `SKILL.md` (89 lines, about 680 words); `optiland-recipes.md` with
+  14 executable, tested recipes; `aberrations.md`, `diagnosis.md`, rewritten
+  `merit-functions.md`, `microscopy.md`, `oct.md`; consolidated `evidence-limits.md` and
+  `opticstudio.md`; an eleven-form starting-point library in `.zmx` and JSON with
+  commentary; the job-runner pages moved to `references/audited/`.
+- Phase 3: `inspect_zmx.py` (any OpticStudio export opens through Optiland; directives
+  classified), `first_order.py` (paraxial gate with optional spec), `render_review.py`
+  (summary plus PNGs to a review page), each with tests. `design.py` and its library stay
+  in place as the audited mode because the npm demo and 400 tests depend on their paths.
+- Phase 4: README rebuilt around the promise, install one-liners and three prompts with a
+  real layout-and-spot figure; tiers, cli and professional-workflow merged into quickstart
+  and install; capabilities rewritten; glossary extended. Evidence trees and internal
+  planning docs removed from the main tree.
+
+Not yet done: scenarios 2 to 5 baselines, the 2.0 version bump, and the description
+near-miss eval.
+
 ## What this review did not change
 
 No code, SKILL.md text or reference file was modified. The numbers above come from
