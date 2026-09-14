@@ -23,7 +23,7 @@ try {
   for (const required of ["bin/optical-design.mjs", "lib/cli.mjs", "lib/installer.mjs", "lib/filesystem.mjs", "lib/workflows.mjs",
     ".codex-plugin/plugin.json", ".claude-plugin/plugin.json", ".agents/plugins/marketplace.json", ".cursor-plugin/plugin.json", "plugin.json",
     "assets/icon.png", "assets/logo.png", "assets/logo-dark.png", "assets/brand/header.svg",
-    "docs/README.md", "docs/cli.md", "docs/first-lens.md", "docs/glossary.md", "docs/professional-workflow.md",
+    "docs/README.md", "docs/cli.md", "docs/glossary.md", "docs/professional-workflow.md",
     "skills/optical-design/SKILL.md", "skills/optical-design/LICENSE",
     "skills/optical-design/scripts/_lib/cli.py", "skills/optical-design/scripts/resolve.py",
     "skills/optical-design/scripts/zernike.py", "skills/optical-design/scripts/wavefront.py",

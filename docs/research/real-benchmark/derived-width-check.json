@@ -1,7 +1,0 @@
-{
-  "compared_full_spectrum_widths": 24,
-  "max_abs_difference_mm": 0.0,
-  "reference_summary_sha256": "605e7d0e803da5d4d20f29610bbd79587ec4a832746d2061ace326c9ce26f90f",
-  "extrapolation": false,
-  "scope": "width reduction against saved summary; not another native run"
-}

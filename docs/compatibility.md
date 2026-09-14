@@ -1,5 +1,10 @@
 # Compatibility
 
+Raw release evidence (job receipts, logs, rendered reviews) is retained in the repository
+history at the [v1.0.0](https://github.com/tangericm/optical-design/tree/v1.0.0/docs/research)
+and [v1.1.0](https://github.com/tangericm/optical-design/tree/v1.1.0/docs/research) tags rather
+than on the main branch.
+
 ## 1.1.0 distribution verification
 
 The distribution release preserves the 1.0.0 optical algorithms. On the Windows release
@@ -57,14 +62,14 @@ was unavailable because local-file navigation was blocked by the browser policy.
 The synthetic N-BK7 singlets are independently constructed from matching prescriptions.
 Shared first-order and geometric spot checks are evidence; FFT MTF uses different pupil
 sampling implementations. Numerical results from the current run are in the local
-`docs/research/copilot-live/` evidence directory, which is excluded from distribution.
+[`docs/research/copilot-live/` in the v1.1.0 tag](https://github.com/tangericm/optical-design/tree/v1.1.0/docs/research/copilot-live) evidence directory, which is excluded from distribution.
 
 Any Agent Skills client can read the portable frontmatter. End-to-end installations in
 every named client have not been tested. Pin the adapter versions and rerun capability
 checks when moving to another machine.
 
 The 0.1.0-dev.2 profile workflow retains reference comparisons, native setting readback,
-source/dependency hashes and raw profiles in local `docs/research/real-benchmark/` evidence.
+source/dependency hashes and raw profiles in local [`docs/research/real-benchmark/` in the v1.1.0 tag](https://github.com/tangericm/optical-design/tree/v1.1.0/docs/research/real-benchmark) evidence.
 Its Stock model still shows about 22% disagreement between Huygens and POP X full 1/e²
 widths. The benchmark preserves that discrepancy. It does not relax the original spherical
 optimization adapter or declare the design physically validated. The final software check
@@ -77,7 +82,7 @@ focus-compensated tolerancing on both engines. Two variables changed in each syn
 Eight identical seeded draws gave uncompensated/compensated passes of 1/8→8/8 native and
 2/8→8/8 portable. These are small conditional demonstrations, not yield estimates for a
 production optical assembly. Five additional Stock 840 nm controls leave the approximately
-22% method discrepancy unresolved. See `docs/research/next-roadmap/` for receipts and limits.
+22% method discrepancy unresolved. See [`docs/research/next-roadmap/` in the v1.1.0 tag](https://github.com/tangericm/optical-design/tree/v1.1.0/docs/research/next-roadmap) for receipts and limits.
 
 The official MCP Python SDK 2.2.0 stdio client/server and process-boundary tests ran on
 Windows. Both portable and native optical acceptance were exercised through actual tool calls.
@@ -93,7 +98,7 @@ synthetic-singlet runs exercised passing and deliberately rejected outcomes: nat
 and portable optimization through the official MCP client. Search sampling was 64;
 validation sampling was 256, with all 81 evaluations charged to one budget. This is a
 separate numerical acceptance check, not a sampling-convergence or physical-validation
-claim. See `docs/research/validation-release/` for retained receipts and rejection artifacts.
+claim. See [`docs/research/validation-release/` in the v1.1.0 tag](https://github.com/tangericm/optical-design/tree/v1.1.0/docs/research/validation-release) for retained receipts and rejection artifacts.
 The final suite reports 610 passed and one Windows symbolic-link capability skip; seven
 package tests and lint/package-install checks also pass. The earlier real OCT method
 discrepancy remains unresolved.
@@ -104,7 +109,7 @@ identity; the regression oracle checks all nine cells against single-wavelength 
 Prior multi-wavelength RMS spot results from this adapter need rerunning. Its separate
 Huygens/POP profile backend is unaffected. The shipped three-field/three-wavelength example
 passes its search-condition control but fails the fixed expanded requirements on both
-engines, with native CLI and portable MCP evidence in `docs/research/field-validation/`.
+engines, with native CLI and portable MCP evidence in [`docs/research/field-validation/` in the v1.1.0 tag](https://github.com/tangericm/optical-design/tree/v1.1.0/docs/research/field-validation).
 The final live-enabled suite reports 614 passed and one platform capability skip; seven
 package tests and lint/package-install checks pass. Native analysis caches are explicitly
 excluded from distribution even after running the live example in the checkout.

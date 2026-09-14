@@ -44,7 +44,7 @@ Start with the portable example; **OpticStudio is optional**.
 
 ## Choose your starting point
 
-**Try the bundled model:** [Start with an example](docs/first-lens.md). Run a portable
+**Try the bundled model:** [Run the quickstart](docs/quickstart.md). Run a portable
 lens workflow and see the outputs. No OpticStudio license needed.
 
 ```sh
@@ -81,7 +81,7 @@ It takes you from a calculator result to a saved lens and readable report.
 The portable demo changes only the final air gap, from 60.00 mm to 46.82 mm. Its
 on-axis, 550 nm result passes the example requirements and is verified after saving
 and reloading. These are computed results for a synthetic model.
-[Exact values and settings](docs/examples/refocus-summary.json) · [Reproduce the example](docs/first-lens.md)
+[Exact values and settings](docs/examples/refocus-summary.json) · [Reproduce the example](docs/quickstart.md)
 
 ## From a model to a decision
 
@@ -119,8 +119,6 @@ installer. Native plugin metadata is included for all three clients. Public cura
 catalog listings have a separate submission and review process.
 
 The shared ecosystem installer remains available: `npx skills add tangericm/optical-design`.
-
-[Understand skills, plugins, npm, and marketplaces →](docs/deployment.md)
 
 ## Contribute or get help
 

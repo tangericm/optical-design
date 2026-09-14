@@ -161,5 +161,3 @@ snapshot. Remove with `codex plugin remove optical-design@optical-design`.
 For optional interactive jobs, configure the [local MCP server](../skills/optical-design/references/interactive.md)
 with your workspace and allowed input roots. Installing the skill does not configure
 or start that server automatically.
-
-Looking for an npm package or marketplace listing? Read [deployment explained](deployment.md).

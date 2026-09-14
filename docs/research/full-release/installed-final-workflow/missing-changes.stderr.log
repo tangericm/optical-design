@@ -1,7 +1,0 @@
-usage: design.py [-h] --model MODEL [--spec SPEC] --out OUT --backend
-                 {zos,optiland} [--tolerances TOLERANCES]
-                 [--variables VARIABLES] [--changes CHANGES]
-                 [--perturbations PERTURBATIONS]
-                 [--validation-spec VALIDATION_SPEC] [--json]
-                 {inspect,edit,audit,refocus,optimize,tolerance,sensitivity}
-design.py: error: --changes is required only with edit action

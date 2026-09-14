@@ -5,7 +5,7 @@
 **New here?** [Install the skill](install.md), then [run your first optical workflow](quickstart.md).
 Start with the portable example before connecting an OpticStudio installation.
 
-**New to the project?** [Start with an example](first-lens.md) and look up unfamiliar
+**New to the project?** [Run the quickstart](quickstart.md) and look up unfamiliar
 terms in the [glossary](glossary.md).
 **Already have a prescription?** Go to the [professional workflow](professional-workflow.md).
 
@@ -16,7 +16,6 @@ terms in the [glossary](glossary.md).
 | [Installation](install.md) | Choose a client, verify setup, update, or troubleshoot |
 | [Quickstart](quickstart.md) | Calculate, refocus, and create a review with bundled examples |
 | [Compute tiers](tiers.md) | Choose numerical, portable, or licensed native execution |
-| [Deployment explained](deployment.md) | Understand npm, npx, skills, plugins, and marketplaces |
 | [Command reference](cli.md) | Install, diagnose, run the demo, update, or uninstall |
 | [Capabilities and limits](capabilities.md) | Check whether your model and intended analysis are supported |
 
@@ -45,7 +44,7 @@ For native Huygens/POP intensity comparisons, use the
 
 [Runnable workflow scenarios](../skills/optical-design/evals/README.md) provide example
 commands and acceptance criteria. [Compatibility evidence](compatibility.md) records
-tested environments and limitations; [release evidence](https://github.com/tangericm/optical-design/blob/main/docs/research/full-release/README.md)
+tested environments and limitations; [release evidence](https://github.com/tangericm/optical-design/blob/v1.1.0/docs/research/full-release/README.md)
 retains the detailed verification history.
 
 [Contributing](../CONTRIBUTING.md) · [Security](../SECURITY.md) · [Changelog](../CHANGELOG.md)

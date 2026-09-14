@@ -42,6 +42,6 @@ integrated marginals or measured OCT performance.
 
 ## Research evidence
 
-The [real-design reference audit](https://github.com/tangericm/optical-design/blob/main/docs/research/real-benchmark/reference-audit.md) records saved OCT inputs, model hashes, spectrum, units and uncertainty. Its 75 model/case records are reference inputs, not proof of fresh native execution or physical acceptance.
+The [real-design reference audit](https://github.com/tangericm/optical-design/blob/v1.1.0/docs/research/real-benchmark/reference-audit.md) records saved OCT inputs, model hashes, spectrum, units and uncertainty. Its 75 model/case records are reference inputs, not proof of fresh native execution or physical acceptance.
 
-See [controlled profile experiments](https://github.com/tangericm/optical-design/blob/main/docs/research/next-roadmap/README.md) and [release compatibility evidence](compatibility.md) for completed runs and unresolved method differences.
+See [controlled profile experiments](https://github.com/tangericm/optical-design/blob/v1.1.0/docs/research/next-roadmap/README.md) and [release compatibility evidence](compatibility.md) for completed runs and unresolved method differences.

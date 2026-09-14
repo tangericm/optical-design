@@ -13,18 +13,47 @@ outside the shipped scope. The bundled OpticStudio export cannot even be opened 
 portable backend. The prose that wraps the tools is written as a liability policy rather
 than as a colleague explaining optics.
 
-To become widely adopted the skill needs three shifts, in this order:
+To become widely adopted the skill needs four shifts, in this order:
 
-1. **Open the window.** Expose the analyses and optimizer that Optiland already provides
+1. **Change stance.** Let the coding agent write and run the optics code, and make the
+   skill the source of knowledge, recipes and discipline rather than a fixed job runner.
+2. **Open the window.** Expose the analyses and optimizer that Optiland already provides
    (layouts, spot diagrams, ray and OPD fans, field curvature, distortion, Seidel sums,
    through-focus MTF, damped least squares, glass and asphere variables, real ZMX import).
-2. **Change the voice.** Cut SKILL.md and the references to roughly a third of their
+3. **Change the voice.** Cut SKILL.md and the references to roughly a third of their
    current length, replace repeated disclaimers with one clear "evidence limits" section,
    and add the concise principles and formulae the project goal calls for.
-3. **Make the output legible.** A review should open with a layout, a spot diagram, an MTF
+4. **Make the output legible.** A review should open with a layout, a spot diagram, an MTF
    curve and a two-sentence plain-language verdict, with the receipt details below.
 
 The rest of this document gives the evidence for each finding and a prioritized plan.
+
+## Current capabilities at a glance
+
+What the shipped 1.1.0 skill can do today, with no interpretation:
+
+| Area | Shipped today |
+|---|---|
+| Calculators (no engine) | Airy radius and FWHM; Rayleigh, Abbe and Sparrow limits; diffraction and geometric depth of focus; telescope Rayleigh and Dawes; Gaussian beam waist, Rayleigh range, divergence and focused spot; OCT axial resolution from bandwidth and lateral spot with confocal parameter; microscope lateral and axial resolution with Nyquist pixel |
+| Wavefront tools (no engine) | Zernike coefficient generation in Fringe, Noll and ANSI schemes; scalar FFT PSF, Strehl and MTF from coefficients or a measured map; interferogram interpretation (OPD, single pass, surface), phase unwrapping, fringe cavity model |
+| Model I/O | Optiland native JSON; a restricted `.zmx` subset on the portable backend; `.zmx` and `.zos` on the licensed OpticStudio backend |
+| Inspection | Surface inventory, units, fields, wavelengths, pupil, materials, fixed conic and asphere terms, source hash |
+| Metrics | EFL, F-number, total track, image distance, geometric RMS spot radius, scalar FFT MTF at one frequency and axis, each at declared field and wavelength |
+| Requirements and merit | Hard min and max requirements per metric; scalar objective or weighted RMS composite over several metrics |
+| Changes | Explicit radius and thickness edits with expected-value checks; bounded refocus of the final air gap; bounded pattern search over up to four radius or thickness variables |
+| Robustness | Central-difference sensitivity at declared steps; seeded Monte Carlo on radius and thickness with optional focus compensation, Wilson intervals |
+| Validation | Predeclared extra fields, wavelengths or sampling checked on the saved winner after optimization |
+| Reporting | JSON receipt with hashes, settings and history; standalone HTML and Markdown review with tables and a vertex schematic |
+| Interactive | Local MCP server with six job tools: capabilities, start, status, cancel, results, review |
+| Catalog | Validate and rank a local, hand-declared stock-lens index against unit-aware constraints |
+| Native extras | Huygens and POP central intensity profile benchmark against a reference, licensed OpticStudio only |
+| Distribution | `npx optical-design install` for five agents; Claude plugin marketplace; Codex and Cursor metadata; `npx skills add` |
+
+Not shipped: layout plots, spot diagrams, ray and OPD fans, field curvature and
+distortion, Seidel or third-order aberrations, through-focus analysis, damped least
+squares or any global optimizer, glass, conic or asphere variables, new-lens synthesis,
+starting-point library, coatings, non-sequential, polarization beyond a flag, and
+general `.zmx` import on the portable backend.
 
 ## What is already strong and should be kept
 
@@ -186,6 +215,50 @@ skill at all.
 
 Priority 0 items unblock the stated goal. Priority 1 items drive adoption. Priority 2
 items are polish.
+
+### P0. Reposition: guide the agent, do not replace it
+
+The largest single change is a change of stance. Today the skill is a job runner: about
+7,000 lines of Python wrap Optiland so that the agent only ever calls a handful of
+fixed commands, and 400 tests defend that wrapper. That made sense as a way to
+guarantee provenance, but it caps the skill at whatever the wrapper exposes, and it
+means every new analysis or variable type costs a schema, a CLI flag, a receipt field
+and a test. Meanwhile the coding agent using the skill can already write and run
+Optiland code directly; the analyses in finding 1 are each five to fifteen lines.
+
+Anthropic's guidance frames this as choosing the degree of freedom: low freedom
+("run exactly this script") for fragile, deterministic steps; high freedom (heuristics
+and recipes) where the agent should adapt to the problem. Lens design is mostly the
+second kind. The skill should therefore carry the knowledge and the discipline, and let
+the agent do the work:
+
+- **Knowledge in references, not code.** An Optiland recipes reference of ten to
+  fifteen short, tested snippets (load a `.zmx`, draw the layout, spot diagram by field,
+  ray and OPD fans, Seidel table, first-order summary, build an `OptimizationProblem`
+  with operands and variables, run least squares, swap glass with GlassExpert, run a
+  tolerance sample, save `.zmx` and PNGs). Each is something the agent adapts, not a
+  black box it calls. Pair it with the aberration primer and the domain references so
+  the agent knows *why* to run each one.
+- **Discipline in a short checklist, not a fortress.** Work on a copy, hash the source,
+  run the first-order gate, freeze requirements before optimizing, re-measure the saved
+  candidate, report the settings alongside every number. These are six lines of SKILL.md.
+  The agent can honor them in code it writes; they do not need a bespoke job system.
+- **Keep scripts for what must be deterministic.** The Tier 0 calculators (cited
+  formulae, pinned tests), a ZMX inspector that reports what a file contains, a small
+  report renderer that turns a folder of JSON and PNGs into the review page, and the
+  ZOSPy connection helper for licensed users. Everything else in `scripts/_lib/` becomes
+  optional: keep the verified job runner as an advanced "audited mode" for teams that
+  need receipts, and stop growing it.
+- **Tests defend the knowledge.** Pin every formula and every recipe to a known value
+  (the recipes run against the bundled forms in CI), and drop the tests that only exist
+  to defend the wrapper's schema. Fewer, more meaningful tests; a much smaller surface to
+  maintain.
+
+The result is a skill whose SKILL.md fits on one screen, whose references read like a
+good lens-design handbook with runnable examples, and whose agent can do anything
+Optiland or OpticStudio can do, with the same discipline the current tool enforces by
+construction. That is also what the most-installed skills look like: guidance plus a
+few sharp tools, not a platform.
 
 ### P0. Import real ZMX files (portable backend)
 
@@ -375,7 +448,7 @@ Desktop or Cursor can converse about a lens without spinning up a job.
 
 | Milestone | Contents | Why first |
 |---|---|---|
-| 1.2 "Open the file" | Real ZMX import, `analyze` with plots, SKILL.md rewrite, description fix | Unblocks every real user; largest visible change for the least risk to the verified job core |
+| 1.2 "Open the file" | Real ZMX import, Optiland recipes reference, `analyze` with plots, SKILL.md rewrite, description fix | Unblocks every real user; largest visible change for the least risk to the verified job core |
 | 1.3 "Design, not just refocus" | Least-squares optimizer, conic/asphere/glass variables, wavefront and Seidel operands, review redesign | Turns the tool into something that can improve a real lens |
 | 1.4 "Teach" | Aberration primer, forms library with commentary, microscopy and OCT rewrites, two worked examples | The content that earns word-of-mouth in the optics community |
 | 1.5 "Lighten" | Evidence moved out, docs merged, optics-shaped MCP tools | Lower barrier for contributors and forks |

@@ -15,6 +15,12 @@
 
 ## Unreleased
 
+- Remove committed release-evidence trees (`docs/research/`, 98 MB of receipts and logs),
+  internal planning documents (`docs/superpowers/`), the product brief and the deployment
+  explainer from the main branch. Evidence stays available at the v1.0.0 and v1.1.0 tags.
+- Move the brand guide to `assets/brand/README.md`; merge the example page into the quickstart.
+- Add `docs/roadmap/2026-09-14-adoption-review.md`: an audit with a prioritized plan.
+
 ## 1.0.0 — 2026-09-13
 
 - Complete the saved sequential-imaging workflow with inspection, expected-value edits,

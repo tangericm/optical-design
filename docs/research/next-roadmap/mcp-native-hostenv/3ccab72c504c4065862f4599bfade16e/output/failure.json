@@ -1,6 +1,0 @@
-{
-  "error": "OpticStudio Licence is not valid for API, connection not established",
-  "error_type": "ConnectionRefusedError",
-  "baseline_restored": false,
-  "stage": "setup_or_teardown"
-}

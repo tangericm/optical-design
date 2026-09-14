@@ -9,7 +9,7 @@ it does not optimize a prescription or decide whether the physical design meets 
 From the repository root, use a licensed Windows OpticStudio installation and pinned dependencies:
 
 ```powershell
-uv run --python 3.11 --with zospy==2.1.5 --with pythonnet==3.1.0 skills/optical-design/scripts/benchmark.py --manifest docs/research/real-benchmark/manifest.json --out benchmark-run --json
+uv run --python 3.11 --with zospy==2.1.5 --with pythonnet==3.1.0 skills/optical-design/scripts/benchmark.py --manifest my-benchmark/manifest.json --out benchmark-run --json
 ```
 
 Use a new or empty output directory. The runner verifies declared input hashes, copies each
@@ -177,7 +177,7 @@ catalog accuracy. POP supports the explicit Gaussian-waist launch above, not arb
 or imported fields. Non-sequential paths, source calibration, OCT SNR and manufacturing
 acceptance require separate evidence.
 
-The repository's `docs/research/real-benchmark/reference-audit.md` records the OCT example's
+The [v1.1.0 tag's `docs/research/real-benchmark/reference-audit.md`](https://github.com/tangericm/optical-design/tree/v1.1.0/docs/research/real-benchmark/reference-audit.md) records the OCT example's
 exact model/raw-file hashes, 18-wave spectrum, boundaries, baseline widths and uncertainty.
 `manifest.json` and `reference.json` in that repository directory contain 25 shared cases over
 three models (75 records). Consult that research evidence for this particular benchmark;

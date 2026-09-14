@@ -2,7 +2,7 @@
 
 [Documentation](README.md) / Glossary
 
-Use this alongside the [example workflow](first-lens.md). Reports retain exact metric
+Use this alongside the [quickstart](quickstart.md). Reports retain exact metric
 names and units; a short label should never hide a different definition.
 
 | Term | Meaning in this workflow |

@@ -5,6 +5,35 @@
 Run a calculator, refocus a synthetic singlet, and generate a review you can open
 in a browser. **No OpticStudio license is needed.**
 
+## One command
+
+Install [Node.js](https://nodejs.org/en/download) 22+ and
+[uv](https://docs.astral.sh/uv/getting-started/installation/), then open a terminal in
+your project folder:
+
+```sh
+npx optical-design doctor
+npx optical-design demo --out my-first-lens
+```
+
+Use a new output directory. The first run may download Python and Optiland. The demo
+calculates a diffraction limit, adjusts the example lens's final air gap, verifies the
+saved candidate, and creates an HTML review. Open the review path printed at completion;
+the source model stays unchanged.
+
+| Output | What to look for |
+|---|---|
+| Job outcome | Whether the candidate improved and met the stated requirements |
+| Prescription changes | The original and final spacing, with the remaining lens geometry fixed |
+| Analysis settings | Fields, wavelengths, sampling, metric definitions, and units |
+| Saved-model checks | Whether the saved and reloaded candidate matches the reported result |
+| Review package | A readable view of the recorded evidence; it can also describe a failed job |
+
+The requirements are specific to the synthetic model, and an HTML report is not by
+itself proof that a design passed. Prefer individual commands? Continue below.
+
+## Step by step
+
 You need [uv](https://docs.astral.sh/uv/getting-started/installation/) and Python 3.11+.
 uv can provision the requested Python and dependencies on first use; allow time for
 those downloads. The command examples below work in PowerShell and common Unix shells.
@@ -78,6 +107,12 @@ rendering success is not a separate optical acceptance test. Keep the original j
 folder and its artifacts together if you need to regenerate the review.
 
 ## Continue with your own requirements
+
+To hand the tool your own saved prescription, ask your agent:
+
+> Use optical-design to inspect [model path]. Check that its surface types and analysis
+> assumptions are supported. Summarize the current design, identify the inputs needed
+> to assess [my requirement], and preserve the source model.
 
 Use the [model contract and specification guide](../skills/optical-design/references/design-workflow.md)
 before substituting your own lens. Example requirements belong to the synthetic
