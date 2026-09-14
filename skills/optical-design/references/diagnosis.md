@@ -1,6 +1,6 @@
 # Diagnosis template
 
-After every `analyze` run, write two sentences: which aberration dominates, at which field
+After every analysis (fans, spot, Seidel, field curvature), write two sentences: which aberration dominates, at which field
 and wavelength, what evidence shows it, and which variable class to release next. See
 [aberrations.md](aberrations.md) for the underlying formulae and variable-to-aberration map.
 
