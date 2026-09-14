@@ -1,0 +1,117 @@
+{
+  "description_under_test": "Use whenever the user has a lens or optical system to design, analyze, optimize, tolerance or review: a .zmx, .zos or Optiland prescription; achromats, objectives, relays, tube lenses, scan lenses; microscopy or OCT optics; or questions about resolution, PSF, MTF, Strehl, Zernike, wavefront or interferometry results. Use it for lens-design questions even when no file is attached.",
+  "should_trigger": [
+    {
+      "query": "How do I design an achromat for 532 nm at f/4 with 50 mm EFL?",
+      "predicted_trigger": true,
+      "reason": "Description explicitly lists achromats as a primary lens type this skill designs."
+    },
+    {
+      "query": "What does Strehl ratio tell me about the quality of my optical system?",
+      "predicted_trigger": true,
+      "reason": "Description explicitly mentions Strehl as a key performance metric within scope."
+    },
+    {
+      "query": "Can you explain how to read MTF curves and what they mean?",
+      "predicted_trigger": true,
+      "reason": "Description explicitly lists MTF results and performance metrics as core skill content."
+    },
+    {
+      "query": "How do I interpret PSF measurements from my microscope?",
+      "predicted_trigger": true,
+      "reason": "Description covers both PSF results and microscopy optics design within scope."
+    },
+    {
+      "query": "What's the relationship between wavefront error and Zernike coefficients?",
+      "predicted_trigger": true,
+      "reason": "Description explicitly lists wavefront and Zernike as metrics this skill analyzes."
+    },
+    {
+      "query": "I have a .zmx file with my zoom lens. My edge-of-field MTF is collapsing—what should I change?",
+      "predicted_trigger": true,
+      "reason": "Description explicitly mentions .zmx files and MTF optimization as primary skill use cases."
+    },
+    {
+      "query": "My microscopy objective seems soft. Which element should I adjust to reduce spherical aberration?",
+      "predicted_trigger": true,
+      "reason": "Description includes microscopy optics design and optimization as in-scope work."
+    },
+    {
+      "query": "I'm designing a scan lens. How do I ensure uniform field coverage across large deflection angles?",
+      "predicted_trigger": true,
+      "reason": "Description explicitly lists scan lenses as a key optical system type this skill designs."
+    },
+    {
+      "query": "I'm analyzing this Optiland prescription—it has too much chromatic aberration. Can you help me optimize it?",
+      "predicted_trigger": true,
+      "reason": "Description explicitly mentions Optiland prescriptions and optimization as in-scope."
+    },
+    {
+      "query": "How sensitive is my lens design to edge thickness and center thickness variations? I need tight tolerances.",
+      "predicted_trigger": true,
+      "reason": "Description explicitly lists tolerancing as a key skill use case."
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "query": "How do I design a thin-film coating stack for an anti-reflection layer?",
+      "predicted_trigger": false,
+      "reason": "Description explicitly excludes thin-film coating design from scope."
+    },
+    {
+      "query": "How do I optimize LED illumination uniformity for a car headlight?",
+      "predicted_trigger": false,
+      "reason": "Description explicitly excludes illumination and non-imaging optics from scope."
+    },
+    {
+      "query": "Can you help me calculate the fiber-optic link budget for my communications system?",
+      "predicted_trigger": false,
+      "reason": "Fiber-optic link budget involves signal propagation and electronics, not lens or optical system design."
+    },
+    {
+      "query": "My camera sensor has too much noise. How do I reduce it?",
+      "predicted_trigger": false,
+      "reason": "Sensor electronics and imaging noise are outside the scope of optical system design."
+    },
+    {
+      "query": "I'm using Python's matplotlib library to plot my data, but the focus looks blurry when I zoom in on the graph. What's wrong?",
+      "predicted_trigger": false,
+      "reason": "This is a software rendering issue mentioning 'focus' as a UI term, not optical design."
+    },
+    {
+      "query": "How do I stack astrophotography images to improve my long-exposure photographs?",
+      "predicted_trigger": false,
+      "reason": "Image processing and stacking workflows are outside the scope of lens design."
+    },
+    {
+      "query": "How do I design baffles to reduce stray light in my non-sequential optical system?",
+      "predicted_trigger": false,
+      "reason": "Description explicitly excludes non-sequential and stray-light design from scope."
+    },
+    {
+      "query": "I'm splicing optical fibers. What's the best way to minimize insertion loss?",
+      "predicted_trigger": false,
+      "reason": "Fiber splicing and coupling are fiber-optic component assembly, not lens design."
+    },
+    {
+      "query": "How does optical character recognition work for reading text in images?",
+      "predicted_trigger": false,
+      "reason": "OCR is a computer vision algorithm, not optical system or lens design despite the name."
+    },
+    {
+      "query": "I have a microscope camera system. My image processing pipeline needs help with exposure and white balance adjustments.",
+      "predicted_trigger": false,
+      "reason": "Image processing and sensor settings are peripheral to lens design, not optical system design work."
+    }
+  ],
+  "summary": {
+    "should_trigger_hits": 10,
+    "should_not_trigger_correct_rejections": 10,
+    "misfires": [],
+    "suggested_description_edits": [
+      "The description is well-written and comprehensive. No critical edits needed—it clearly delineates optical system design and performance analysis (sequential optics, prescriptions, aberrations) from adjacent domains (non-sequential, stray light, coatings, illumination, image processing).",
+      "Optional: Add 'first-order and' before 'design' (e.g., 'first-order design, analyze, optimize...') to explicitly signal that this covers Gaussian/paraxial optics work, not just ray-only geometric analysis.",
+      "Optional: Reinforce the no-file clause by changing 'Use it for lens-design questions even when no file is attached' to 'Use it for any lens-design or optical analysis question, with or without design files' to clarify that theoretical design and performance analysis are fully in-scope."
+    ]
+  }
+}
