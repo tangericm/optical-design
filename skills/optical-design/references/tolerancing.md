@@ -1,4 +1,63 @@
-# Tolerance evidence
+# Tolerancing
+
+How to turn a nominal design into a yield estimate you can defend: declare the
+perturbation model, run sensitivity first, then a seeded Monte Carlo with a compensator,
+and report the pass fraction with its interval and its assumptions.
+
+## Contents
+
+- [Run it with Optiland](#run-it-with-optiland)
+- [Declare before you run](#declare-before-you-run)
+- [Reading and reporting the result](#reading-and-reporting-the-result)
+- [Audited mode: design.py tolerance](#audited-mode-designpy-tolerance)
+
+## Run it with Optiland
+
+Use recipe 12 in [Optiland recipes](optiland-recipes.md): `tolerancing.Perturbation` for
+each radius and thickness (uniform or normal, in the units the drawing will use), a focus
+compensator on the final air gap, `SensitivityAnalysis` for the one-at-a-time table,
+`MonteCarlo` for the sampled draws, and a Wilson interval on the pass fraction. Typical
+optical-shop starting tolerances: radius ±0.1 % or a test-plate fit of 3 to 5 fringes,
+center thickness ±0.02 to ±0.05 mm, wedge 1 to 3 arcmin, element decenter 0.02 to
+0.05 mm, index ±0.0005 and Abbe ±0.8 % for standard grades. Radius and thickness alone
+capture focus and spherical drift; decenter, tilt and irregularity usually dominate coma
+and astigmatism in an as-built lens, so say when they are left out.
+
+## Declare before you run
+
+Before a run, record nominal values, perturbation identities and units, distribution and
+parameter meaning, truncation, correlations, compensator bounds, random seed, sample count,
+acceptance limits and engine settings. Unsupported perturbations must be rejected; they
+cannot silently contribute zero sensitivity.
+
+## Reading and reporting the result
+
+Tolerance analysis needs a manufacturing model and compensators. Its performance criterion
+can differ from the optimization merit function; compensator choices determine which
+errors are adjustable during assembly. Declare the permitted travel and adjustment rule.
+[Ansys sequential tolerancing](https://optics.ansys.com/hc/en-us/articles/42661666289043-How-to-perform-a-sequential-tolerance-analysis).
+
+Start with a signed one-at-a-time sensitivity check. Re-evaluate the nominal model after
+restoration and inspect asymmetric changes or failures. Sensitivity ranking is local and
+does not include interactions unless they are explicitly evaluated. A focus-only experiment
+must be described as focus sensitivity, not a general manufacturing-yield analysis.
+
+For Monte Carlo evidence, keep every draw's outcome and compensator result. Report the
+number attempted, completed, passing and failed, the denominator used for the pass fraction,
+and how execution failures are treated. Never drop unfavorable or failed draws to improve
+the reported fraction. Keep source preservation and reproducibility evidence with the result.
+
+Give a confidence interval for a binomial pass proportion when draws support that model.
+The Wilson method avoids treating an observed all-pass finite sample as certainty.
+It quantifies sampling uncertainty, not uncertainty in an incorrect manufacturing model.
+[NIST proportion confidence intervals](https://www.itl.nist.gov/div898/handbook/prc/section2/prc241.htm).
+
+A diffraction-limited nominal design does not automatically fail tolerancing. The decision
+is whether predicted as-built metrics satisfy the actual specification under the declared
+tolerance and compensation model. Confirm model realism with measured manufacturing and
+assembly data before describing a simulation result as production yield.
+
+## Audited mode: design.py tolerance
 
 The shipped command is `design.py tolerance`; see [the executable workflow](audited/design-workflow.md).
 Its JSON configuration uses `schema: "1"`, explicit integer `seed`, `samples` from 1 to 1000,
@@ -69,35 +128,3 @@ are not silently counted as completed pairs. Intervals are conditional on the de
 independent perturbation model, engine and bounded adjustment rule. Incomplete runs may
 have informative stopping. These are sampled pass fractions, not manufacturing guarantees,
 and the two marginal intervals do not constitute a confidence interval for improvement.
-
-Tolerance analysis needs a manufacturing model and compensators. Its performance criterion
-can differ from the optimization merit function; compensator choices determine which
-errors are adjustable during assembly. Declare the permitted travel and adjustment rule.
-[Ansys sequential tolerancing](https://optics.ansys.com/hc/en-us/articles/42661666289043-How-to-perform-a-sequential-tolerance-analysis).
-
-Before a run, record nominal values, perturbation identities and units, distribution and
-parameter meaning, truncation, correlations, compensator bounds, random seed, sample count,
-acceptance limits and engine settings. Unsupported perturbations must be rejected; they
-cannot silently contribute zero sensitivity.
-
-Start with a signed one-at-a-time sensitivity check. Re-evaluate the nominal model after
-restoration and inspect asymmetric changes or failures. Sensitivity ranking is local and
-does not include interactions unless they are explicitly evaluated. A focus-only experiment
-must be described as focus sensitivity, not a general manufacturing-yield analysis.
-
-For Monte Carlo evidence, keep every draw's outcome and compensator result. Report the
-number attempted, completed, passing and failed, the denominator used for the pass fraction,
-and how execution failures are treated. Never drop unfavorable or failed draws to improve
-the reported fraction. Keep source preservation and reproducibility evidence with the result.
-
-Give a confidence interval for a binomial pass proportion when draws support that model.
-The Wilson method avoids treating an observed all-pass finite sample as certainty.
-It quantifies sampling uncertainty, not uncertainty in an incorrect manufacturing model.
-[NIST proportion confidence intervals](https://www.itl.nist.gov/div898/handbook/prc/section2/prc241.htm).
-
-A diffraction-limited nominal design does not automatically fail tolerancing. The decision
-is whether predicted as-built metrics satisfy the actual specification under the declared
-tolerance and compensation model. Confirm model realism with measured manufacturing and
-assembly data before describing a simulation result as production yield.
-
-Primary links checked 2026-09-12. Run accounting and acceptance rules are project policy.
