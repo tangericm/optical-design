@@ -17,6 +17,9 @@ import math
 import sys
 from pathlib import Path
 
+# Keep the installed skill tree unchanged during normal CLI use.
+sys.dont_write_bytecode = True
+
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from _lib import cli  # noqa: E402, RUF100
 from _lib.comparison import compare_documents, flatten  # noqa: E402, F401, RUF100

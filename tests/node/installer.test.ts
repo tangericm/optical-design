@@ -28,6 +28,86 @@ test('CLI executable exists and gives useful help without installing', async () 
 
 describe('managed installation', () => {
   beforeEach(async () => { api = await import('../../lib/installer.mjs'); });
+  test('installed Airy calculator leaves no bytecode and permits update then uninstall', async () => {
+    const source = path.join(context.packageRoot, 'skills/optical-design/scripts');
+    await mkdir(path.join(source, '_lib'));
+    for (const name of ['resolve.py', '_lib/__init__.py', '_lib/cli.py', '_lib/optics.py']) {
+      await writeFile(path.join(source, name), await readFile(path.join(repository, 'skills/optical-design/scripts', name)));
+    }
+    const { destination } = await api.manage('install', { agent: 'codex' }, context);
+    const env = { ...process.env };
+    delete env.PYTHONDONTWRITEBYTECODE;
+    const calculation = spawnSync('uv', ['run', '--python', '3.11', path.join(destination, 'scripts/resolve.py'), 'airy', '--wavelength-um', '0.55', '--fnum', '4', '--json'], { cwd: context.cwd, env, encoding: 'utf8' });
+    expect(calculation.status, calculation.stderr).toBe(0);
+    expect(JSON.parse(calculation.stdout).results.airy_radius_um).toBeCloseTo(2.684);
+    expect(await readdir(path.join(destination, 'scripts/_lib'))).not.toContain('__pycache__');
+    await api.manage('update', { agent: 'codex' }, context);
+    await api.manage('uninstall', { agent: 'codex' }, context);
+    await expect(lstat(destination)).rejects.toMatchObject({ code: 'ENOENT' });
+  });
+  test.each(['update', 'uninstall'])('accepts actual CPython caches during %s but preserves project outputs', async operation => {
+    const { destination } = await api.manage('install', { agent: 'codex' }, context);
+    const env = { ...process.env };
+    delete env.PYTHONDONTWRITEBYTECODE;
+    const result = spawnSync('uv', ['run', '--python', '3.11', 'python', '-c', 'import tool'], { cwd: path.join(destination, 'scripts'), env, encoding: 'utf8' });
+    expect(result.status, result.stderr).toBe(0);
+    expect((await readdir(path.join(destination, 'scripts/__pycache__'))).length).toBeGreaterThan(0);
+    await writeFile(path.join(context.cwd, 'user-result.json'), 'keep my result');
+    await api.manage(operation, { agent: 'codex' }, context);
+    expect(await readFile(path.join(context.cwd, 'user-result.json'), 'utf8')).toBe('keep my result');
+  });
+  test.each(['edited-source', 'unknown-file', 'fake-pyc', 'linked-cache'])('preserves suspicious cache content: %s', async change => {
+    const { destination } = await api.manage('install', { agent: 'codex' }, context);
+    const cache = path.join(destination, 'scripts/__pycache__');
+    if (change === 'linked-cache') {
+      await writeFile(path.join(context.home, 'keep'), 'outside');
+      await symlink(context.home, cache, process.platform === 'win32' ? 'junction' : 'dir');
+    } else {
+      const env = { ...process.env };
+      delete env.PYTHONDONTWRITEBYTECODE;
+      const result = spawnSync('uv', ['run', '--python', '3.11', 'python', '-c', 'import tool'], { cwd: path.join(destination, 'scripts'), env, encoding: 'utf8' });
+      expect(result.status, result.stderr).toBe(0);
+      if (change === 'edited-source') await writeFile(path.join(destination, 'scripts/tool.py'), 'user edits');
+      if (change === 'unknown-file') await writeFile(path.join(cache, 'notes.txt'), 'user notes');
+      if (change === 'fake-pyc') await writeFile(path.join(cache, 'tool.cpython-312.pyc'), 'user notes');
+    }
+    for (const operation of ['update', 'uninstall']) await expect(api.manage(operation, { agent: 'codex' }, context)).rejects.toThrow(/changed|edited|symlink|symbolic/i);
+    expect((await lstat(destination)).isDirectory()).toBe(true);
+    if (change === 'linked-cache') expect(await readFile(path.join(context.home, 'keep'), 'utf8')).toBe('outside');
+  });
+  test('retains one intact backup and safely previews/prunes backups while preserving changes', async () => {
+    await api.manage('install', { agent: 'codex' }, context);
+    const first = await api.manage('update', { agent: 'codex' }, context);
+    const second = await api.manage('update', { agent: 'codex' }, context);
+    await expect(lstat(first.backup)).rejects.toMatchObject({ code: 'ENOENT' });
+    await writeFile(path.join(second.backup, 'notes.txt'), 'keep notes');
+    const third = await api.manage('update', { agent: 'codex' }, context);
+    expect(third.preservedBackups).toContain(second.backup);
+    const preview = await api.manage('prune-backups', { agent: 'codex' }, context);
+    expect(preview.dryRun).toBe(true);
+    expect(preview.removable).toEqual([third.backup]);
+    expect((await lstat(third.backup)).isDirectory()).toBe(true);
+    await api.manage('uninstall', { agent: 'codex' }, context);
+    const cleaned = await api.manage('prune-backups', { agent: 'codex', apply: true }, context);
+    expect(cleaned.removed).toEqual([third.backup]);
+    expect(await readFile(path.join(second.backup, 'notes.txt'), 'utf8')).toBe('keep notes');
+  });
+  test('backup cleanup preserves linked and legacy backups', async () => {
+    const { destination } = await api.manage('install', { agent: 'codex' }, context);
+    const previous = await api.manage('update', { agent: 'codex' }, context);
+    const receiptPath = path.join(previous.backup, '.optical-design-install.json');
+    const receipt = JSON.parse(await readFile(receiptPath, 'utf8'));
+    delete receipt.installationDestination;
+    await writeFile(receiptPath, JSON.stringify(receipt));
+    const linked = path.join(path.dirname(destination), '.optical-design.backup-12345678-1234-4123-8123-123456789012');
+    await symlink(context.home, linked, process.platform === 'win32' ? 'junction' : 'dir');
+    await writeFile(path.join(context.home, 'keep.txt'), 'keep');
+    const result = await api.manage('prune-backups', { agent: 'codex', apply: true }, context);
+    expect(result.removed).toEqual([]);
+    expect(result.preserved).toContain(previous.backup);
+    expect(result.preserved).toContain(linked);
+    expect(await readFile(path.join(context.home, 'keep.txt'), 'utf8')).toBe('keep');
+  });
   test.each(['update', 'uninstall'])('preserves newly added __proto__ file before %s', async operation => {
     const { destination } = await api.manage('install', { agent: 'codex' }, context);
     await writeFile(path.join(destination, '__proto__'), 'user notes');
@@ -145,6 +225,50 @@ describe('CLI and execution', () => {
     expect(result.ok).toBe(false);
     expect(JSON.stringify(result)).not.toContain('secret');
     expect(JSON.stringify(result)).toContain('OpticStudio');
+  });
+  test('doctor distinguishes setup from engine readiness and requires explicit engine probe', async () => {
+    const calls: any[] = [];
+    const run = (command: string, args: string[]) => { calls.push([command, args]); return { status: 0, stdout: calls.length === 1 ? 'uv 0.8.0' : 'optical-design engine check passed' }; };
+    const setup = await api.execute(['doctor'], { ...context, run });
+    expect(setup.ok).toBe(true);
+    expect(setup.portable.status).toBe('untested');
+    expect(setup.native).toContain('untested');
+    expect(calls).toHaveLength(1);
+    calls.length = 0;
+    const checked = await api.execute(['doctor', '--engine-check'], { ...context, run });
+    expect(checked.portable.status).toBe('ready');
+    expect(calls).toHaveLength(2);
+    expect(calls[1][1]).toContain('optiland==0.6.2');
+  });
+  test('doctor explicit engine failure makes doctor fail', async () => {
+    let calls = 0;
+    const result = await api.execute(['doctor', '--engine-check'], { ...context, run: () => ++calls === 1 ? { status: 0, stdout: 'uv 0.8.0' } : { status: 1, stdout: '', stderr: 'private diagnostic' } });
+    expect(result.ok).toBe(false);
+    expect(result.portable.status).toBe('failed');
+    expect(JSON.stringify(result)).not.toContain('private diagnostic');
+  });
+  test('walkthrough resolves bundled script paths and validates returned evidence files', async () => {
+    const output = path.join(context.cwd, 'walkthrough');
+    const calls: any[] = [];
+    const run = async (command: string, args: string[]) => {
+      calls.push([command, args]);
+      await mkdir(output);
+      const results: Record<string, string> = {};
+      for (const [name, file] of [['review', 'review.html'], ['summary', 'summary.json'], ['candidate', 'candidate.json']]) {
+        results[name] = path.join(output, file);
+        await writeFile(results[name], 'evidence');
+      }
+      return { status: 0, stdout: JSON.stringify({ results }), stderr: '' };
+    };
+    const result = await api.execute(['walkthrough', '--out', 'walkthrough'], { ...context, run });
+    expect(result.ok).toBe(true);
+    expect(result.review).toBe(path.join(output, 'review.html'));
+    expect(calls[0][1]).toContain(path.join(context.packageRoot, 'skills/optical-design/scripts/walkthrough.py'));
+    expect(await readFile(path.join(output, 'walkthrough.stderr.log'), 'utf8')).toBe('');
+    await expect(api.execute(['walkthrough', '--out', output], context)).rejects.toThrow(/exists/i);
+  });
+  test.each(['demo', 'walkthrough'])('%s rejects output inside the skill', async command => {
+    await expect(api.execute([command, '--out', path.join(context.packageRoot, 'skills/optical-design/output')], context)).rejects.toThrow(/outside/i);
   });
   test('demo rejects existing output and propagates process failure', async () => {
     await expect(api.execute(['demo', '--out', context.cwd], context)).rejects.toThrow(/exist/i);

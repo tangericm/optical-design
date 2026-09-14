@@ -11,6 +11,9 @@ from pathlib import Path
 
 import numpy as np
 
+# Keep the installed skill tree unchanged during normal CLI use.
+sys.dont_write_bytecode = True
+
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import _lib.zernike as Z  # noqa: E402, RUF100
 from _lib import cli, fourier, optics  # noqa: E402, RUF100

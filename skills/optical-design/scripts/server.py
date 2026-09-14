@@ -6,8 +6,12 @@
 from __future__ import annotations
 
 import argparse
+import sys
 from contextlib import asynccontextmanager
 from typing import Any, Literal
+
+# Keep the installed skill tree unchanged during normal CLI use.
+sys.dont_write_bytecode = True
 
 from _lib.tool_jobs import JobManager
 from mcp.server import MCPServer
