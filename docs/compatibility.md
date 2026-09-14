@@ -1,5 +1,12 @@
 # Compatibility
 
+## 2.0.0
+
+The 2.0.0 reframing changes documentation, adds the recipes, forms, evals and three thin
+scripts (`inspect_zmx.py`, `first_order.py`, `render_review.py`), and leaves the audited
+mode's optical algorithms and engine pins unchanged, so the 1.1.0 verification below still
+describes them. New scripts are covered by the Optiland-tier tests in CI.
+
 Raw release evidence (job receipts, logs, rendered reviews) is retained in the repository
 history at the [v1.0.0](https://github.com/tangericm/optical-design/tree/v1.0.0/docs/research)
 and [v1.1.0](https://github.com/tangericm/optical-design/tree/v1.1.0/docs/research) tags rather

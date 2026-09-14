@@ -60,7 +60,7 @@ evidence. Same-method reproduction does not establish design acceptance.
 
 ## Compatibility record
 
-Distribution version 1.1.0 retains 1.0.0 optical algorithms. Verify supported scope at
+Version 2.0.0 keeps the audited-mode algorithms of 1.0.0 unchanged. Verify supported scope at
 [release evidence](https://github.com/tangericm/optical-design/tree/v1.1.0/docs/research):
 OpticStudio 2024 R1 with API 24.1.0, ZOSPy 2.1.5, pythonnet 3.1.0 on Windows. Native audit,
 refocus, optimize and compensated tolerance passed on synthetic N-BK7 singlet models with

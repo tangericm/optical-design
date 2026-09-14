@@ -1,6 +1,6 @@
 {
   "name": "optical-design",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "description": "Optical calculations, sequential lens workflows, and engineering review.",
   "author": { "name": "Eric Tang", "url": "https://github.com/tangericm" },
   "homepage": "https://github.com/tangericm/optical-design#readme",

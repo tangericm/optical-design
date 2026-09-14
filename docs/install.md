@@ -115,7 +115,7 @@ Install/update/uninstall default to the current project. Use the same `--global`
 choice for subsequent operations. `update` uses the version bundled in the command
 you execute; it does not separately fetch a moving GitHub branch.
 
-For reproducibility, use `npx optical-design@1.1.0 install --agent codex` and retain
+For reproducibility, use `npx optical-design@2.0.0 install --agent codex` and retain
 the reported version. The install receipt is `.optical-design-install.json` inside
 the installed skill directory. It records the package version and exact file hashes.
 
@@ -167,7 +167,7 @@ approximately **5.368**, with the method and units in the output. For the next s
 If you prefer a fixed release, clone the tag:
 
 ```sh
-git clone --branch v1.1.0 --depth 1 https://github.com/tangericm/optical-design.git
+git clone --branch v2.0.0 --depth 1 https://github.com/tangericm/optical-design.git
 ```
 
 Copy the **whole** `skills/optical-design` directory into your client's skill directory.
@@ -197,7 +197,7 @@ npx optical-design uninstall --agent codex
 
 Add `--global` to update/uninstall a global installation. Updates preserve a backup
 and refuse edited installations. A fixed version can be installed with
-`npx optical-design@1.1.0 install --agent codex`.
+`npx optical-design@2.0.0 install --agent codex`.
 
 For installations made with the shared `skills` installer, use its own commands:
 `npx skills update optical-design` or `npx skills remove optical-design`.

@@ -13,7 +13,11 @@
 - Verify the packed command and portable demo in Windows, macOS, and Linux CI.
 - Preserve the v1.0.0 optical algorithms and supported-model boundaries.
 
-## Unreleased
+## 2.0.0 — 2026-09-14
+
+The skill now guides the coding agent instead of wrapping it: knowledge, recipes and
+discipline in the skill, computation in code the agent writes against Optiland or
+OpticStudio. The audited job runner remains as an optional mode with unchanged algorithms.
 
 - Reframe the skill around guiding the coding agent: a one-screen `SKILL.md` with the
   workflow and discipline, an Optiland recipes reference with executable, tested snippets,
