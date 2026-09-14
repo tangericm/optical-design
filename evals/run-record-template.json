@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "scenario_id": null,
+  "run_id": null,
+  "condition": "with-skill or without-skill",
+  "model": {
+    "provider": null,
+    "exact_id": null,
+    "reasoning_effort": null
+  },
+  "versions": {
+    "skill_commit": null,
+    "package": null,
+    "python": null,
+    "optiland_distribution": null,
+    "agent_host": null
+  },
+  "budget": {
+    "wall_seconds": 900,
+    "optimizer_function_evaluations": 150
+  },
+  "input_sha256": {},
+  "cold_dependency_cache": false,
+  "seed": null,
+  "wall_seconds": null,
+  "input_tokens": null,
+  "output_tokens": null,
+  "termination": null,
+  "transcript_artifact": null,
+  "output_artifacts": [],
+  "assertions": [],
+  "grader_id": null,
+  "grader_blinded": true,
+  "rubric_exposed": false,
+  "interventions": []
+}

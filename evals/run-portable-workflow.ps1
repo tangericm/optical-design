@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param(
     [Parameter(Mandatory = $true)][string]$OutputRoot,
-    [string]$SkillRoot = (Join-Path $PSScriptRoot '..')
+    [string]$SkillRoot = (Join-Path $PSScriptRoot '../skills/optical-design')
 )
 
 $ErrorActionPreference = 'Stop'

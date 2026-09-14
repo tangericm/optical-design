@@ -43,7 +43,7 @@ they do not attach to an open editor. Native tool calls can block past a coopera
    model lineage, objective terms, per-condition failures and sensitivity limits. The
    schematic is prescription geometry, not a traced ray plot or physical measurement.
 
-Use the [installed-skill workflow evals](../../evals/README.md) for executable steps and
+Use the [workflow verification protocol](https://github.com/tangericm/optical-design/tree/main/evals) for executable steps and
 pass/fail evidence criteria. Shipped assets are synthetic examples, never inferred
 requirements for an unrelated optical system.
 

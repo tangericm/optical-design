@@ -13,7 +13,7 @@ the semi-Plössl topology in a scanned sample arm.
 On-axis RMS spot is 102 um against a 9.2 um Airy radius at 840 nm/f9;
 spherochromatism from the two cemented interfaces was never corrected. Telecentricity
 away from 840 nm has not been checked. Rebalancing this file across 800-900 nm is
-eval scenario 3 in `evals/evals.json`.
+a band-rebalancing learning exercise.
 
 Release the four element curvatures first (never varied — only stop distance, group
 separation and back focus were), then the inter-group air gap, then let the two

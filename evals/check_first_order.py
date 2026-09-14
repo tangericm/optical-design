@@ -2,9 +2,9 @@
 # requires-python = ">=3.11"
 # dependencies = []
 # ///
-"""Print ground-truth first-order values for a .zmx or Optiland .json model.
+"""Print reference first-order values for a validated mm .zmx or Optiland .json model.
 
-Graders use this as an independent check on what an agent reports: EFL, BFL, F/#,
+Graders use this as a reference check on what an agent reports: EFL, BFL, F/#,
 EPD, total track, per-wavelength EFL (reveals axial color) and the real-ray
 image-space chief-ray angle at the largest declared field (telecentricity error).
 
@@ -98,12 +98,19 @@ def first_order_summary(path: Path) -> dict:
     p = optic.paraxial
 
     thicknesses = [_scalar(s.thickness) for s in optic.surfaces.surfaces]
-    bfl = thicknesses[-2] if len(thicknesses) >= 2 else None
+    image_distance = thicknesses[-2] if len(thicknesses) >= 2 else None
+    # Trace a parallel unit-height ray and intersect its outgoing paraxial line
+    # with the axis. This measures focus from the last optical vertex and does
+    # not call the skill's first_order.compute() or mistake detector gap for BFL.
+    y, u = p.trace_generic(1.0, 0.0, p.surfaces.positions[1] - 1, optic.primary_wavelength)
+    slope = _scalar(u[-1])
+    bfl = image_distance - _scalar(y[-1]) / slope if slope and image_distance is not None else None
 
     result = {
         "path": str(path),
         "efl_mm": _scalar(p.f2()),
         "bfl_mm": bfl,
+        "image_distance_mm": image_distance,
         "f_number": _scalar(p.FNO()),
         "epd_mm": _scalar(p.EPD()),
         "total_track_mm": _scalar(optic.total_track),
